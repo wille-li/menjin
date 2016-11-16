@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper  
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- SQL 关键字请使用大写字母, 表名, 属性名用小写 -->
+<mapper namespace="com.menjin.mapper.TestMapper">
+	<resultMap type="com.menjin.model.Test" id="resultMap">
+		<id column="t_id" property="tid" jdbcType="INTEGER" />
+		<result column="name" property="name" jdbcType="VARCHAR" />
+	</resultMap>
+	<sql id="columnList" >
+	    t_id, name
+	</sql>
+	<insert id="insert" parameterType="com.menjin.model.Test" useGeneratedKeys="true"
+		keyColumn="id">
+		INSERT INTO table_test(name) VALUES (#{name})
+	</insert>
+
+	<update id="updateByPrimaryKey" parameterType="com.menjin.model.Test">
+		UPDATE table_test SET name=#{name} WHERE t_id=#{tid}
+	</update>
+
+	<select id="selectByPrimaryKey" parameterType="com.menjin.model.Test" resultType="com.menjin.model.Test">
+		SELECT 
+		<include refid="columnList" /> 
+		FROM table_test WHERE t_id=#{tid}
+	</select>
+
+	<delete id="deleteByPrimaryKey" parameterType="com.menjin.model.Test">
+		DELETE FROM table_test WHERE t_id=#{tid}
+	</delete>
+</mapper>  

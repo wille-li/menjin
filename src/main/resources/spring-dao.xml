@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd">
+
+
+	<bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource"  
+		destroy-method="close" 
+		p:driverClass="${jdbc.driverClassName}"
+		p:jdbcUrl="${jdbc.url}" 
+		p:user="${jdbc.username}" 
+		p:password="${jdbc.password}"
+		p:testConnectionOnCheckout="${jdbc.c3p0.testConnectionOnCheckout}"
+		p:testConnectionOnCheckin="${jdbc.c3p0.testConnectionOnCheckin}"
+		p:idleConnectionTestPeriod="${jdbc.c3p0.idleConnectionTestPeriod}"
+		p:initialPoolSize="${jdbc.c3p0.initialPoolSize}" 
+		p:minPoolSize="${jdbc.c3p0.minPoolSize}"
+		p:maxPoolSize="${jdbc.c3p0.maxPoolSize}" 
+		p:maxIdleTime="${jdbc.c3p0.maxIdleTime}" />
+
+
+	<!-- 配置sqlSessionFactory -->
+    <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <!-- 实例化sqlSessionFactory时需要使用上述配置好的数据源以及SQL映射文件 -->
+        <property name="dataSource" ref="dataSource" />
+        <property name="mapperLocations" value="classpath:mapper/*.xml" />
+    </bean>
+    
+        <!-- 配置扫描器 -->
+    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <!-- 扫描com.menjin.dao这个包以及它的子包下的所有映射接口类 -->
+        <property name="basePackage" value="com.menjin.mapper" />
+        <property name="sqlSessionFactoryBeanName" value="sqlSessionFactory" />
+    </bean>
+	
+	<!-- 配置Spring的事务管理器 -->
+    <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="dataSource" />
+    </bean>
+
+    <!-- 配置事务异常封装 -->
+    <bean id="persistenceExceptionTranslationPostProcessor"
+        class="org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor" />
+
+    <!-- 基于数据源的事务管理器 -->
+    <!-- <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager" 
+        p:dataSource-ref="dataSource" /> -->
+
+    <!-- 配合<tx:advice>和<aop:advisor>完成了事务切面的定义 -->
+    <!-- 使用强大的切点表达式是语言轻松定义目标方法 -->
+    <aop:config proxy-target-class="true">
+        <!-- 通过aop定义事务增强切面 -->
+        <aop:pointcut expression=" execution(* com.*.service..*(..))"
+            id="serviceMethod" />
+        <!-- 引用事务增强 -->
+        <aop:advisor advice-ref="txAdvice" pointcut-ref="serviceMethod" />
+    </aop:config>
+    <!-- 事务增强 -->
+    <tx:advice id="txAdvice" transaction-manager="transactionManager">
+        <!-- 事务属性定义 -->
+        <tx:attributes>
+            <tx:method name="*" />
+        </tx:attributes>
+    </tx:advice>
+</beans>
