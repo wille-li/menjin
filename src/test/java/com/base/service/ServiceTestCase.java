@@ -22,7 +22,7 @@ import com.menjin.service.TestService;
 @Transactional //这个非常关键，如果不加入这个注解配置，事务控制就会完全失效  
 //这里的事务关联到配置文件中的事务控制器(transactionManager = "transactionManager")，同时指定自动回滚(defaultRollback = true).  
 //这样做操作的数据库才不会污染数据库！  
-@Rollback
+@Rollback(false)//想看到更新效果就设置为false
 public class ServiceTestCase {
 	
 	private Logger log = LoggerFactory.getLogger(getClass());
@@ -36,5 +36,30 @@ public class ServiceTestCase {
 		test.setTid(1);
 		test = testService.findById(test);
 		log.info(test.getName());
+	}
+	
+	@Test
+	public void testCount(){
+		int count = testService.findCount(null, null);
+		log.info("Test表数据量为:" + count);
+	}
+	
+	@Test
+	public void testInsert(){
+		com.menjin.model.Test entity = new com.menjin.model.Test();
+		entity.setName("Jack");
+		int insertCount = testService.add(entity);
+		log.info("插入数据量为:" + insertCount);
+	}
+	
+	@Test 
+	public void testUpdate(){
+		com.menjin.model.Test entity = new com.menjin.model.Test();
+		entity.setTid(4);
+		entity = testService.findById(entity);
+		log.info(entity.getName());
+		entity.setName("Lin");
+		int updateCount = testService.modifyById(entity);
+		log.info("更新数据量为:" + updateCount);
 	}
 }

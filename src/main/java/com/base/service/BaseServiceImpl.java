@@ -1,7 +1,11 @@
 package com.base.service;
 
+import java.util.List;
+import java.util.Map;
+
 import javax.annotation.PostConstruct;
 
+import com.base.entity.SimplePage;
 import com.base.mapper.BaseCrudMapper;
 
 /**
@@ -39,6 +43,24 @@ public abstract class BaseServiceImpl<ModelType> implements BaseService<ModelTyp
 	@Override
 	public ModelType findById(ModelType entity) {
 		return mapper.selectByPrimaryKey(entity);
+	}
+
+	@Override
+	public List<ModelType> findByPage(SimplePage page, Map<String, Object> params, String orderBy) {
+		// TODO Auto-generated method stub
+		return this.mapper.selectByPage(page, params, orderBy);
+	}
+
+	@Override
+	public List<ModelType> findByParams(ModelType entity, Map<String, Object> paramMap) {
+		// TODO Auto-generated method stub
+		return this.mapper.selectByParams(entity, paramMap);
+	}
+
+	@Override
+	public int findCount(ModelType entity, Map<String, Object> paramMap) {
+		// TODO Auto-generated method stub
+		return this.mapper.selectCount(entity, paramMap);
 	}
 
 }

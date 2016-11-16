@@ -1,5 +1,12 @@
 package com.base.mapper;
 
+import java.util.List;
+import java.util.Map;
+
+import org.apache.ibatis.annotations.Param;
+
+import com.base.entity.SimplePage;
+
 /**
  * Mapper的基础接口
  * @author wille
@@ -35,4 +42,37 @@ public abstract interface BaseCrudMapper<ModelType> {
 	 * @return
 	 */
 	public abstract int updateByPrimaryKey(ModelType entity);
+	
+	/**
+	 * 查询对象集合,不分页方法(建议限制条数)
+	 * @param entity 对象信息
+	 * @param paramMap 其他参数集合
+	 * @return
+	 */
+	public abstract List<ModelType> selectByParams(
+			@Param("model") ModelType entity,
+			@Param("params") Map<String, Object> paramMap);
+	
+	/**
+	 * 获取条数
+	 * @param entity 对象信息, (不一定要用到,可以传空)
+	 * @param paramMap 其他参数, (不一定要用到,可以传空)
+	 * @return
+	 */
+	public abstract int selectCount(
+			@Param("model") ModelType entity,
+			@Param("params") Map<String, Object> paramMap);
+	
+	/**
+	 * 查询对象集合,分页方法
+	 * @param page 分页对象
+	 * @param paramMap 其他参数
+	 * @param orderBy  排序
+	 * @return
+	 */
+	public abstract List<ModelType> selectByPage(
+			@Param("page") SimplePage page,
+			@Param("params") Map<String, Object> paramMap,
+			@Param("orderByField") String orderBy);
+	
 }
