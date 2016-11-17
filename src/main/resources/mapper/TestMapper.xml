@@ -6,7 +6,7 @@
 <!-- SQL 关键字请使用大写字母, 表名, 属性名用小写 -->
 <mapper namespace="com.menjin.mapper.TestMapper">
 	<resultMap type="com.menjin.model.Test" id="resultMap">
-		<id column="t_id" property="tid" jdbcType="INTEGER" />
+		<id column="t_id" property="tid" jdbcType="INTEGER" javaType="java.lang.Integer"/>
 		<result column="name" property="name" jdbcType="VARCHAR" />
 	</resultMap>
 	<sql id="columnList" >
@@ -33,7 +33,7 @@
 		UPDATE table_test SET name = #{name} WHERE t_id=#{tid}
 	</update>
 
-	<select id="selectByPrimaryKey" parameterType="com.menjin.model.Test" resultType="com.menjin.model.Test">
+	<select id="selectByPrimaryKey" parameterType="com.menjin.model.Test"  resultMap="resultMap">
 		SELECT 
 		<include refid="columnList" /> 
 		FROM table_test WHERE t_id=#{tid}
@@ -44,7 +44,26 @@
 	</delete>
 	
 	<select id="selectCount" resultType="java.lang.Integer" >
-	    SELECT COUNT(1) FROM table_test WHERE 1=1 
+	    SELECT COUNT(1) FROM table_test WHERE 1 = 1 
 	    <include refid="condition" />
+	</select>
+	
+	<select id="selectByPage" resultMap="resultMap">
+	    SELECT 
+		t1.t_id, t1.name
+		FROM table_test t1
+		INNER JOIN 
+		(
+		    SELECT t_id FROM table_test WHERE 1 = 1
+		    <include refid="condition" />
+		    <if test="null!=page and null!=page.pageSize">
+		      LIMIT #{page.startRowNum}, #{page.pageSize}
+		    </if>
+		) AS t2
+		ON t1.t_id = t2.t_id
+		WHERE 1 = 1
+		<if test="null != orderByField">
+		    ORDER BY #{orderByField}
+		</if>
 	</select>
 </mapper>  

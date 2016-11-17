@@ -1,5 +1,8 @@
 package com.base.service;
 
+import java.util.List;
+import java.util.Map;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
@@ -10,6 +13,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.base.entity.SimplePage;
 import com.menjin.service.TestService;
 
 /**
@@ -33,7 +37,7 @@ public class ServiceTestCase {
 	@Test
 	public void testDBConnection(){
 		com.menjin.model.Test test = new com.menjin.model.Test();
-		test.setTid(1);
+		test.setTid(4);
 		test = testService.findById(test);
 		log.info(test.getName());
 	}
@@ -48,18 +52,36 @@ public class ServiceTestCase {
 	public void testInsert(){
 		com.menjin.model.Test entity = new com.menjin.model.Test();
 		entity.setName("Jack");
-		int insertCount = testService.add(entity);
-		log.info("插入数据量为:" + insertCount);
+		int insertTotalCount = 0;
+		for (int i = 0; i < 1000; i++){
+			entity.setName("Wille" + i);
+			int insertCount = testService.add(entity);
+			if (insertCount > 0) {
+				insertTotalCount++;
+			}
+		}
+		log.info("插入数据量为:" + insertTotalCount);
 	}
 	
 	@Test 
 	public void testUpdate(){
-		com.menjin.model.Test entity = new com.menjin.model.Test();
-		entity.setTid(4);
-		entity = testService.findById(entity);
-		log.info(entity.getName());
-		entity.setName("Lin");
-		int updateCount = testService.modifyById(entity);
+		com.menjin.model.Test test = new com.menjin.model.Test();
+		test.setTid(4);
+		test = testService.findById(test);
+		log.info(test.getName());
+		test.setName("Lin");
+		int updateCount = testService.modifyById(test);
 		log.info("更新数据量为:" + updateCount);
+	}
+	
+	@Test
+	public void testFindByPage(){
+		int count = testService.findCount(null, null);
+		SimplePage page = new SimplePage(1, 20, count);
+		Map<String, Object> params = null;
+		String orderBy = null;
+		List<com.menjin.model.Test> testList = testService.findByPage(page, params, orderBy);
+		log.info("Page size: " + testList.size());
+		log.info("Content: " + testList.toString());
 	}
 }
