@@ -125,10 +125,10 @@ public class SystemLogAspect {
 			log.setRunTime(nowTime - startTime);
 			// 保存数据库
 			// logService.add(log);
-			logger.info("=====前置通知结束=====");
+			logger.info("=====后置通知结束=====");
 		} catch (Exception e) {
 			// 记录本地异常日志
-			logger.error("==前置通知异常==");
+			logger.error("==后置通知异常==");
 			logger.error("异常信息:", e);
 		}
 	}
