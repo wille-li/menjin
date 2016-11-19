@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE tiles-definitions PUBLIC "-//Apache Software Foundation//DTD Tiles Configuration 3.0//EN" "http://tiles.apache.org/dtds/tiles-config_3_0.dtd">
+<tiles-definitions>
+	<!-- Base Definition -->
+	<definition name="base-definition" template="/WEB-INF/views/layouts/defaultLayout.jsp">
+		<put-attribute name="title" value="" />
+		<put-attribute name="header" value="/WEB-INF/views/template/header.jsp" />
+		<put-attribute name="menu" value="/WEB-INF/views/template/menu.jsp" />
+		<put-attribute name="body" value="" />
+		<put-attribute name="footer" value="/WEB-INF/views/template/footer.jsp" />
+	</definition>
+
+	<!-- {1} 是第一个星号的值,对应文件夹,{1}_{2}组合成文件名 -->
+	<definition name="*.*ist" extends="base-definition">
+		<put-attribute name="body" value="/WEB-INF/views/{1}/{1}_{2}ist.jsp" />
+	</definition>
+	
+		<definition name="test" extends="base-definition">
+		<put-attribute name="body" value="/WEB-INF/views/index.jsp" />
+	</definition>
+
+
+</tiles-definitions>
