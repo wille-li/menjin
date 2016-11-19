@@ -3,34 +3,87 @@ package com.base.entity;
 import java.io.Serializable;
 import java.util.Date;
 
+/**
+ * Log 对象类
+ * @author Wille
+ *
+ */
 public class LogInfo implements Serializable{
 	
 	/**
 	 * 序列号
 	 */
 	private static final long serialVersionUID = -1263073076153037525L;
+	
+	/**
+	 * Log id
+	 */
+	private Integer id;
 
+	/**
+	 * log描述
+	 */
 	private String description;
 	
+	/**
+	 * 方法名
+	 */
 	private String method;
 	
+	/**
+	 * 客户端IP
+	 */
 	private String requestIP;
 	
+	/**
+	 * 服务器IP
+	 */
 	private String serverIP;
 	
+	/**
+	 * Log类型
+	 * 1:控制器log
+	 */
 	private String logType;
 	
+	/**
+	 * 错误代号
+	 */
 	private String exceptionCode;
 	
+	/**
+	 * 错误描述
+	 */
 	private String exceptionDetail;
 	
+	/**
+	 * 参数字符串
+	 */
 	private String params;
 	
+	/**
+	 * 运行时间
+	 */
 	private Long runTime;
 
+	/**
+	 * 创建者
+	 */
 	private String createBy;
 	
+	/**
+	 * 创建时间
+	 */
 	private Date createDate;
+	
+
+	public Integer getId() {
+		return id;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
+	}
 
 	public String getDescription() {
 		return description;
@@ -106,8 +159,8 @@ public class LogInfo implements Serializable{
 
 	public String getCreateBy() {
 		return createBy;
+		
 	}
-
 	public void setCreateBy(String createBy) {
 		this.createBy = createBy;
 	}
@@ -122,10 +175,10 @@ public class LogInfo implements Serializable{
 
 	@Override
 	public String toString() {
-		return "LogInfo [description=" + description + ", method=" + method + ", requestIP=" + requestIP + ", serverIP="
-				+ serverIP + ", logType=" + logType + ", exceptionCode=" + exceptionCode + ", exceptionDetail="
-				+ exceptionDetail + ", params=" + params + ", runTime=" + runTime + ", createBy=" + createBy
-				+ ", createDate=" + createDate + "]";
+		return "LogInfo [id=" + id + ", description=" + description + ", method=" + method + ", requestIP=" + requestIP
+				+ ", serverIP=" + serverIP + ", logType=" + logType + ", exceptionCode=" + exceptionCode
+				+ ", exceptionDetail=" + exceptionDetail + ", params=" + params + ", runTime=" + runTime + ", createBy="
+				+ createBy + ", createDate=" + createDate + "]";
 	}
 
 }

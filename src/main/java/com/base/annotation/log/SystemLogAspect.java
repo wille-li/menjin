@@ -3,6 +3,7 @@ package com.base.annotation.log;
 import java.net.InetAddress;
 import java.util.Calendar;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
@@ -19,6 +20,7 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 import com.base.entity.LogInfo;
+import com.base.service.LogInfoService;
 
 /**
  * 系统Log 切面类
@@ -32,8 +34,8 @@ import com.base.entity.LogInfo;
 public class SystemLogAspect {
 
 	// 注入Service用于把日志保存数据库
-	// @Resource
-	// private LogService logService;
+	@Resource
+	private LogInfoService logInfoService;
 	private static final Logger logger = LoggerFactory.getLogger(SystemLogAspect.class);
 
 	private final String LOG_KEY = "logInfo";
@@ -67,7 +69,7 @@ public class SystemLogAspect {
 			// 方法路径
 			String className = joinPoint.getTarget().getClass().getName();
 			String methodName = joinPoint.getSignature().getName();
-			methodName += className;
+			methodName = className + "." + methodName + "()";
 
 			String serverIP = InetAddress.getLocalHost().getHostAddress();
 			// *========控制台输出=========*//
@@ -78,7 +80,7 @@ public class SystemLogAspect {
 			// *========数据库日志=========*//
 			LogInfo log = new LogInfo();
 			log.setMethod(methodName);
-			log.setLogType("0");
+			log.setLogType("1");
 			log.setRequestIP(ip);
 			log.setServerIP(serverIP);
 			log.setExceptionCode(null);
@@ -86,9 +88,8 @@ public class SystemLogAspect {
 			log.setParams(null);
 			log.setCreateBy(username);
 			log.setCreateDate(Calendar.getInstance().getTime());
+			// 把log对象放到request里面
 			request.setAttribute(LOG_KEY, log);
-			// 保存数据库
-			// logService.add(log);
 			logger.info("=====前置通知结束=====");
 		} catch (Exception e) {
 			// 记录本地异常日志
@@ -124,7 +125,7 @@ public class SystemLogAspect {
 			Long startTime = log.getCreateDate().getTime();
 			log.setRunTime(nowTime - startTime);
 			// 保存数据库
-			// logService.add(log);
+			logInfoService.add(log);
 			logger.info("=====后置通知结束=====");
 		} catch (Exception e) {
 			// 记录本地异常日志

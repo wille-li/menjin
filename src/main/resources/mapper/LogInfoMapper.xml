@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper  
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- SQL 关键字请使用大写字母, 表名, 属性名用小写 -->
+<mapper namespace="com.base.mapper.LogInfoMapper">
+	<resultMap type="com.base.entity.LogInfo" id="resultMap">
+		<id column="id" property="id" jdbcType="INTEGER" javaType="java.lang.Integer"/>
+		<result column="description" property="description" jdbcType="VARCHAR" />
+		<result column="method" property="method" jdbcType="VARCHAR" />
+		<result column="request_ip" property="requestIP" jdbcType="VARCHAR" />
+		<result column="server_ip" property="serverIP" jdbcType="VARCHAR" />
+		<result column="log_type" property="logType" jdbcType="VARCHAR" />
+		<result column="exception_code" property="exceptionCode" jdbcType="VARCHAR" />
+		<result column="exception_Detail" property="exceptionDetail" jdbcType="VARCHAR" />
+		<result column="params" property="params" jdbcType="VARCHAR" />
+		<result column="run_time" property="runTime" jdbcType="INTEGER" javaType="java.lang.Long"/>
+		<result column="create_by" property="createBy" jdbcType="VARCHAR" />
+		<result column="create_date" property="createDate" jdbcType="TIMESTAMP" />
+	</resultMap>
+	<sql id="insertList" >
+	    description, method, request_ip, server_ip, log_type,
+	    exception_code, exception_detail, params, run_time, create_by,
+	    create_date
+	</sql>
+	
+	<insert id="insert" parameterType="com.base.entity.LogInfo" useGeneratedKeys="true"
+		keyColumn="id">
+		INSERT INTO t_activity_log(
+        <include refid="insertList"/>) VALUES (
+        #{description}, #{method}, #{requestIP},
+        #{serverIP}, #{logType}, #{exceptionCode},
+        #{exceptionDetail}, #{params}, #{runTime},
+        #{createBy}, #{createDate})
+	</insert>
+
+</mapper>  

@@ -17,6 +17,10 @@ public class TestController {
 	@Autowired
 	TestService testService;
 	
+	/**
+	 * 对controller方法切入log内容
+	 * @return
+	 */
 	@RequestMapping(value="/test.do")
 	@SystemControllerLog
 	public String testController(){
