@@ -1,4 +1,4 @@
-package com.menjin.model;
+package com.menjin.test.model;
 
 /**
  * 测试使用

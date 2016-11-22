@@ -4,8 +4,8 @@
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <!-- SQL 关键字请使用大写字母, 表名, 属性名用小写 -->
-<mapper namespace="com.menjin.mapper.TestMapper">
-	<resultMap type="com.menjin.model.Test" id="resultMap">
+<mapper namespace="com.menjin.test.mapper.TestMapper">
+	<resultMap type="com.menjin.test.model.Test" id="resultMap">
 		<id column="t_id" property="tid" jdbcType="INTEGER" javaType="java.lang.Integer"/>
 		<result column="name" property="name" jdbcType="VARCHAR" />
 	</resultMap>
@@ -24,22 +24,22 @@
 	    </if>
 	</sql>
 	
-	<insert id="insert" parameterType="com.menjin.model.Test" useGeneratedKeys="true"
+	<insert id="insert" parameterType="com.menjin.test.model.Test" useGeneratedKeys="true"
 		keyColumn="id">
 		INSERT INTO table_test(name) VALUES (#{name})
 	</insert>
 
-	<update id="updateByPrimaryKey" parameterType="com.menjin.model.Test">
+	<update id="updateByPrimaryKey" parameterType="com.menjin.test.model.Test">
 		UPDATE table_test SET name = #{name} WHERE t_id=#{tid}
 	</update>
 
-	<select id="selectByPrimaryKey" parameterType="com.menjin.model.Test"  resultMap="resultMap">
+	<select id="selectByPrimaryKey" parameterType="com.menjin.test.model.Test"  resultMap="resultMap">
 		SELECT 
 		<include refid="columnList" /> 
 		FROM table_test WHERE t_id=#{tid}
 	</select>
 
-	<delete id="deleteByPrimaryKey" parameterType="com.menjin.model.Test">
+	<delete id="deleteByPrimaryKey" parameterType="com.menjin.test.model.Test">
 		DELETE FROM table_test WHERE t_id=#{tid}
 	</delete>
 	

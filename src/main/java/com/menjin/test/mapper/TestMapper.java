@@ -1,7 +1,7 @@
-package com.menjin.mapper;
+package com.menjin.test.mapper;
 
 import com.base.mapper.BaseCrudMapper;
-import com.menjin.model.Test;
+import com.menjin.test.model.Test;
 
 /**
  * 测试使用

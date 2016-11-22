@@ -1,4 +1,4 @@
-package com.menjin.controller;
+package com.menjin.test.controller;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -7,7 +7,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.base.annotation.log.SystemControllerLog;
-import com.menjin.service.TestService;
+import com.menjin.test.service.TestService;
 
 @Controller
 public class TestController {

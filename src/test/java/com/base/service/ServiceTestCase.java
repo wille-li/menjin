@@ -15,7 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.base.annotation.log.SystemControllerLog;
 import com.base.entity.SimplePage;
-import com.menjin.service.TestService;
+import com.menjin.test.service.TestService;
 
 /**
  * 基础框架的测试类
@@ -37,7 +37,7 @@ public class ServiceTestCase {
 	
 	@Test
 	public void testDBConnection(){
-		com.menjin.model.Test test = new com.menjin.model.Test();
+		com.menjin.test.model.Test test = new com.menjin.test.model.Test();
 		test.setTid(4);
 		test = testService.findById(test);
 		log.info(test.getName());
@@ -52,7 +52,7 @@ public class ServiceTestCase {
 	
 	@Test
 	public void testInsert(){
-		com.menjin.model.Test entity = new com.menjin.model.Test();
+		com.menjin.test.model.Test entity = new com.menjin.test.model.Test();
 		entity.setName("Jack");
 		int insertTotalCount = 0;
 		for (int i = 0; i < 1000; i++){
@@ -67,7 +67,7 @@ public class ServiceTestCase {
 	
 	@Test 
 	public void testUpdate(){
-		com.menjin.model.Test test = new com.menjin.model.Test();
+		com.menjin.test.model.Test test = new com.menjin.test.model.Test();
 		test.setTid(4);
 		test = testService.findById(test);
 		log.info(test.getName());
@@ -82,7 +82,7 @@ public class ServiceTestCase {
 		SimplePage page = new SimplePage(1, 20, count);
 		Map<String, Object> params = null;
 		String orderBy = null;
-		List<com.menjin.model.Test> testList = testService.findByPage(page, params, orderBy);
+		List<com.menjin.test.model.Test> testList = testService.findByPage(page, params, orderBy);
 		log.info("Page size: " + testList.size());
 		log.info("Content: " + testList.toString());
 	}

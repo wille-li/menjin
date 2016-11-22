@@ -11,7 +11,7 @@
 		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
 
 	<!-- 配置自动扫描的包 -->
-	<context:component-scan base-package="com.menjin.controller" />
+	<context:component-scan base-package="com.menjin.*.controller" />
 	<mvc:annotation-driven />
 	<mvc:resources mapping="/resources/**" location="/resources/" />
     <aop:aspectj-autoproxy proxy-target-class="true"/>
