@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper  
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- SQL 关键字请使用大写字母, 表名, 属性名用小写 -->
+<mapper namespace="com.menjin.user.mapper.ResourceMapper">
+	<resultMap type="com.menjin.user.model.Resource" id="resourceResultMap">
+		<id column="id" property="id" jdbcType="INTEGER" javaType="java.lang.Integer"/>
+		<result column="resource_url" property="resourceUrl" jdbcType="VARCHAR" />
+		<result column="name" property="name" jdbcType="VARCHAR" />
+		<result column="parentId" property="parentId" jdbcType="INTEGER"  javaType="java.lang.Integer"/>
+		<result column="resKey" property="resKey" jdbcType="VARCHAR" />
+		<result column="description" property="description" jdbcType="VARCHAR" />
+	</resultMap>
+	<sql id="allField" >
+	    resource_url, name, parentId, resKey, description
+	</sql>
+	
+	<insert id="insert" parameterType="com.menjin.user.model.Resource" useGeneratedKeys="true"
+		keyColumn="id">
+		INSERT INTO t_resource(
+        <include refid="allField"/>) VALUES (
+        #{resourceUrl}, #{name}, #{parentId},
+        #{resKey}, #{description})
+	</insert>
+	
+	<select id="selectByPrimaryKey" parameterType="Integer" resultMap="resourceResultMap">
+		select * from t_resource where id = #{id}
+	</select>
+	
+	<delete id="deleteByPrimaryKey" parameterType="Integer">
+		delete from t_resource  where id = #{id}
+	</delete>
+	
+	<update id="updateByPrimaryKey" parameterType="com.menjin.user.model.Resource">
+		update t_resource
+			<set>
+				<if test="resourceUrl!=null">resource_url=#{resourceUrl},</if>
+				<if test="name!=null">name=#{name},</if>
+				<if test="parentId!=null">parentId=#{parentId},</if>
+				<if test="resKey!=null">resKey=#{resKey},</if>
+				<if test="description!=null">description=#{description},</if>
+			</set>
+			where id = #{id}
+	</update>
+
+</mapper>  

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper  
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- SQL 关键字请使用大写字母, 表名, 属性名用小写 -->
+<mapper namespace="com.menjin.user.mapper.RoleMapper">
+	<resultMap type="com.menjin.user.model.Role" id="roleResultMap">
+		<id column="id" property="id" jdbcType="INTEGER" javaType="java.lang.Integer"/>
+		<result column="name" property="name" jdbcType="VARCHAR" />
+		<result column="description" property="description" jdbcType="VARCHAR" />
+	</resultMap>
+	<sql id="allFiled" >
+	    name, description
+	</sql>
+	
+	<insert id="insert" parameterType="com.menjin.user.model.Role" useGeneratedKeys="true"
+		keyColumn="id">
+		INSERT INTO t_role(
+        <include refid="allFiled"/>) VALUES (
+        #{name}, #{description})
+	</insert>
+	
+	<select id="selectByPrimaryKey" parameterType="Integer" resultMap="roleResultMap">
+		select * from t_role where id = #{id}
+	</select>
+	
+	<delete id="deleteByPrimaryKey" parameterType="Integer">
+		delete from t_role  where id = #{id}
+	</delete>
+	
+	<update id="updateByPrimaryKey" parameterType="com.menjin.user.model.Role">
+		update t_role
+			<set>
+				<if test="name!=null">name=#{name},</if>
+				<if test="description!=null">description=#{description},</if>
+			</set>
+			where id = #{id}
+	</update>
+	
+</mapper>  

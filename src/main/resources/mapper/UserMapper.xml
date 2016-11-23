@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper  
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- SQL 关键字请使用大写字母, 表名, 属性名用小写 -->
+<mapper namespace="com.menjin.user.mapper.UserMapper">
+	<resultMap type="com.menjin.user.model.User" id="userResultMap">
+		<id column="id" property="id" jdbcType="INTEGER" javaType="java.lang.Integer"/>
+		<result column="username" property="username" jdbcType="VARCHAR" />
+		<result column="password" property="password" jdbcType="VARCHAR" />
+		<result column="customer_type" property="customerType" jdbcType="VARCHAR" />
+		<result column="name" property="name" jdbcType="VARCHAR" />
+		<result column="birthday" property="birthday" jdbcType="DATE" />
+		<result column="id _card_number" property="idCardNumber" jdbcType="VARCHAR" />
+		<result column="email" property="email" jdbcType="VARCHAR" />
+		<result column="phone" property="phone" jdbcType="VARCHAR" />
+		<result column="mobilephone" property="mobilephone" jdbcType="VARCHAR" />
+		<result column="address" property="address" jdbcType="VARCHAR" />
+		<result column="country" property="country" jdbcType="VARCHAR" />
+		<result column="security_question" property="securityQuestion" jdbcType="VARCHAR" />
+		<result column="security_answer" property="securityAnswer" jdbcType="VARCHAR" />
+		<result column="created_date" property="createdDate" jdbcType="TIMESTAMP" />
+		<result column="created_by" property="createdBy" jdbcType="VARCHAR" />
+		<result column="modified_date" property="modifiedDate" jdbcType="TIMESTAMP" />
+		<result column="modified_by" property="modifiedBy" jdbcType="VARCHAR" />
+		<result column="status" property="status" jdbcType="VARCHAR" />
+		<result column="delete_status" property="deleteStatus" jdbcType="VARCHAR" />
+		<result column="expired_date" property="expiredDate" jdbcType="TIMESTAMP" />
+	</resultMap>
+	
+	<sql id="allField" >
+	    username, password, customer_type, name, birthday,
+	    id _card_number, email, phone, mobilephone, address,
+	    country,security_question,security_answer,created_date,created_by,
+	   modified_date,modified_by,status,delete_status,expired_date
+	</sql>
+	
+	<insert id="insert" parameterType="com.menjin.user.model.User" useGeneratedKeys="true"
+		keyColumn="id">
+		INSERT INTO t_user(
+        <include refid="allField"/>) VALUES (
+        #{username}, #{password}, #{customerType},#{name},
+        #{birthday}, #{idCardNumber},#{email},#{phone},
+        #{mobilephone}, #{address}, #{country},#{securityQuestion},
+        #{securityAnswer}, #{createdDate},#{createdBy},#{modifiedDate},
+        #{modifiedBy},#{status},#{deleteStatus},#{expiredDate})
+	</insert>
+	
+	<select id="selectByPrimaryKey" parameterType="Integer" resultMap="userResultMap">
+		select * from t_user where id = #{id}
+	</select>
+	
+	<delete id="deleteByPrimaryKey" parameterType="Integer">
+		delete from t_user  where id = #{id}
+	</delete>
+	
+	<!-- username,created_date,created_by不能修改，应该是一旦插入到数据库就不能更改的 -->
+	<update id="updateByPrimaryKey" parameterType="com.menjin.user.model.User">
+		update t_user
+			<set>
+				<if test="password!=null">password=#{password},</if>
+				<if test="customerType!=null">customer_type=#{customerType},</if>
+				<if test="name!=null">name=#{name},</if>
+				<if test="birthday!=null">birthday=#{birthday},</if>
+				<if test="idCardNumber!=null">id _card_number=#{idCardNumber},</if>
+				<if test="email!=null">email=#{email},</if>
+				<if test="phone!=null">phone=#{phone},</if>
+				<if test="mobilephone!=null">mobilephone=#{mobilephone},</if>
+				<if test="address!=null">address=#{address},</if>
+				<if test="country!=null">country=#{country},</if>
+				<if test="securityQuestion!=null">security_question=#{securityQuestion},</if>
+				<if test="securityAnswer!=null">security_answer=#{securityAnswer},</if>
+				<if test="modifiedDate!=null">modified_date=#{modifiedDate},</if>
+				<if test="modifiedBy!=null">modified_by=#{modifiedBy},</if>
+				<if test="status!=null">status=#{status},</if>
+				<if test="deleteStatus!=null">delete_status=#{deleteStatus},</if>
+				<if test="expiredDate!=null">expired_date=#{expiredDate},</if>
+			</set>
+			where id = #{id}
+	</update>
+
+</mapper>  
