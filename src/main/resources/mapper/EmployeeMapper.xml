@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper  
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- SQL 关键字请使用大写字母, 表名, 属性名用小写 -->
+<mapper namespace="com.menjin.company.mapper.EmployeeMapper">
+    <!-- 返回集带上部门，公司信息。用于根据员工信息找出员工所属公司部门 -->
+	<resultMap type="com.menjin.company.model.Employee" id="resultMap">
+		<id column="id" property="id" jdbcType="INTEGER" javaType="java.lang.Integer"/>
+		<result column="employee_no" property="employeeNo" jdbcType="VARCHAR" />
+		<result column="employee_name" property="employeeName" jdbcType="VARCHAR" />
+		<result column="employee_sex" property="employeeSex" jdbcType="VARCHAR" />
+		<result column="email" property="email" jdbcType="VARCHAR" />
+		<result column="mobile" property="mobile" jdbcType="VARCHAR" />
+		<result column="id_card_type" property="IdCardType" jdbcType="VARCHAR" />
+		<result column="id_card_num" property="IdCardNum" jdbcType="VARCHAR" />
+		<result column="created_by" property="createBy" jdbcType="VARCHAR" />
+		<result column="modified_date" property="modifiedDate" jdbcType="TIMESTAMP" />
+		<association property="department" column="department_id" javaType="com.menjin.company.model.Department">  
+            <id column="id" property="id" jdbcType="INTEGER" javaType="java.lang.Integer"/>
+		    <result column="department_name" property="departmentName" jdbcType="VARCHAR" />
+		    <result column="department_header" property="departmentHeader" jdbcType="VARCHAR" />
+		    <result column="department_phone" property="departmentPhone" jdbcType="VARCHAR" />
+		    <result column="created_time" property="createTime" jdbcType="TIMESTAMP" />
+		    <result column="created_by" property="createBy" jdbcType="VARCHAR" />
+		    <result column="modified_date" property="modifiedDate" jdbcType="TIMESTAMP" />
+		    <association property="company" column="company_id" javaType="com.menjin.company.model.Company">  
+                 <id column="id" property="id" jdbcType="INTEGER" javaType="java.lang.Integer"/>
+		         <result column="company_name" property="companyName" jdbcType="VARCHAR" />
+		         <result column="company_addr" property="companyAddress" jdbcType="VARCHAR" />
+		         <result column="company_mobile" property="companyPhone" jdbcType="VARCHAR" />
+		         <result column="created_time" property="createTime" jdbcType="TIMESTAMP" />
+		         <result column="created_by" property="createBy" jdbcType="VARCHAR" />
+		         <result column="modified_date" property="modifiedDate" jdbcType="TIMESTAMP" />
+            </association>
+        </association> 
+	</resultMap>
+	
+    <resultMap type="com.menjin.company.model.Employee" id="baseResultMap">
+		<id column="id" property="id" jdbcType="INTEGER" javaType="java.lang.Integer"/>
+		<result column="employee_no" property="employeeNo" jdbcType="VARCHAR" />
+		<result column="employee_name" property="employeeName" jdbcType="VARCHAR" />
+		<result column="employee_sex" property="employeeSex" jdbcType="VARCHAR" />
+		<result column="email" property="email" jdbcType="VARCHAR" />
+		<result column="mobile" property="mobile" jdbcType="VARCHAR" />
+		<result column="id_card_type" property="IdCardType" jdbcType="VARCHAR" />
+		<result column="id_card_num" property="IdCardNum" jdbcType="VARCHAR" />
+		<result column="created_by" property="createBy" jdbcType="VARCHAR" />
+		<result column="modified_date" property="modifiedDate" jdbcType="TIMESTAMP" />
+	</resultMap>
+	
+	<sql id="insertList" >
+	    employee_no,employee_name,employee_sex,email,
+	    mobile,id_card_type,id_card_num,department_id,
+	    created_by,modified_date
+	</sql>
+	
+	<insert id="insert" parameterType="com.menjin.company.model.Employee" useGeneratedKeys="true"
+		keyColumn="id">
+		INSERT INTO t_employee(<include refid="insertList"/>) VALUES (
+		#{employeeNo}, #{employeeName}, #{employeeSex},#{email},
+		#{mobile}, #{IdCardType},#{IdCardNum},#{department.id},
+		#{createBy}, #{modifiedDate})
+	</insert>
+	
+	<update id="updateByPrimaryKey" parameterType="com.menjin.company.model.Employee">
+		UPDATE t_employee SET employee_no = #{employeeNo},employee_name = #{employeeName},
+		employee_sex = #{employeeSex}, email = #{email},mobile = #{mobile},
+		id_card_type = #{IdCardType},id_card_num = #{IdCardNum},department_id = #{department.id},
+		created_by = #{createBy},modified_date = #{modifiedDate} 
+		WHERE id=#{id}
+	</update>
+	
+	<!-- <select id="selectByPrimaryKey" parameterType="com.menjin.company.model.Employee"  resultMap="resultMap">
+		SELECT * FROM t_employee e,t_company c,t_department d
+		WHERE e.department_id = d.id AND d.company_id = c.id AND e.id = #{id}
+	</select> -->
+	<select id="selectByPrimaryKey" parameterType="com.menjin.company.model.Employee"  resultMap="baseResultMap">
+		SELECT * FROM t_employee e
+		WHERE  e.id = #{id}
+	</select> 
+	
+	<select id="getEmployeesByDepartmentId" resultMap="baseResultMap">
+		SELECT * FROM t_employee 
+		WHERE  department_id = #{departmentId}
+	</select> 
+	
+	<select id="getEmployeesByCompanyId" resultMap="resultMap">
+		SELECT * FROM t_employee e ,t_department d ,t_company c
+		WHERE e.department_id = d.id AND d.company_Id = c.id AND  c.id = #{companyId}
+	</select> 
+	
+	
+	<delete id="deleteByPrimaryKey" parameterType="com.menjin.company.model.Employee">
+		DELETE FROM t_employee WHERE id=#{id}
+	</delete>
+	
+	<select id="selectCount" resultType="java.lang.Integer" >
+	    SELECT COUNT(1) FROM t_employee WHERE 1 = 1
+	</select>
+	
+	<select id="selectByPage" resultMap="resultMap">
+	    SELECT 
+		t1.*
+		FROM t_employee t1
+		INNER JOIN 
+		(
+		    SELECT id FROM t_employee WHERE 1 = 1
+		    <if test="null!=page and null!=page.pageSize">
+		      LIMIT #{page.startRowNum}, #{page.pageSize}
+		    </if>
+		) AS t2
+		ON t1.id = t2.id
+		WHERE 1 = 1
+		<if test="null != orderByField">
+		    ORDER BY #{orderByField}
+		</if>
+	</select>
+	
+</mapper>  

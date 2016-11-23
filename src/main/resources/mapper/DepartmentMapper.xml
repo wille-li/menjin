@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper  
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- SQL 关键字请使用大写字母, 表名, 属性名用小写 -->
+<mapper namespace="com.menjin.company.mapper.DepartmentMapper">
+	<resultMap type="com.menjin.company.model.Department" id="resultMap">
+		<id column="id" property="id" jdbcType="INTEGER" javaType="java.lang.Integer"/>
+		<result column="department_name" property="departmentName" jdbcType="VARCHAR" />
+		<result column="department_header" property="departmentHeader" jdbcType="VARCHAR" />
+		<result column="department_phone" property="departmentPhone" jdbcType="VARCHAR" />
+		<result column="created_time" property="createTime" jdbcType="TIMESTAMP" />
+		<result column="created_by" property="createBy" jdbcType="VARCHAR" />
+		<result column="modified_date" property="modifiedDate" jdbcType="TIMESTAMP" />
+		<!-- <association column="company_id" property="company" javaType="com.menjin.model.Company"/> -->
+		<association property="company" column="company_id" javaType="com.menjin.company.model.Company">  
+            <id column="id" property="id" jdbcType="INTEGER" javaType="java.lang.Integer"/>
+		    <result column="company_name" property="companyName" jdbcType="VARCHAR" />
+		    <result column="company_addr" property="companyAddress" jdbcType="VARCHAR" />
+		    <result column="company_mobile" property="companyPhone" jdbcType="VARCHAR" />
+		    <result column="created_time" property="createTime" jdbcType="TIMESTAMP" />
+		    <result column="created_by" property="createBy" jdbcType="VARCHAR" />
+		    <result column="modified_date" property="modifiedDate" jdbcType="TIMESTAMP" />
+        </association> 
+	</resultMap>
+	<sql id="insertList" >
+	    company_id,department_name,department_header,department_phone,created_time,
+	    created_by,modified_date
+	</sql>
+	
+	<sql id="columnList" >
+	    id,company_id,department_name,department_header,department_phone,created_time,
+	    created_by,modified_date
+	</sql>
+	
+	
+	<insert id="insert" parameterType="com.menjin.company.model.Department" useGeneratedKeys="true" keyColumn="id">  
+        INSERT INTO t_department(<include refid="insertList"/>) VALUES(
+         #{company.id},#{departmentName}, #{departmentHeader},#{departmentPhone},
+		#{createTime}, #{createBy}, #{modifiedDate})  
+    </insert>
+    
+    <select id="selectCount" resultType="java.lang.Integer" >
+	    SELECT COUNT(1) FROM t_department WHERE 1 = 1 
+	</select> 
+	
+	<select id="selectByPrimaryKey" parameterType="com.menjin.company.model.Department"  resultMap="resultMap">
+		SELECT * FROM t_company c,t_department d WHERE c.id = d.company_id AND d.id=#{id}
+	</select>
+	
+	<select id="getDepartmentsByCompanyId" resultMap="resultMap">
+	    SELECT * FROM t_department WHERE company_id = #{companyId}
+	</select>
+	
+	<update id="updateByPrimaryKey" parameterType="com.menjin.company.model.Department">
+		UPDATE t_department SET department_name = #{departmentName},department_header = #{departmentHeader},
+		department_phone = #{departmentPhone},company_id = #{company.id}, created_time = #{createTime}, 
+		created_by = #{createBy},modified_date = #{modifiedDate} 
+		WHERE id=#{id}
+	</update>
+	
+	<delete id="deleteByPrimaryKey" parameterType="com.menjin.company.model.Department">
+		DELETE FROM t_department WHERE id=#{id}
+	</delete>
+	
+	<select id="selectByPage" resultMap="resultMap">
+	    SELECT 
+		t1.*
+		FROM t_department t1
+		INNER JOIN 
+		(
+		    SELECT id FROM t_department WHERE 1 = 1
+		    <if test="null!=page and null!=page.pageSize">
+		      LIMIT #{page.startRowNum}, #{page.pageSize}
+		    </if>
+		) AS t2
+		ON t1.id = t2.id
+		WHERE 1 = 1
+		<if test="null != orderByField">
+		    ORDER BY #{orderByField}
+		</if>
+	</select>
+	
+</mapper>  
