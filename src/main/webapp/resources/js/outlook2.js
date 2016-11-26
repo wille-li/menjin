@@ -4,8 +4,8 @@
 var _menus = {"menus":[
 						{"menuid":"1","icon":"icon-role","menuname":"权限管理",
 							"menus":[
-									{"menuid":"12","menuname":"员工管理","icon":"icon-add","url":"http://blog.csdn.net/chinahuyong/article/details/11926719"},
-									{"menuid":"13","menuname":"用户管理","icon":"icon-users","url":"https://www.baidu.com/"},
+									{"menuid":"12","menuname":"员工管理","icon":"icon-add","url":"http://localhost:8080/MenJin/company.do"},
+									{"menuid":"13","menuname":"用户管理","icon":"icon-users","url":"./department.do"},
 									{"menuid":"14","menuname":"角色管理","icon":"icon-role","url":"https://www.baidu.com/"},
 									{"menuid":"15","menuname":"权限管理","icon":"icon-set","url":"https://www.baidu.com/"},
 									{"menuid":"16","menuname":"公司管理","icon":"icon-log","url":"demo1.html"}
