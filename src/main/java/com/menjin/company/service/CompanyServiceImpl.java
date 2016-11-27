@@ -1,5 +1,7 @@
 package com.menjin.company.service;
 
+import java.util.List;
+
 import javax.annotation.Resource;
 
 import org.springframework.stereotype.Service;
@@ -23,5 +25,10 @@ public class CompanyServiceImpl extends BaseServiceImpl<Company> implements Comp
 	public BaseCrudMapper<Company> init() {
 		return companyMapper;
 	}
-	
+
+	@Override
+	public List<Company> selectAllAndDepartment() {
+		return companyMapper.selectAllAndDepartment();
+	}
+
 }

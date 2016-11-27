@@ -1,6 +1,7 @@
 package com.menjin.company.model;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * 
@@ -10,27 +11,29 @@ import java.util.Date;
 public class Company {
 
 	private Integer id;
-	
+
 	/**
 	 * 公司名称
 	 */
 	private String companyName;
-	
+
 	/**
 	 * 公司地址，楼层
 	 */
 	private String companyAddress;
-	
+
 	/**
-	 *公司电话 
+	 * 公司电话
 	 */
 	private String companyPhone;
-	
+
 	private Date createTime;
-	
+
 	private String createBy;
-	
+
 	private Date modifiedDate;
+
+	private List<Department> departments;
 
 	public Integer getId() {
 		return id;
@@ -80,7 +83,6 @@ public class Company {
 		this.createBy = createBy;
 	}
 
-
 	public Date getModifiedDate() {
 		return modifiedDate;
 	}
@@ -89,12 +91,21 @@ public class Company {
 		this.modifiedDate = modifiedDate;
 	}
 
+	public List<Department> getDepartments() {
+		return departments;
+	}
+
+	public void setDepartments(List<Department> departments) {
+		this.departments = departments;
+	}
+
 	@Override
 	public String toString() {
 		return "Company [id=" + id + ", companyName=" + companyName
 				+ ", companyAddress=" + companyAddress + ", companyPhone="
 				+ companyPhone + ", createTime=" + createTime + ", createBy="
-				+ createBy + ", modifiedDate=" + modifiedDate + "]";
+				+ createBy + ", modifiedDate=" + modifiedDate
+				+ ", departments=" + departments + "]";
 	}
 
 }

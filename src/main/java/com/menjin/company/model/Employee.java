@@ -119,6 +119,7 @@ public class Employee {
 		IdCardType = idCardType;
 	}
 
+
 	public String getIdCardNum() {
 		return IdCardNum;
 	}
@@ -149,7 +150,7 @@ public class Employee {
 				+ ", employeeNo=" + employeeNo + ", employeeName="
 				+ employeeName + ", employeeSex=" + employeeSex + ", email="
 				+ email + ", mobile=" + mobile + ", IdCardType=" + IdCardType
-				+ ", IdCardNum=" + IdCardNum + ", createBy=" + createBy
+				+ ", idCardNum=" + IdCardNum + ", createBy=" + createBy
 				+ ", modifiedDate=" + modifiedDate + "]";
 	}
 
