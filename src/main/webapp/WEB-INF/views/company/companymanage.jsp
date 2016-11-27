@@ -24,8 +24,8 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 			<th field="companyAddress"  width="100">公司楼层</th>  
 			<th field="companyPhone"  width="150">公司联系电话</th>  
 			<th field="createBy" width="100">记录创建人</th>  
-			<th field="createTime" width="150">记录创建时间</th>  
-			<th field=modifiedDate width="150">记录修改时间</th>  
+			<th field="createTime" width="150" formatter="formatDatebox">记录创建时间</th>  
+			<th field=modifiedDate width="150" formatter="formatDatebox">记录修改时间</th>  
 		</tr>  
 	</thead>  
 </table>

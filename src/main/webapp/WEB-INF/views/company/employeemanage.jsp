@@ -33,8 +33,8 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 			       <th field="mobile"  width="80">联系电话</th>  
 			       <th field="idCardNum"  width="80">证件号码</th>  
 			       <th field="createBy" width="80">记录创建人</th>  
-			       <th field="createTime" width="80">记录创建时间</th>  
-			       <th field="modifiedDate" width="80">记录修改时间</th> 
+			       <th field="createTime" width="80" formatter="formatDatebox">记录创建时间</th>  
+			       <th field="modifiedDate" width="80" formatter="formatDatebox">记录修改时间</th> 
 		           </tr>  
 	             </thead>  
               </table>
