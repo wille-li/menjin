@@ -38,3 +38,49 @@ a:hover{ color:Red; text-decoration:underline;}
 .icon-database{ background-position:-20px -140px;}
 .icon-expand{ background:url('/images/coll2.gif') no-repeat;}
 .icon-collapse{ background:url('/images/coll3.gif') no-repeat;}
+
+.body-tab{overflow-y: hidden}
+.no-script{position:absolute; z-index:100000; height:2046px;top:0px;left:0px; width:100%; background:white; text-align:center;}
+.header-tab {
+	overflow: hidden;
+	height: 60px;
+	background: url(../images/layout-browser-hd-bg.gif) #7f99be repeat-x center 50%;
+	line-height: 45px;
+	color: #fff;
+	font-family: Verdana, 微软雅黑, 黑体
+}
+.footer-tab{
+	height: 30px; 
+	background: #D2E0F2; 
+}
+.menu-tab{
+	width:180px;
+}
+.body-tab{
+	background: #eee; 
+	overflow-y:hidden;
+}
+
+.open-window{
+	width: 300px; 
+	height: 150px; 
+	padding: 5px;
+    background: #fafafa;
+}
+
+.open-window-content{
+	padding: 10px; 
+	background: #fff; 
+	border: 1px solid #ccc;
+}
+
+.open-window-button{
+	text-align: right; 
+	height: 30px; 
+	line-height: 30px;
+}
+
+.ad-banner{
+	width:100%;
+	text-align: center;
+}
