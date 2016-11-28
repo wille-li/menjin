@@ -36,7 +36,7 @@ public class PhotoInfo implements Serializable {
 	private Long size;
 	
 	/**
-	 * 图片属于哪个用户
+	 * 图片属于哪个访客
 	 */
 	private Integer uid;
 	

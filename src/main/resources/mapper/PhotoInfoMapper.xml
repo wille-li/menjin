@@ -12,63 +12,16 @@
 		<result column="size" property="size" jdbcType="BLOB" javaType="java.lang.Long" />
 		<result column="uid" property="uid" jdbcType="INTEGER" javaType="java.lang.Integer"/>
 		<result column="create_by" property="createBy" jdbcType="VARCHAR" />
-		<result column="create_date" property="createDate" jdbcType="VARCHAR" />
+		<result column="create_date" property="createDate" jdbcType="TIMESTAMP" />
 	</resultMap>
 	<sql id="columnList" >
-	    t_id, name
+	    id, name, path, size, uid, create_by, create_date
 	</sql>
 	
-	<sql id="condition">
-	    <if test="null!=params" >
-	        <if test="null!=params.queryCondition and ''!=params.queryCondition" >
-	            ${params.queryCondition}
-	        </if>
-	        <if test="null!=params.name and ''!=params.name" >
-	            AND name = '${params.name}'
-	        </if>
-	    </if>
-	</sql>
-	
-	<insert id="insert" parameterType="com.menjin.test.model.Test" useGeneratedKeys="true"
+	<insert id="insert" parameterType="com.menjin.photo.model.PhotoInfo" useGeneratedKeys="true"
 		keyColumn="id">
-		INSERT INTO table_test(name) VALUES (#{name})
+		INSERT INTO t_photo(name, path, size, uid, create_by, create_date) 
+		VALUES (#{name}, #{path}, #{size}, #{uid}, #{createBy}, #{createDate})
 	</insert>
-
-	<update id="updateByPrimaryKey" parameterType="com.menjin.test.model.Test">
-		UPDATE table_test SET name = #{name} WHERE t_id=#{tid}
-	</update>
-
-	<select id="selectByPrimaryKey" parameterType="com.menjin.test.model.Test"  resultMap="resultMap">
-		SELECT 
-		<include refid="columnList" /> 
-		FROM table_test WHERE t_id=#{tid}
-	</select>
-
-	<delete id="deleteByPrimaryKey" parameterType="com.menjin.test.model.Test">
-		DELETE FROM table_test WHERE t_id=#{tid}
-	</delete>
 	
-	<select id="selectCount" resultType="java.lang.Integer" >
-	    SELECT COUNT(1) FROM table_test WHERE 1 = 1 
-	    <include refid="condition" />
-	</select>
-	
-	<select id="selectByPage" resultMap="resultMap">
-	    SELECT 
-		t1.t_id, t1.name
-		FROM table_test t1
-		INNER JOIN 
-		(
-		    SELECT t_id FROM table_test WHERE 1 = 1
-		    <include refid="condition" />
-		    <if test="null!=page and null!=page.pageSize">
-		      LIMIT #{page.startRowNum}, #{page.pageSize}
-		    </if>
-		) AS t2
-		ON t1.t_id = t2.t_id
-		WHERE 1 = 1
-		<if test="null != orderByField">
-		    ORDER BY #{orderByField}
-		</if>
-	</select>
 </mapper>  

@@ -17,6 +17,7 @@
 		<mybatis.spring.version>1.3.0</mybatis.spring.version>
 		<aspectj.version>1.8.9</aspectj.version>
 		<apache.tiles.version>3.0.5</apache.tiles.version>
+		<file.upload.version>1.3.2</file.upload.version>
 	</properties>
 
 	<dependencies>
@@ -161,6 +162,11 @@
 		    <version>1.2</version>
 		</dependency>
 
+		<dependency>
+			<groupId>commons-fileupload</groupId>
+			<artifactId>commons-fileupload</artifactId>
+			<version>${file.upload.version}</version>
+		</dependency>
 	</dependencies>
 	<build>
 		<plugins>
