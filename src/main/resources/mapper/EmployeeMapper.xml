@@ -67,8 +67,7 @@
 	<update id="updateByPrimaryKey" parameterType="com.menjin.company.model.Employee">
 		UPDATE t_employee SET employee_no = #{employeeNo},employee_name = #{employeeName},
 		employee_sex = #{employeeSex}, email = #{email},mobile = #{mobile},
-		id_card_type = #{IdCardType},id_card_num = #{IdCardNum},department_id = #{department.id},
-		created_by = #{createBy},modified_date = #{modifiedDate} 
+		id_card_type = #{IdCardType},id_card_num = #{IdCardNum},modified_date = #{modifiedDate} 
 		WHERE id=#{id}
 	</update>
 	
@@ -98,6 +97,9 @@
 	
 	<select id="selectCount" resultType="java.lang.Integer" >
 	    SELECT COUNT(1) FROM t_employee WHERE 1 = 1
+	    <if test="null!=params and null!=params.departmentId">
+		         AND department_id = #{params.departmentId}
+		</if>
 	</select>
 	
 	<select id="selectByPage" resultMap="resultMap">
@@ -107,6 +109,9 @@
 		INNER JOIN 
 		(
 		    SELECT id FROM t_employee WHERE 1 = 1
+		    <if test="null!=params and null!=params.departmentId">
+		         AND department_id = #{params.departmentId}
+		    </if>
 		    <if test="null!=page and null!=page.pageSize">
 		      LIMIT #{page.startRowNum}, #{page.pageSize}
 		    </if>

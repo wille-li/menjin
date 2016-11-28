@@ -43,6 +43,9 @@
     
     <select id="selectCount" resultType="java.lang.Integer" >
 	    SELECT COUNT(1) FROM t_department WHERE 1 = 1 
+	    <if test="null!=params and null!=params.companyId">
+		         AND company_id = #{params.companyId}
+		</if>
 	</select> 
 	
 	<select id="selectByPrimaryKey" parameterType="com.menjin.company.model.Department"  resultMap="resultMap">
@@ -55,7 +58,7 @@
 	
 	<update id="updateByPrimaryKey" parameterType="com.menjin.company.model.Department">
 		UPDATE t_department SET department_name = #{departmentName},department_header = #{departmentHeader},
-		department_phone = #{departmentPhone},company_id = #{company.id}, created_time = #{createTime}, 
+		department_phone = #{departmentPhone},company_id = #{company.id}, 
 		created_by = #{createBy},modified_date = #{modifiedDate} 
 		WHERE id=#{id}
 	</update>
@@ -71,6 +74,9 @@
 		INNER JOIN 
 		(
 		    SELECT id FROM t_department WHERE 1 = 1
+		    <if test="null!=params and null!=params.companyId">
+		         AND company_id = #{params.companyId}
+		    </if>
 		    <if test="null!=page and null!=page.pageSize">
 		      LIMIT #{page.startRowNum}, #{page.pageSize}
 		    </if>
