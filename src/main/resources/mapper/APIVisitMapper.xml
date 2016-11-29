@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper  
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- SQL 关键字请使用大写字母, 表名, 属性名用小写 -->
+<mapper namespace="com.menjin.api.mapper.APIVisitMapper">
+	<resultMap type="com.menjin.api.model.APIVisit" id="resultMap">
+		<id column="id" property="id" jdbcType="INTEGER" javaType="java.lang.Integer" />
+		<result column="visitor_id" property="visitorID" jdbcType="INTEGER" />
+		<result column="employee_id" property="employeeID" jdbcType="INTEGER" />
+		<result column="appointment_time" property="appointmentTime"
+			jdbcType="TIMESTAMP" />
+		<result column="status" property="status" jdbcType="INTEGER" />
+		<result column="created_by" property="createBy" jdbcType="VARCHAR" />
+		<result column="modified_date" property="modifiedDate"
+			jdbcType="TIMESTAMP" />
+	</resultMap>
+
+
+	<sql id="insertList">
+		visitor_id,employee_id,appointment_time,status,
+		created_by,modified_date
+	</sql>
+
+	<sql id="columnList">
+		id,visitor_id,employee_id,appointment_time,status,
+		created_by,modified_date
+	</sql>
+
+
+	<insert id="insert" parameterType="com.menjin.api.model.APIVisit"
+		useGeneratedKeys="true" keyColumn="id">
+		INSERT INTO t_visit(
+		<include refid="insertList" />
+		) VALUES (
+		#{visitorID}, #{employeeID}, #{appointmentTime},
+		#{status}, #{createBy}, #{modifiedDate})
+	</insert>
+
+	<select id="selectByPrimaryKey" parameterType="com.menjin.api.model.APIVisit"
+		resultMap="resultMap">
+		SELECT
+		<include refid="columnList" />
+		FROM t_visit WHERE id = #{id}
+	</select>
+
+	<delete id="deleteByPrimaryKey" parameterType="com.menjin.api.model.APIVisit">
+		DELETE FROM
+		t_visit WHERE id=#{id}
+	</delete>
+
+	<select id="selectCount" resultType="java.lang.Integer">
+		SELECT COUNT(1) FROM t_visit WHERE 1 = 1
+	</select>
+
+	<select id="selectByPage" resultMap="resultMap">
+		SELECT
+		t1.*
+		FROM t_visit t1
+		INNER JOIN
+		(
+		SELECT id FROM t_visit WHERE 1 = 1
+		<if test="null!=page and null!=page.pageSize">
+			LIMIT #{page.startRowNum}, #{page.pageSize}
+		</if>
+		) AS t2
+		ON t1.id = t2.id
+		WHERE 1 = 1
+		<if test="null != orderByField">
+			ORDER BY #{orderByField}
+		</if>
+	</select>
+
+</mapper>  

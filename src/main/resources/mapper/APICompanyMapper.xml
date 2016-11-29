@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper  
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- SQL 关键字请使用大写字母, 表名, 属性名用小写 -->
+<mapper namespace="com.menjin.api.mapper.APICompanyMapper">
+	<resultMap type="com.menjin.api.model.APICompany" id="resultMap">
+		<id column="id" property="id" jdbcType="INTEGER" javaType="java.lang.Integer" />
+		<result column="company_name" property="companyName" jdbcType="VARCHAR" />
+		<result column="company_addr" property="companyAddress"
+			jdbcType="VARCHAR" />
+		<result column="company_mobile" property="companyPhone"
+			jdbcType="VARCHAR" />
+		<result column="created_time" property="createTime" jdbcType="TIMESTAMP" />
+		<result column="created_by" property="createBy" jdbcType="VARCHAR" />
+		<result column="modified_date" property="modifiedDate"
+			jdbcType="TIMESTAMP" />
+	</resultMap>
+
+
+	<sql id="insertList">
+		company_name,company_addr,company_mobile,created_time,
+		created_by,modified_date
+	</sql>
+
+	<sql id="columnList">
+		id,company_name,company_addr,company_mobile,created_time,
+		created_by,modified_date
+	</sql>
+
+
+	<insert id="insert" parameterType="com.menjin.api.model.APICompany"
+		useGeneratedKeys="true" keyColumn="id">
+		INSERT INTO t_company(
+		<include refid="insertList" />
+		) VALUES (
+		#{companyName}, #{companyAddress}, #{companyPhone},
+		#{createTime}, #{createBy}, #{modifiedDate})
+	</insert>
+
+	<update id="updateByPrimaryKey" parameterType="com.menjin.api.model.APICompany">
+		UPDATE t_company
+		SET company_name = #{companyName},company_addr = #{companyAddress},
+		company_mobile = #{companyPhone}, created_time = #{createTime},
+		created_by = #{createBy},modified_date = #{modifiedDate}
+		WHERE id=#{id}
+	</update>
+
+	<select id="selectByPrimaryKey" parameterType="com.menjin.api.model.APICompany"
+		resultMap="resultMap">
+		SELECT
+		<include refid="columnList" />
+		FROM t_company WHERE id = #{id}
+	</select>
+
+	<delete id="deleteByPrimaryKey" parameterType="com.menjin.api.model.APICompany">
+		DELETE FROM
+		t_company WHERE id=#{id}
+	</delete>
+
+	<select id="selectCount" resultType="java.lang.Integer">
+		SELECT COUNT(1) FROM t_company WHERE 1 = 1
+	</select>
+
+	<select id="selectByPage" resultMap="resultMap">
+		SELECT
+		t1.*
+		FROM t_company t1
+		INNER JOIN
+		(
+		SELECT id FROM t_company WHERE 1 = 1
+		<if test="null!=page and null!=page.pageSize">
+			LIMIT #{page.startRowNum}, #{page.pageSize}
+		</if>
+		) AS t2
+		ON t1.id = t2.id
+		WHERE 1 = 1
+		<if test="null != orderByField">
+			ORDER BY #{orderByField}
+		</if>
+	</select>
+
+</mapper>  
