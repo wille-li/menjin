@@ -10,4 +10,10 @@ import com.menjin.user.model.User;
  */
 public interface UserMapper extends BaseCrudMapper<User> {
 
+	/**
+	 * 根据用户名查用户信息
+	 * @param username
+	 * @return
+	 */
+	public User selectByUserName(String username);
 }

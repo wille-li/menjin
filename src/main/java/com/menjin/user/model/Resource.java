@@ -1,13 +1,17 @@
 package com.menjin.user.model;
 
 import java.io.Serializable;
+import java.util.HashSet;
+import java.util.Set;
+
+import org.springframework.security.core.GrantedAuthority;
 
 /**
  * 资源Resource实体
  * @author Jack
  *
  */
-public class Resource implements Serializable{
+public class Resource implements Serializable , GrantedAuthority {
 
 	private static final long serialVersionUID = -5618086043877626022L;
 
@@ -28,6 +32,8 @@ public class Resource implements Serializable{
 	
 	//描述
 	private String description;
+	
+	private Set<Role> roles = new HashSet<Role>(); 
 
 	public Resource() {
 
@@ -80,6 +86,14 @@ public class Resource implements Serializable{
 	public void setDescription(String description) {
 		this.description = description;
 	}
+	
+	public Set<Role> getRoles() {
+		return roles;
+	}
+
+	public void setRoles(Set<Role> roles) {
+		this.roles = roles;
+	}
 
 	@Override
 	public String toString() {
@@ -88,7 +102,9 @@ public class Resource implements Serializable{
 				+ resKey + ", description=" + description + "]";
 	}
 	
-	
+	public String getAuthority() {  
+        return getName();  
+    }  
 }
 	
 	

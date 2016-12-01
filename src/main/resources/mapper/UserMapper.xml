@@ -12,7 +12,7 @@
 		<result column="customer_type" property="customerType" jdbcType="VARCHAR" />
 		<result column="name" property="name" jdbcType="VARCHAR" />
 		<result column="birthday" property="birthday" jdbcType="DATE" />
-		<result column="id _card_number" property="idCardNumber" jdbcType="VARCHAR" />
+		<result column="id_card_number" property="idCardNumber" jdbcType="VARCHAR" />
 		<result column="email" property="email" jdbcType="VARCHAR" />
 		<result column="phone" property="phone" jdbcType="VARCHAR" />
 		<result column="mobilephone" property="mobilephone" jdbcType="VARCHAR" />
@@ -31,7 +31,7 @@
 	
 	<sql id="allField" >
 	    username, password, customer_type, name, birthday,
-	    id _card_number, email, phone, mobilephone, address,
+	    id_card_number, email, phone, mobilephone, address,
 	    country,security_question,security_answer,created_date,created_by,
 	   modified_date,modified_by,status,delete_status,expired_date
 	</sql>
@@ -47,37 +47,25 @@
         #{modifiedBy},#{status},#{deleteStatus},#{expiredDate})
 	</insert>
 	
-	<select id="selectByPrimaryKey" parameterType="Integer" resultMap="userResultMap">
+	<select id="selectByPrimaryKey" parameterType="com.menjin.user.model.User" resultMap="userResultMap">
 		select * from t_user where id = #{id}
 	</select>
 	
-	<delete id="deleteByPrimaryKey" parameterType="Integer">
+	<select id="selectByUserName" parameterType="String" resultMap="userResultMap">
+		select * from t_user where username = #{username}
+	</select>
+	
+	<delete id="deleteByPrimaryKey" parameterType="com.menjin.user.model.User">
 		delete from t_user  where id = #{id}
 	</delete>
 	
 	<!-- username,created_date,created_by不能修改，应该是一旦插入到数据库就不能更改的 -->
 	<update id="updateByPrimaryKey" parameterType="com.menjin.user.model.User">
-		update t_user
-			<set>
-				<if test="password!=null">password=#{password},</if>
-				<if test="customerType!=null">customer_type=#{customerType},</if>
-				<if test="name!=null">name=#{name},</if>
-				<if test="birthday!=null">birthday=#{birthday},</if>
-				<if test="idCardNumber!=null">id _card_number=#{idCardNumber},</if>
-				<if test="email!=null">email=#{email},</if>
-				<if test="phone!=null">phone=#{phone},</if>
-				<if test="mobilephone!=null">mobilephone=#{mobilephone},</if>
-				<if test="address!=null">address=#{address},</if>
-				<if test="country!=null">country=#{country},</if>
-				<if test="securityQuestion!=null">security_question=#{securityQuestion},</if>
-				<if test="securityAnswer!=null">security_answer=#{securityAnswer},</if>
-				<if test="modifiedDate!=null">modified_date=#{modifiedDate},</if>
-				<if test="modifiedBy!=null">modified_by=#{modifiedBy},</if>
-				<if test="status!=null">status=#{status},</if>
-				<if test="deleteStatus!=null">delete_status=#{deleteStatus},</if>
-				<if test="expiredDate!=null">expired_date=#{expiredDate},</if>
-			</set>
-			where id = #{id}
+		update t_user set password=#{password},customer_type=#{customerType},name=#{name},
+		 birthday=#{birthday},id_card_number=#{idCardNumber},email=#{email},phone=#{phone},
+		 mobilephone=#{mobilephone},address=#{address},country=#{country},security_question=#{securityQuestion},
+		 security_answer=#{securityAnswer},modified_date=#{modifiedDate},modified_by=#{modifiedBy},
+		 status=#{status},delete_status=#{deleteStatus},expired_date=#{expiredDate} where id = #{id}
 	</update>
 
 </mapper>  

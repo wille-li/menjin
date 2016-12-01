@@ -11,6 +11,7 @@
 		<log4j.version>1.7.21</log4j.version>
 		<mysql.version>5.1.38</mysql.version>
 		<spring.version>4.3.2.RELEASE</spring.version>
+		<spring.security.version>4.1.1.RELEASE</spring.security.version>
 		<junit.version>4.12</junit.version>
 		<c3p0.version>0.9.5.2</c3p0.version>
 		<mybatis.version>3.4.1</mybatis.version>
@@ -87,9 +88,33 @@
 			<artifactId>spring-test</artifactId>
 			<version>${spring.version}</version>
 		</dependency>
-
-
-
+		
+		<!-- Spring Security 4 所需要用到的jar包  -->
+		<dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-core</artifactId>
+			<version>${spring.security.version}</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-web</artifactId>
+			<version>${spring.security.version}</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-config</artifactId>
+			<version>${spring.security.version}</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-taglibs</artifactId>
+			<version>${spring.security.version}</version>
+		</dependency>
+		
+		
 		<!-- https://mvnrepository.com/artifact/com.mchange/c3p0 -->
 		<dependency>
 			<groupId>com.mchange</groupId>

@@ -55,7 +55,7 @@ public class ServiceTestCase {
 		com.menjin.test.model.Test entity = new com.menjin.test.model.Test();
 		entity.setName("Jack");
 		int insertTotalCount = 0;
-		for (int i = 0; i < 1000; i++){
+		for (int i = 0; i < 10; i++){
 			entity.setName("Wille" + i);
 			int insertCount = testService.add(entity);
 			if (insertCount > 0) {

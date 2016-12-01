@@ -1,14 +1,21 @@
 package com.menjin.user.model;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
+import java.util.List;
+import java.util.Set;
+
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 /**
  * User用户对象
  * @author Jack
  *
  */
-public class User implements Serializable{
+public class User implements Serializable , UserDetails{
 	
 	private static final long serialVersionUID = -7517937362922901896L;
 
@@ -74,6 +81,8 @@ public class User implements Serializable{
 	
 	//过期时间
 	private Date expiredDate;
+	
+	private Set<Role> roles;
 
 	public User() {
 		
@@ -247,6 +256,14 @@ public class User implements Serializable{
 		this.expiredDate = expiredDate;
 	}
 
+	public Set<Role> getRoles() {
+		return roles;
+	}
+
+	public void setRoles(Set<Role> roles) {
+		this.roles = roles;
+	}
+
 	@Override
 	public String toString() {
 		return "User [id=" + id + ", username=" + username + ", password="
@@ -262,4 +279,39 @@ public class User implements Serializable{
 				+ modifiedBy + ", expiredDate=" + expiredDate + "]";
 	}
 	
+	public Collection<? extends GrantedAuthority> getAuthorities() {  
+	     List<GrantedAuthority> list = new ArrayList<GrantedAuthority>();  
+	       
+	     for (Role role : roles) {  
+	         list.add(role.generateGrantedAuthority());  
+	         for (Resource resource : role.getResources()) {  
+	             list.add(resource);  
+	         }  
+	     }  
+	     return list;  
+	 } 
+
+	@Override
+	public boolean isAccountNonExpired() {
+		// TODO Auto-generated method stub
+		return true;
+	}
+
+	@Override
+	public boolean isAccountNonLocked() {
+		// TODO Auto-generated method stub
+		return true;
+	}
+
+	@Override
+	public boolean isCredentialsNonExpired() {
+		// TODO Auto-generated method stub
+		return true;
+	}
+
+	@Override
+	public boolean isEnabled() {
+		int a = Integer.parseInt(this.status);
+		return a == 0 ? false:true;
+	}
 }

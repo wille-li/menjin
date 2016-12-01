@@ -4,6 +4,7 @@ import java.io.Serializable;
 
 /**
  * 权限role与资源resource的关联关系对象
+ * role与resource为多对多的关系
  * @author Jack
  *
  */
@@ -11,9 +12,6 @@ public class RolesResource implements Serializable{
 
 		private static final long serialVersionUID = -6930320802471903560L;
 
-		//与t_role_resource关联的主键id
-		private Integer id ;
-		
 		//关联t_resource表的主键id
 		private Integer resourceId;
 		
@@ -22,14 +20,6 @@ public class RolesResource implements Serializable{
 
 		public RolesResource() {
 
-		}
-
-		public Integer getId() {
-			return id;
-		}
-
-		public void setId(Integer id) {
-			this.id = id;
 		}
 
 		public Integer getResourceId() {
@@ -50,7 +40,7 @@ public class RolesResource implements Serializable{
 
 		@Override
 		public String toString() {
-			return "RolesResource [id=" + id + ", resourceId=" + resourceId
+			return "RolesResource [resourceId=" + resourceId
 					+ ", roleId=" + roleId + "]";
 		}
 		

@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans:beans xmlns="http://www.springframework.org/schema/security"
+             xmlns:beans="http://www.springframework.org/schema/beans"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xsi:schemaLocation="http://www.springframework.org/schema/beans
+      http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
+      http://www.springframework.org/schema/security
+      http://www.springframework.org/schema/security/spring-security-4.1.xsd ">
+      
+      <!-- 不需要进行安全认证的资源 -->
+     <http pattern="/login.jsp" security="none"/>
+     <http pattern="/sessionTimeout.jsp" security="none"/>
+   
+   	<beans:bean id="myFilter"
+   		class="org.springframework.security.web.access.intercept.FilterSecurityInterceptor">
+   		<beans:property name="authenticationManager" ref="authenticationManager"></beans:property>
+   		<beans:property name="accessDecisionManager" >
+   			<beans:bean class="org.springframework.security.access.vote.AffirmativeBased">
+   				<beans:constructor-arg index="0">
+   						<beans:list>
+							<beans:bean class="org.springframework.security.access.vote.RoleVoter" />
+						</beans:list>   
+   				</beans:constructor-arg>
+   			</beans:bean>
+   		</beans:property>
+   		<beans:property name="securityMetadataSource" ref="resourceServiceImpl"/>
+   	</beans:bean>
+   
+      <http auto-config="true" >
+      		<access-denied-handler error-page="/accessDenied.jsp"/>
+      	
+      		<form-login 
+      			login-page="/login.jsp"
+      			default-target-url="/user/login.do"
+      			always-use-default-target="true"
+      			authentication-failure-url="/login.jsp"
+      		/>
+      		<!-- 资源所需要的权限 -->
+      		<!-- <intercept-url pattern="/user/login.do" access="hasAnyRole('ROLE_USER','ROLE_ADMIN')"/>
+      		<intercept-url pattern="/index.jsp*" access="hasAnyRole('ROLE_USER','ROLE_ADMIN')"/>
+      		<intercept-url pattern="/*index2.jsp*" access="hasAnyRole('ROLE_USER','ROLE_ADMIN')"/>
+      		<intercept-url pattern="/admin.jsp*" access="hasRole('ROLE_ADMIN')"/> -->
+      		
+      		<!-- <intercept-url pattern="/**" access="hasRole('ROLE_USER')"/> -->
+      		
+      		<logout invalidate-session="true"  logout-success-url="/login.jsp" />
+      		
+      		<session-management invalid-session-url="/sessionTimeout.jsp">
+      			<concurrency-control max-sessions="1"
+      			error-if-maximum-exceeded="true" />
+     		 </session-management>		
+      				
+      		<custom-filter ref="myFilter" before="FILTER_SECURITY_INTERCEPTOR" />
+      		
+      		<csrf disabled="true" />
+      </http>
+      
+      <authentication-manager alias="authenticationManager">
+      		<!-- <authentication-provider>
+      			<user-service>
+      				<user name="user" password="123" authorities="ROLE_USER"/>
+      				<user name="user2" password="1234" authorities="ROLE_USER,ROLE_ADMIN"/>
+      			</user-service>
+      		</authentication-provider> -->
+      		
+      		<!-- 使用自定义的UserDetailsService -->
+      		<authentication-provider user-service-ref="userServiceImpl"></authentication-provider>
+      </authentication-manager>
+      
+</beans:beans>

@@ -1,6 +1,10 @@
 package com.menjin.user.model;
 
 import java.io.Serializable;
+import java.util.HashSet;
+import java.util.Set;
+
+import org.springframework.security.core.GrantedAuthority;
 
 /**
  * Role权限对象
@@ -19,6 +23,10 @@ public class Role implements Serializable{
 	
 	//描述
 	private String description;
+	
+	private Set<Resource> resources = new HashSet<Resource>();  
+	 
+	private Set<User> users = new HashSet<User>();  
 
 	public Role() {
 
@@ -47,6 +55,22 @@ public class Role implements Serializable{
 	public void setDescription(String description) {
 		this.description = description;
 	}
+	
+	public Set<Resource> getResources() {
+		return resources;
+	}
+
+	public void setResources(Set<Resource> resources) {
+		this.resources = resources;
+	}
+
+	public Set<User> getUsers() {
+		return users;
+	}
+
+	public void setUsers(Set<User> users) {
+		this.users = users;
+	}
 
 	@Override
 	public String toString() {
@@ -54,4 +78,11 @@ public class Role implements Serializable{
 				+ description + "]";
 	}
 	
+	 public GrantedAuthority generateGrantedAuthority() {  
+	        return new GrantedAuthority() {  
+	            public String getAuthority() {  
+	                return getName();  
+	            }  
+	        };  
+	    }  
 }

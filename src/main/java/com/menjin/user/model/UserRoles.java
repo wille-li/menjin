@@ -4,6 +4,7 @@ import java.io.Serializable;
 
 /**
  * 用户user与权限role关联关系对象
+ * user与role为多对多的关系
  * @author Jack
  *
  */
@@ -11,9 +12,6 @@ public class UserRoles implements Serializable{
 	
 	private static final long serialVersionUID = 2242764244318222826L;
 
-	//与t_user_role关联的主键id
-	private Integer id ;
-	
 	//关联t_user表的主键id
 	private Integer userId;
 	
@@ -22,14 +20,6 @@ public class UserRoles implements Serializable{
 
 	public UserRoles() {
 	
-	}
-
-	public Integer getId() {
-		return id;
-	}
-
-	public void setId(Integer id) {
-		this.id = id;
 	}
 
 	public Integer getUserId() {
@@ -50,7 +40,7 @@ public class UserRoles implements Serializable{
 
 	@Override
 	public String toString() {
-		return "UserRoles [id=" + id + ", userId=" + userId + ", roleId="
+		return "UserRoles [userId=" + userId + ", roleId="
 				+ roleId + "]";
 	}
 	

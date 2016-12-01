@@ -17,5 +17,8 @@
 	<import resource="spring-dao.xml" />
 	<import resource="spring-service.xml" />
 	
-
+	<bean id="messageSource"
+	 	class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
+	 	<property name="basename" value="classpath:devConfig/message_zh_CN"/>
+	 </bean>
 </beans>

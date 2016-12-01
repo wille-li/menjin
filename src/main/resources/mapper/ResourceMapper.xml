@@ -25,24 +25,42 @@
         #{resKey}, #{description})
 	</insert>
 	
-	<select id="selectByPrimaryKey" parameterType="Integer" resultMap="resourceResultMap">
+	<select id="selectAllResources" resultMap="resourceResultMap">
+		select * from t_resource
+	</select>
+	
+	<select id="selectByPrimaryKey" parameterType="com.menjin.user.model.Resource" resultMap="resourceResultMap">
 		select * from t_resource where id = #{id}
 	</select>
 	
-	<delete id="deleteByPrimaryKey" parameterType="Integer">
+	<select id="selectByResourceUrl" parameterType="String" resultMap="resourceResultMap">
+		select * from t_resource where resource_url = #{resourceUrl}
+	</select>
+	
+	<delete id="deleteByPrimaryKey" parameterType="com.menjin.user.model.Resource">
 		delete from t_resource  where id = #{id}
 	</delete>
 	
 	<update id="updateByPrimaryKey" parameterType="com.menjin.user.model.Resource">
-		update t_resource
-			<set>
-				<if test="resourceUrl!=null">resource_url=#{resourceUrl},</if>
-				<if test="name!=null">name=#{name},</if>
-				<if test="parentId!=null">parentId=#{parentId},</if>
-				<if test="resKey!=null">resKey=#{resKey},</if>
-				<if test="description!=null">description=#{description},</if>
-			</set>
-			where id = #{id}
+		update t_resource set resource_url=#{resourceUrl},name=#{name},parentId=#{parentId},
+		resKey=#{resKey},description=#{description} where id = #{id}
 	</update>
-
+	
+	<select id="getResourcesByUserId" parameterType="Integer" resultMap="resourceResultMap">
+		SELECT r.* FROM t_resource r WHERE r.id in 
+		(SELECT t.resource_id FROM t_role_resource t where t.role_id 
+		in (select ur.role_id from t_user_role ur where ur.user_id = #{userId}))
+	</select>
+	
+	<select id="getResourcesByUsername" parameterType="String" resultMap="resourceResultMap">
+		SELECT r.* FROM t_resource r WHERE r.id in 
+		(SELECT t.resource_id FROM t_role_resource t where t.role_id 
+		in (select ur.role_id from t_user_role ur , t_user u where ur.user_id = u.id
+		and u.username = #{username}))
+	</select>
+	
+	<insert id="insertRolesResource" parameterType="com.menjin.user.model.RolesResource">
+		insert into t_role_resource(role_id,resource_id) values (#{roleId},#{resourceId})
+	</insert>
+	
 </mapper>  
