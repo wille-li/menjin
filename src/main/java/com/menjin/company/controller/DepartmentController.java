@@ -47,16 +47,17 @@ public class DepartmentController {
 	@ResponseBody
 	public Map getDepartmentByCompanyId(@Param(value = "companyId") Integer companyId,
 			@Param(value="pageSize") Integer page,@Param(value="rows") Integer rows) {
+		logger.info("Start to get Departments By Company ID !");
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("companyId", companyId);
 		int count = departmentService.findCount(null, params);
 		SimplePage simplepage = new SimplePage(page, rows, count);
-		
 		String orderBy = null;
 		List<Department> departments = departmentService.findByPage(simplepage,params, orderBy);
 		Map maps = new HashMap();
 		maps.put("rows", departments);
 		maps.put("total", count);
+		logger.info("End to get Departments!");
 		return maps;
 	}
 
@@ -78,6 +79,7 @@ public class DepartmentController {
 	@SystemControllerLog
 	@ResponseBody
 	public Map getCompanyByTree() {
+		logger.info("Start to get CompanyTree!  departmentlistbytree.do");
 		Map companysTree = new HashMap();
 		int count = companyService.findCount(null, null);
 		logger.info("Conpany Count:" + count);
@@ -97,6 +99,7 @@ public class DepartmentController {
 			maps.add(map);
 		}
 		companysTree.put("children", maps);
+		logger.info("End to get CompanyTree!");
 		return companysTree;
 	}
 
@@ -106,10 +109,7 @@ public class DepartmentController {
 	public Integer addDepartment(@ModelAttribute Department department,
 			@Param(value = "companyId") String companyId,
 			HttpServletRequest request, HttpServletResponse response) {
-		logger.info(department.getDepartmentName());
-		logger.info(department.getDepartmentHeader());
-		logger.info(department.getDepartmentPhone());
-		logger.info(companyId);
+		logger.info("Start to insert new Department!Department Name:"+department.getDepartmentName());
 		if (companyId != null && !companyId.equals("")) {
 			Company company = new Company();
 			company.setId(Integer.parseInt(companyId));
@@ -118,9 +118,9 @@ public class DepartmentController {
 			department.setModifiedDate(new Date());
 			department.setCreateBy("Admin");
 			int returnCode = departmentService.add(department);
+			logger.info("End to Insert Company!ReturnCode:"+returnCode);
 			return returnCode;
 		}
-
 		return null;
 	}
 
@@ -130,6 +130,7 @@ public class DepartmentController {
 	public Integer updateCompany(@ModelAttribute Department department,
 			@Param(value = "companyId") String companyId,
 			HttpServletRequest request, HttpServletResponse response) {
+		logger.info("Start to update Department!");
 		if(companyId != null && !companyId.equals("")){
 			Company company = new Company();
 			company.setId(Integer.parseInt(companyId));
@@ -137,6 +138,7 @@ public class DepartmentController {
 			department.setModifiedDate(new Date());
 			department.setCreateBy("Admin");
 			int returnCode = departmentService.modifyById(department);
+			logger.info("End to update Department!ReturnCode:"+returnCode);
 			return returnCode;
 		}
 		

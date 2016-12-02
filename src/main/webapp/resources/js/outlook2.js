@@ -8,7 +8,7 @@ var _menus = {"menus":[
 									{"menuid":"13","menuname":"用户管理","icon":"icon-users","url":"./department.do"},
 									{"menuid":"14","menuname":"角色管理","icon":"icon-role","url":"./employee.do"},
 									{"menuid":"15","menuname":"权限管理","icon":"icon-set","url":"./matter.do"},
-									{"menuid":"16","menuname":"公司管理","icon":"icon-log","url":"demo1.html"}
+									{"menuid":"16","menuname":"公司管理","icon":"icon-log","url":"./vistor.do"}
 								]
 						},{"menuid":"8","icon":"icon-users","menuname":"预约管理",
 							"menus":[{"menuid":"21","menuname":"预约数据","icon":"icon-nav","url":"demo.html"},

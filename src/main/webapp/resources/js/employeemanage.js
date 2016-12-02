@@ -142,8 +142,12 @@ function submitDialog(){
         $("#departmentDialog").dialog("close"); //关闭dialog
         //清空form表单中的数据
         $("#id").textbox("setValue","");
-        $("#departmentName").textbox("setValue","");
-		$("#departmentHeader").textbox("setValue","");
-		$("#departmentPhone").textbox("setValue","");
+		$("#departmentId").textbox("setValue","");
+		$("#employeeNo").textbox("setValue","");
+		$("#employeeName").textbox("setValue","");
+		$("#employeeSex").textbox("setValue","");
+		$("#email").textbox("setValue","");
+		$("#mobile").textbox("setValue","");
+		$("#idCardNum").textbox("setValue","");
    }); 
 }  
