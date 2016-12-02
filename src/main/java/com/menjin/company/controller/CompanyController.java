@@ -56,6 +56,7 @@ public class CompanyController {
 	@SystemControllerLog
 	@ResponseBody
 	public Map getCompanyByPage(@Param(value="pageSize") Integer page,@Param(value="rows") Integer rows){
+		logger.info("Start to getCompanyByPage:companylist.do");
 		int count = companyService.findCount(null, null);
 		logger.info("Conpany Count:"+count);
 		SimplePage simplepage = new SimplePage(page, rows, count);
@@ -65,6 +66,7 @@ public class CompanyController {
 		Map maps = new HashMap();
 		maps.put("rows", companys);
 		maps.put("total", count);
+		logger.info("End getCompanyByPage:companylist!");
 		return maps;
 	}
 	
@@ -79,13 +81,12 @@ public class CompanyController {
 	 */
 	public Integer addCompany(@ModelAttribute Company company,
 			HttpServletRequest request,HttpServletResponse response){
-		logger.info(company.getCompanyName());
-		logger.info(company.getCompanyAddress());
-		logger.info(company.getCompanyPhone());
+		logger.info("Start to insert new Company!Company Name:"+company.getCompanyName());
 		company.setCreateBy("Admin");//根据现在操作用户修改
 		company.setCreateTime(new Date());
 		company.setModifiedDate(new Date());
 		int returnCode = companyService.add(company);
+		logger.info("End to Insert Company!ReturnCode:"+returnCode);
 		return returnCode;
 	}
 	
@@ -93,10 +94,12 @@ public class CompanyController {
 	@SystemControllerLog
 	@ResponseBody
 	public Integer updateCompany(@ModelAttribute Company company,HttpServletRequest request,HttpServletResponse response){
+		logger.info("Start to update Company!");
 		company.setCreateTime(new Date());
 		company.setModifiedDate(new Date());
 		company.setCreateBy("Lin");
 		int returnCode = companyService.modifyById(company);
+		logger.info("End to update Company!ReturnCode:"+returnCode);
 		return returnCode;
 	}
 
