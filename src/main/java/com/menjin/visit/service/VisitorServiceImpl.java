@@ -24,6 +24,11 @@ public class VisitorServiceImpl extends BaseServiceImpl<Visitor> implements Visi
 		return visitorMapper;
 	}
 
+	@Override
+	public Visitor selectByIDCar(String idCardNum) {
+		return visitorMapper.selectByIDCar(idCardNum);
+	}
+
 
 
 }

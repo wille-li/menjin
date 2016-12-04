@@ -60,6 +60,19 @@ public class DepartmentController {
 		logger.info("End to get Departments!");
 		return maps;
 	}
+	
+	@RequestMapping(value = "/departmentlistBycompanyIdForCombox.do")
+	@SystemControllerLog
+	@ResponseBody
+	public List<Department> getDepartmetsByCompanyIdForCombox(@Param(value = "companyId") Integer companyId){
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("companyId", companyId);
+		int count = departmentService.findCount(null, params);
+		SimplePage simplepage = new SimplePage(1, count, count);
+		String orderBy = null;
+		List<Department> departments = departmentService.findByPage(simplepage,params, orderBy);
+		return departments;
+	}
 
 	@RequestMapping(value = "/departmentlist.do")
 	@SystemControllerLog

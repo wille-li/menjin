@@ -23,10 +23,10 @@ import com.base.entity.SimplePage;
 import com.menjin.company.model.Company;
 import com.menjin.company.model.Department;
 import com.menjin.company.model.Employee;
+import com.menjin.company.model.TreeJson;
 import com.menjin.company.service.CompanyService;
 import com.menjin.company.service.DepartmentService;
 import com.menjin.company.service.EmployeeService;
-import com.menjin.util.TreeJson;
 
 @Controller
 public class EmployeeController {
@@ -65,6 +65,20 @@ public class EmployeeController {
 		maps.put("rows", employees);
 		maps.put("total", count);
 		return maps;
+	}
+	
+	@RequestMapping(value = "/employeelistBydepartmentIdForCombox.do")
+	@SystemControllerLog
+	@ResponseBody
+	public List<Employee> getEmployeeByDepartemtnIdForCombox(@Param(value = "departmentId") Integer departmentId) {
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("departmentId", departmentId);
+		int count = employeeService.findCount(null, params);
+		logger.info("Conpany Count:"+count);
+		SimplePage simplepage = new SimplePage(1, count, count);
+		String orderBy = null;
+		List<Employee> employees = employeeService.findByPage(simplepage,params, orderBy);
+		return employees;
 	}
 
 	@RequestMapping(value = "/employeelist.do")

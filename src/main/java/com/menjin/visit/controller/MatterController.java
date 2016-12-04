@@ -58,6 +58,20 @@ public class MatterController {
 		return maps;
 	}
 	
+	@RequestMapping(value="/matterlistForCombox.do")
+	@SystemControllerLog
+	@ResponseBody
+	public List<Matter> getMatterByPageForCombox(){
+		logger.info("Start to getMatterByPage:matterlist.do");
+		int count = matterService.findCount(null, null);
+		logger.info("Matters Count:"+count);
+		SimplePage simplepage = new SimplePage(1, count, count);
+		Map<String, Object> params = null;
+		String orderBy = null;
+		List<Matter> matters = matterService.findByPage(simplepage, params, orderBy);
+		return matters;
+	}
+	
 	@RequestMapping(value="/addMatter.do")
 	@SystemControllerLog
 	@ResponseBody

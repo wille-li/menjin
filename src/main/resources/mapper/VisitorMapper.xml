@@ -57,6 +57,12 @@
 		<include refid="columnList" /> 
 		FROM t_visitor WHERE id=#{id}
 	</select>
+	
+	<select id="selectByIDCar" parameterType="com.menjin.visit.model.Visitor"  resultMap="resultMap">
+		SELECT 
+		<include refid="columnList" /> 
+		FROM t_visitor WHERE id_card_num=#{idCardNum}
+	</select>
 
 	<delete id="deleteByPrimaryKey" parameterType="com.menjin.visit.model.Visitor">
 		DELETE FROM t_visitor WHERE id=#{id}

@@ -1,5 +1,6 @@
 package com.menjin.company.controller;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.base.annotation.log.SystemControllerLog;
 import com.base.entity.SimplePage;
 import com.menjin.company.model.Company;
+import com.menjin.company.model.TreeJson;
 import com.menjin.company.service.CompanyService;
 
 @Controller
@@ -39,18 +41,6 @@ public class CompanyController {
 		return "company/companymanage";
 	}
 	
-	/*@RequestMapping(value="/companylist.do")
-	@SystemControllerLog
-	@ResponseBody
-	public List<Company> getCompanyByPage(){
-		int count = companyService.findCount(null, null);
-		logger.info("Conpany Count:"+count);
-		SimplePage page = new SimplePage(1, 10, count);
-		Map<String, Object> params = null;
-		String orderBy = null;
-		List<Company> companys = companyService.findByPage(page, params, orderBy);
-		return companys;
-	}*/
 	
 	@RequestMapping(value="/companylist.do")
 	@SystemControllerLog
@@ -70,15 +60,21 @@ public class CompanyController {
 		return maps;
 	}
 	
+	@RequestMapping(value="/getcompanylistByTree.do")
+	@SystemControllerLog
+	@ResponseBody
+	public List<Company> getCompanyListByTree(){
+		Map<String, Object> params = null;
+		String orderBy = null;
+		int count = companyService.findCount(null, null);
+		SimplePage simplepage = new SimplePage(1, count, count);
+		List<Company> companys = companyService.findByPage(simplepage, params, orderBy);
+		return companys;
+	}
+	
 	@RequestMapping(value="/addCompany.do")
 	@SystemControllerLog
 	@ResponseBody
-	/**
-	 * @Param(value = "companyName") String companyName,
-			@Param(value = "companyAddress")String companyAddress,
-			@Param(value = "companyPhone")String companyPhone,
-	 * @return
-	 */
 	public Integer addCompany(@ModelAttribute Company company,
 			HttpServletRequest request,HttpServletResponse response){
 		logger.info("Start to insert new Company!Company Name:"+company.getCompanyName());

@@ -9,4 +9,5 @@ import com.menjin.visit.model.Visitor;
  */
 public interface VisitorMapper extends BaseCrudMapper<Visitor>{
 
+	public Visitor selectByIDCar(String idCardNum);
 }

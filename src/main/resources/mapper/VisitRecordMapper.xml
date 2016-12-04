@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper  
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- SQL 关键字请使用大写字母, 表名, 属性名用小写 -->
+<mapper namespace="com.menjin.visit.mapper.VisitRecordMapper">
+	<resultMap type="com.menjin.visit.model.VisitRecord" id="resultMap">
+		<id column="id" property="id" jdbcType="INTEGER" javaType="java.lang.Integer" />
+		<result column="matter_txn_num" property="matterTxnNum"
+			jdbcType="VARCHAR" />
+		<result column="people_sum" property="peopleSum" jdbcType="VARCHAR" />
+		<result column="license_plate" property="licensePlate"
+			jdbcType="VARCHAR" />
+		<result column="appointment_time" property="appointmentTime"
+			jdbcType="TIMESTAMP" />
+		<result column="expire_time" property="expireTime" jdbcType="TIMESTAMP" />
+		<result column="actual_time" property="actualTime" jdbcType="TIMESTAMP" />
+		<result column="leave_time" property="leaveTime" jdbcType="TIMESTAMP" />
+		<result column="status" property="status" jdbcType="VARCHAR" />
+		<result column="created_by" property="createBy" jdbcType="VARCHAR" />
+		<result column="modified_date" property="modifiedDate"
+			jdbcType="TIMESTAMP" />
+		<association property="matter" column="matter_id"
+			javaType="com.menjin.visit.model.Matter">
+			<id column="mat_id" property="id" jdbcType="INTEGER" javaType="java.lang.Integer" />
+			<result column="matter_decs" property="matterDecs" jdbcType="VARCHAR" />
+			<!-- <result column="created_date" property="createTime" jdbcType="TIMESTAMP" 
+				/> <result column="created_by" property="createBy" jdbcType="VARCHAR" /> 
+				<result column="modified_date" property="modifiedDate" jdbcType="TIMESTAMP" 
+				/> -->
+		</association>
+		<association property="company" column="company_id"
+			javaType="com.menjin.company.model.Company">
+			<id column="com_id" property="id" jdbcType="INTEGER" javaType="java.lang.Integer" />
+			<result column="company_name" property="companyName" jdbcType="VARCHAR" />
+			<result column="company_addr" property="companyAddress"
+				jdbcType="VARCHAR" />
+			<result column="company_mobile" property="companyPhone"
+				jdbcType="VARCHAR" />
+			<!-- <result column="created_time" property="createTime" jdbcType="TIMESTAMP" 
+				/> <result column="created_by" property="createBy" jdbcType="VARCHAR" /> 
+				<result column="modified_date" property="modifiedDate" jdbcType="TIMESTAMP" 
+				/> -->
+		</association>
+		<association property="department" column="department_id"
+			javaType="com.menjin.company.model.Department">
+			<id column="dep_id" property="id" jdbcType="INTEGER" javaType="java.lang.Integer" />
+			<result column="department_name" property="departmentName"
+				jdbcType="VARCHAR" />
+			<result column="department_header" property="departmentHeader"
+				jdbcType="VARCHAR" />
+			<result column="department_phone" property="departmentPhone"
+				jdbcType="VARCHAR" />
+			<!-- <result column="created_time" property="createTime" jdbcType="TIMESTAMP" 
+				/> <result column="created_by" property="createBy" jdbcType="VARCHAR" /> 
+				<result column="modified_date" property="modifiedDate" jdbcType="TIMESTAMP" 
+				/> -->
+		</association>
+		<association property="employee" column="employee_id"
+			javaType="com.menjin.company.model.Employee">
+			<id column="emp_id" property="id" jdbcType="INTEGER" javaType="java.lang.Integer" />
+			<result column="employee_no" property="employeeNo" jdbcType="VARCHAR" />
+			<result column="employee_name" property="employeeName"
+				jdbcType="VARCHAR" />
+			<result column="employee_sex" property="employeeSex" jdbcType="VARCHAR" />
+			<result column="email" property="email" jdbcType="VARCHAR" />
+			<result column="mobile" property="mobile" jdbcType="VARCHAR" />
+			<result column="id_card_type" property="IdCardType" jdbcType="VARCHAR" />
+			<result column="id_card_num" property="IdCardNum" jdbcType="VARCHAR" />
+			<!-- <result column="created_by" property="createBy" jdbcType="VARCHAR" 
+				/> <result column="modified_date" property="modifiedDate" jdbcType="TIMESTAMP" 
+				/> -->
+		</association>
+		<association property="visitor" column="visitor_id"
+			javaType="com.menjin.visit.model.Visitor">
+			<id column="vis_id" property="id" jdbcType="INTEGER" javaType="java.lang.Integer" />
+			<result column="visitor_name" property="visitorName" jdbcType="VARCHAR" />
+			<result column="id_card_type" property="IdCardType" jdbcType="VARCHAR" />
+			<result column="id_card_num" property="IdCardNum" jdbcType="VARCHAR" />
+			<result column="sex" property="sex" jdbcType="VARCHAR" />
+			<result column="nation" property="nation" jdbcType="VARCHAR" />
+			<result column="birth" property="birth" jdbcType="VARCHAR" />
+			<result column="address" property="address" jdbcType="VARCHAR" />
+			<result column="mobile" property="mobile" jdbcType="VARCHAR" />
+			<result column="email" property="email" jdbcType="VARCHAR" />
+			<result column="rank" property="rank" jdbcType="VARCHAR" />
+			<!-- <result column="created_by" property="createBy" jdbcType="VARCHAR" 
+				/> <result column="created_time" property="createdTime" jdbcType="TIMESTAMP" 
+				/> <result column="modified_date" property="modifiedDate" jdbcType="TIMESTAMP" 
+				/> -->
+		</association>
+	</resultMap>
+	
+	<resultMap type="java.util.HashMap" id="txnResultMap">
+	    <result column="newOrderNo" property="newOrderNo"
+			jdbcType="VARCHAR" />
+	</resultMap>
+	
+    <select id="getNewTxnNo" parameterType="java.util.Map" statementType="CALLABLE"  resultMap="txnResultMap">  
+       <![CDATA[
+       {call generate_orderNo(  
+          #{orderNamePre ,jdbcType=VARCHAR,mode=IN},  
+          #{num ,jdbcType=INTEGER,mode=IN}, 
+          #{newOrderNo ,jdbcType=VARCHAR,mode=OUT})}  
+          ]]>
+    </select> 
+	<sql id="condition">
+		<if test="null!=params">
+			<if test="null!=params.status and ''!=params.status">
+				AND rank = '${params.status}'
+			</if>
+			<if test="null!=params.visitorId and ''!=params.visitorId">
+				AND visitor_id = '${params.visitorId}'
+			</if>
+			<if test="null!=params.companyId and ''!=params.companyId">
+				AND company_id = '${params.companyId}'
+			</if>
+			<if test="null!=params.departmentId and ''!=params.departmentId">
+				AND department_id = '${params.departmentId}'
+			</if>
+			<if test="null!=params.employeeId and ''!=params.employeeId">
+				AND employee_id = '${params.employeeId}'
+			</if>
+		</if>
+	</sql>
+	
+	
+
+	<insert id="insert" parameterType="com.menjin.visit.model.VisitRecord"
+		useGeneratedKeys="true" keyColumn="id">
+		INSERT INTO
+		t_visit(matter_txn_num,visitor_id,company_id,department_id,
+		employee_id,people_sum,license_plate,matter_id,
+		appointment_time,expire_time,actual_time,leave_time,
+		status,created_by,modified_date)
+		VALUES (
+		#{matterTxnNum},#{visitor.id},#{company.id},#{department.id},
+		#{employee.id},#{peopleSum},#{licensePlate},#{matter.id},
+		#{appointmentTime},#{expireTime},#{actualTime},#{leaveTime},
+		#{status},#{createBy},#{modifiedDate})
+	</insert>
+
+	<update id="updateByPrimaryKey" parameterType="com.menjin.visit.model.VisitRecord">
+		UPDATE t_visit
+		SET
+		company_id = #{company.id},department_id = #{department.id},
+		employee_id = #{employee.id},people_sum = #{peopleSum},
+		license_plate = #{licensePlate},matter_id = #{matter.id},
+		appointment_time = #{appointmentTime},actual_time = #{actualTime},
+		leave_time = #{leaveTime},status = #{status},modified_date = #{modifiedDate}
+		 WHERE id=#{id}
+	</update>
+
+	<select id="selectByPrimaryKey" parameterType="com.menjin.visit.model.VisitRecord"
+		resultMap="resultMap">
+		SELECT t1.*,s.*,c.*,d.*,e.*,m.* ,
+		s.id as vis_id,c.id as com_id,
+		d.id as dep_id,e.id as emp_id,m.id as mat_id
+		FROM t_visit t1
+		LEFT JOIN t_visitor s ON t1.visitor_id = s.id
+		LEFT JOIN t_company c ON t1.company_id = c.id
+		LEFT JOIN t_department d ON t1.department_id = d.id
+		LEFT JOIN t_employee e ON t1.employee_id = e.id
+		LEFT JOIN t_matter m ON t1.matter_id = m.id 
+		WHERE
+		t1.id=#{id} 
+		<!-- SELECT * FROM t_visit t1,t_visitor s,t_company c,t_department d,
+		t_employee e,t_matter m WHERE t1.visitor_id = s.id AND t1.company_id = c.id
+		AND t1.department_id = d.id AND t1.employee_id = e.id AND t1.matter_id = m.id 
+		AND t1.id=#{id} -->
+	</select>
+
+	<delete id="deleteByPrimaryKey" parameterType="com.menjin.visit.model.VisitRecord">
+		DELETE FROM
+		t_visit WHERE id=#{id}
+	</delete>
+
+	<select id="selectCount" resultType="java.lang.Integer">
+		SELECT COUNT(1) FROM t_visit WHERE 1 = 1
+		<include refid="condition" />
+	</select>
+
+	<select id="selectByPage" resultMap="resultMap">
+		SELECT
+		t1.*,s.*,c.*,d.*,e.*,m.*
+		FROM t_visit t1
+		INNER JOIN
+		(
+		SELECT id FROM t_visit WHERE 1
+		= 1
+		
+		<if test="null!=page and null!=page.pageSize">
+			LIMIT #{page.startRowNum}, #{page.pageSize}
+		</if>
+		) AS t2
+		ON t1.id = t2.id
+		LEFT JOIN t_visitor s ON t1.visitor_id = s.id
+		LEFT JOIN t_company c ON t1.company_id = c.id
+		LEFT JOIN t_department d ON t1.department_id = d.id
+		LEFT JOIN t_employee e ON t1.employee_id = e.id
+		LEFT JOIN t_matter m ON t1.matter_id = m.id
+		WHERE 1 = 1
+		<include refid="condition" />
+		<if test="null != orderByField">
+			ORDER BY #{orderByField}
+		</if>
+	</select>
+</mapper>  

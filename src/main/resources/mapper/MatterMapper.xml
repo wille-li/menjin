@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper  
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- SQL 关键字请使用大写字母, 表名, 属性名用小写 -->
+<mapper namespace="com.menjin.visit.mapper.MatterMapper">
+	<resultMap type="com.menjin.visit.model.Matter" id="resultMap">
+		<id column="id" property="id" jdbcType="INTEGER" javaType="java.lang.Integer"/>
+		<result column="matter_decs" property="matterDecs"
+			jdbcType="VARCHAR" />
+		<result column="created_date" property="createTime" jdbcType="TIMESTAMP" />
+		<result column="created_by" property="createBy" jdbcType="VARCHAR" />
+		<result column="modified_date" property="modifiedDate"
+			jdbcType="TIMESTAMP" />
+	</resultMap>
+	<sql id="columnList" >
+	    id, matter_decs,created_by,modified_date,created_date
+	</sql>
+	
+	<sql id="condition">
+	    <if test="null!=params" >
+	        <if test="null!=params.queryCondition and ''!=params.queryCondition" >
+	            ${params.queryCondition}
+	        </if>
+	        <if test="null!=params.name and ''!=params.name" >
+	            AND name = '${params.name}'
+	        </if>
+	    </if>
+	</sql>
+	
+	<insert id="insert" parameterType="com.menjin.visit.model.Matter" useGeneratedKeys="true"
+		keyColumn="id">
+		INSERT INTO t_matter(matter_decs,created_by,modified_date,created_date) VALUES (
+		#{matterDecs},#{createBy},#{modifiedDate},#{createTime})
+	</insert>
+
+	<update id="updateByPrimaryKey" parameterType="com.menjin.visit.model.Matter">
+		UPDATE t_matter SET matter_decs = #{matterDecs},modified_date = #{modifiedDate} WHERE id=#{id}
+	</update>
+
+	<select id="selectByPrimaryKey" parameterType="com.menjin.visit.model.Matter"  resultMap="resultMap">
+		SELECT 
+		<include refid="columnList" /> 
+		FROM t_matter WHERE id=#{id}
+	</select>
+
+	<delete id="deleteByPrimaryKey" parameterType="com.menjin.visit.model.Matter">
+		DELETE FROM t_matter WHERE id=#{id}
+	</delete>
+	
+	<select id="selectCount" resultType="java.lang.Integer" >
+	    SELECT COUNT(1) FROM t_matter WHERE 1 = 1 
+	    <include refid="condition" />
+	</select>
+	
+	<select id="selectByPage" resultMap="resultMap">
+	    SELECT 
+		t1.*
+		FROM t_matter t1
+		INNER JOIN 
+		(
+		    SELECT id FROM t_matter WHERE 1 = 1
+		    <include refid="condition" />
+		    <if test="null!=page and null!=page.pageSize">
+		      LIMIT #{page.startRowNum}, #{page.pageSize}
+		    </if>
+		) AS t2
+		ON t1.id = t2.id
+		WHERE 1 = 1
+		<if test="null != orderByField">
+		    ORDER BY #{orderByField}
+		</if>
+	</select>
+</mapper>  

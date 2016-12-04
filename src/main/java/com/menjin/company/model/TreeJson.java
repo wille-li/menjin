@@ -1,4 +1,4 @@
-package com.menjin.util;
+package com.menjin.company.model;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -7,13 +7,17 @@ import java.util.List;
  * 
  * @author Lin
  *
+ *Easyui Tree 结构类
  * @param <T>
  */
 public class TreeJson<T> {
 	private static final long serialVersionUID = -3226875355919405201L;
 	private int id;
+	//显示名
 	private String text;
+	//状态：打开、关闭
 	private String state;
+	//图片
 	private String iconCls;
 	private boolean checked;
 	private List<TreeJson<T>> children = new ArrayList<TreeJson<T>>();

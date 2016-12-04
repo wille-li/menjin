@@ -10,7 +10,7 @@
 	      striped:true,  
 	      collapsible:false,  
 	      toolbar:"#tb",  
-	      url:'./visitlist.do', //搜索前,触发此action请求所有用户信息  
+	      url:'./visitorlist.do', //搜索前,触发此action请求所有用户信息  
 	      loadMsg:'数据加载中......',  
 	      emptyMsg: '没有记录，请添加！',
 	      onRowContextMenu: onRowContextMenu,
@@ -58,6 +58,17 @@ var isAdd = true;
 	        top:e.pageY
 	    });       
 	}
+  
+//显示拜访缘由信息的
+  function formatRank(value,row,index){
+	    if(value == '3'){
+	    	return "白名单用户";
+	    }else if(value == '2'){
+	    	return "黑名单用户";
+	    }else{
+	    	return "普通用户";
+	    }
+  }
   
   function checkVisitLog(){
 	  var selections = $('#visitortb').datagrid('getSelections');

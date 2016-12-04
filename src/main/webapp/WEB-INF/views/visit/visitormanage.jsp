@@ -43,7 +43,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 			<th field="address"  width="150">地址</th>  
 			<th field="mobile"  width="150">访客联系电话</th>  
 			<th field="email"  width="150">访客邮箱地址</th>  
-			<th field="rank"  width="150">访客等级</th>  
+			<th field="rank"  width="150" formatter="formatRank">访客等级</th>  
 			<!-- <th field="createBy" width="100">记录创建人</th>  
 			<th field="createdTime" width="150" formatter="formatDatebox">记录创建时间</th>  
 			<th field=modifiedDate width="150" formatter="formatDatebox">记录修改时间</th>  --> 
@@ -57,7 +57,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 				<a href="javascript:void(0)" id="addcm" class="easyui-linkbutton" plain="true" icon="icon-add" onclick="addBrand()">新增</a>
 				<a href="javascript:void(0)" id="updatecm" class="easyui-linkbutton" plain="true" icon="icon-save" onclick="updateBrand()">编辑</a>
 				<a href="javascript:void(0)" id="deletecm" class="easyui-linkbutton" plain="true" icon="icon-remove" onclick="deleteCompany()">删除</a>
-			    <select id="vstate" class="easyui-combobox" ata-options="panelHeight:'auto'" name="访客类型" label="访客类型" labelPosition="top" style="width:80px;margin-left:20px">
+			    <select id="vstate" class="easyui-combobox" data-options="panelHeight:'auto'" name="访客类型" label="访客类型" labelPosition="top" style="width:80px;margin-left:20px">
 				<option value="">所有访客</option>
 				<option value="1">普通访客</option>
 				<option value="2">黑名单</option>
@@ -92,7 +92,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 				<input class="easyui-textbox" id="nation" name="nation" style="width:100%" label='民族'/>
 			</div>
 			<div style="margin-bottom:10px;float:left;width:350px;margin-left:10px">
-				<input class="easyui-textbox" id="birth1" name="birth1" style="width:100%" label='出身日月'/>
+				<input class="easyui-textbox" id="birth" name="birth" style="width:100%" label='出身日月'/>
 			</div>
 			<div style="margin-bottom:10px;float:left;width:350px">
 				<input class="easyui-textbox" id="address" name="address" style="width:100%" label='地址'/>
