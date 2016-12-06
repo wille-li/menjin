@@ -4,11 +4,13 @@ import java.util.Date;
 
 public class APIVisit {
 	
-	private Integer id;
+	private String idCardNum;
 	
-	private Integer visitorID;
+	private String companyName;
 	
-	private Integer employeeID;
+	private String interviewee;
+	
+	private String phoneNum;
 	
 	private Date appointmentTime;
 	
@@ -20,28 +22,36 @@ public class APIVisit {
 	
 	private Date modifyDate;
 
-	public Integer getId() {
-		return id;
+	public String getIdCardNum() {
+		return idCardNum;
 	}
 
-	public void setId(Integer id) {
-		this.id = id;
+	public void setIdCardNum(String idCardNum) {
+		this.idCardNum = idCardNum;
 	}
 
-	public Integer getVisitorID() {
-		return visitorID;
+	public String getCompanyName() {
+		return companyName;
 	}
 
-	public void setVisitorID(Integer visitorID) {
-		this.visitorID = visitorID;
+	public void setCompanyName(String companyName) {
+		this.companyName = companyName;
 	}
 
-	public Integer getEmployeeID() {
-		return employeeID;
+	public String getInterviewee() {
+		return interviewee;
 	}
 
-	public void setEmployeeID(Integer employeeID) {
-		this.employeeID = employeeID;
+	public void setInterviewee(String interviewee) {
+		this.interviewee = interviewee;
+	}
+
+	public String getPhoneNum() {
+		return phoneNum;
+	}
+
+	public void setPhoneNum(String phoneNum) {
+		this.phoneNum = phoneNum;
 	}
 
 	public Date getAppointmentTime() {
@@ -86,9 +96,9 @@ public class APIVisit {
 
 	@Override
 	public String toString() {
-		return "APIVisit [id=" + id + ", visitorID=" + visitorID + ", employeeID=" + employeeID + ", appointmentTime="
-				+ appointmentTime + ", status=" + status + ", expireDate=" + expireDate + ", createBy=" + createBy
-				+ ", modifyDate=" + modifyDate + "]";
+		return "APIVisit [idCardNum=" + idCardNum + ", companyName=" + companyName + ", interviewee=" + interviewee
+				+ ", phoneNum=" + phoneNum + ", appointmentTime=" + appointmentTime + ", status=" + status
+				+ ", expireDate=" + expireDate + ", createBy=" + createBy + ", modifyDate=" + modifyDate + "]";
 	}
-	
+
 }

@@ -55,7 +55,7 @@ public class APICompany implements Serializable {
 	public void setCompanyName(String companyName) {
 		this.companyName = companyName;
 	}
-
+	@JsonIgnore
 	public String getCompanyAddress() {
 		return companyAddress;
 	}
@@ -63,7 +63,7 @@ public class APICompany implements Serializable {
 	public void setCompanyAddress(String companyAddress) {
 		this.companyAddress = companyAddress;
 	}
-
+	@JsonIgnore
 	public String getCompanyPhone() {
 		return companyPhone;
 	}

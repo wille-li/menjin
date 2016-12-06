@@ -1,5 +1,8 @@
 package com.menjin.api.controller;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -7,23 +10,29 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.base.annotation.log.SystemControllerLog;
 import com.base.entity.ReturnInfo;
 import com.base.entity.SimplePage;
 import com.base.service.BaseService;
 import com.menjin.api.model.APICompany;
-import com.menjin.api.model.APIDepartment;
-import com.menjin.api.model.APIEmployee;
 import com.menjin.api.model.APIVisit;
 import com.menjin.api.service.APICompanyService;
 import com.menjin.api.service.APIDepartmentService;
 import com.menjin.api.service.APIEmployeeService;
+import com.menjin.photo.model.PhotoInfo;
+import com.menjin.photo.service.PhotoInfoService;
+import com.menjin.visit.model.Visitor;
+import com.menjin.visit.service.VisitorService;
 
 @Controller
 public class APIController {
@@ -36,9 +45,23 @@ public class APIController {
 	
 	public final static String DATA_KEY = "data";
 	
+	public final static String VISITOR_KEY = "visitor";
+	
 	public final static int SUCCESS = 0;
 	
 	public final static int FAIL = 1;
+	
+	public final static int VISITOR_EXISTING = 2;
+	
+	public final static String VERSION_KEY = "version";
+	
+	public static Integer versionNum = 0;
+	
+	@Value("${photo.path}")
+	private String imagePath;
+	
+	@Autowired
+	private PhotoInfoService photoInfoService;
 	
 	@Autowired
 	APICompanyService aPICompanyService;
@@ -49,19 +72,19 @@ public class APIController {
 	@Autowired
 	APIEmployeeService aPIEmployeeService;
 	
+	@Autowired
+	VisitorService visitorService;
+	
 	@RequestMapping(value="/api/getCompany.do", method=RequestMethod.GET)
 	@SystemControllerLog
 	@ResponseBody
 	public Map<String, Object> getCompanyInfo(Integer version){
 		Map<String, Object> returnMap = new HashMap<>();
-		Map<String, List> dataMap = new HashMap<>();
+		Map<String, Object> dataMap = new HashMap<>();
 		ReturnInfo rInfo = new ReturnInfo();
 		List<APICompany> company  = (List<APICompany>) findAllInfo(aPICompanyService);
-		List<APIDepartment> departmentList = (List<APIDepartment>) findAllInfo(aPIDepartmentService);
-		List<APIEmployee> employeeList = (List<APIEmployee>) findAllInfo(aPIEmployeeService);
 		dataMap.put("company", company);
-		dataMap.put("department", departmentList);
-		dataMap.put("employee", employeeList);
+		dataMap.put(VERSION_KEY, "1");
 		rInfo.setMsg("获取成功");
 		rInfo.setRet(SUCCESS);
 		returnMap.put(HEAD_KEY, rInfo);
@@ -80,13 +103,89 @@ public class APIController {
 	@SystemControllerLog
 	@ResponseBody
 	public Map<String, Object> visit(@ModelAttribute APIVisit visit){
-		logger.info(visit.getEmployeeID() + "");
 		Map<String, Object> returnMap = new HashMap<>();
 		ReturnInfo rInfo = new ReturnInfo();
-		rInfo.setMsg("获取成功");
+		String idCardNum = visit.getIdCardNum();
+		Visitor visitor = visitorService.selectByIDCar(idCardNum);
+		if (null == visitor){
+			rInfo.setRet(FAIL);
+			rInfo.setMsg("身份证未做识别验证");
+			returnMap.put(HEAD_KEY, rInfo);
+			return returnMap;
+		} 
+		String phone = visitor.getMobile();
+		if (null == phone){
+			visitor.setMobile(visit.getPhoneNum());
+		}
+		rInfo.setMsg("预约成功");
 		rInfo.setRet(SUCCESS);
 		returnMap.put(HEAD_KEY, rInfo);
 		returnMap.put("validateCode", 666333);
 		return returnMap;
+	}
+	
+	@RequestMapping(value="/api/checkIDCard.do", method=RequestMethod.GET)
+	@SystemControllerLog
+	@ResponseBody
+	public Map<String, Object> checkIDCard(@RequestParam("idCardNum") String idCardNum){
+		Map<String, Object> returnMap = new HashMap<>();
+		Visitor visitor = visitorService.selectByIDCar(idCardNum);
+		ReturnInfo rInfo = new ReturnInfo();
+		if (null == visitor){
+			rInfo.setRet(FAIL);
+			rInfo.setMsg("身份证未注册");
+		} else {
+			rInfo.setRet(VISITOR_EXISTING);
+			rInfo.setMsg("身份证已注册");
+			returnMap.put(VISITOR_KEY, visitor);
+		}
+		
+		returnMap.put(HEAD_KEY, rInfo);
+		return returnMap;
+	}
+	
+	@RequestMapping(value="/api/upload.do", method = RequestMethod.POST)
+	@SystemControllerLog
+	@ResponseBody
+	private Map<String, Object> uploadFile(@RequestParam(value="file") MultipartFile[] files, Visitor visitor){
+		Map <String, Object> result = new HashMap<>();
+		ReturnInfo returnInfo = new ReturnInfo();
+		// 文件大小判断
+		for (MultipartFile file : files){
+			String filename = visitor.getIdCardNum() + Calendar.getInstance().getTimeInMillis() + ".jpg";
+			File tmpFile=new File(imagePath+filename); 
+			//logger.info(imagePath + filename);
+			if(filename!=null&&!file.isEmpty()){  
+				try {  
+					FileCopyUtils.copy(file.getBytes(), tmpFile); 
+					savePhotoInfo(filename, imagePath, file.getBytes().length + 0L);
+					//logger.info("上传成功"); 
+					returnInfo.setRet(APIController.SUCCESS);
+					returnInfo.setMsg("上传图片成功。");
+				} catch (IOException e) {  
+					returnInfo.setRet(APIController.FAIL);
+					returnInfo.setMsg("上传图片失败。");
+				}  
+			} 
+		}
+		/**
+		 * 识别图片过程。
+		 */
+		
+		int resultNum = visitorService.add(visitor);
+		
+        result.put(APIController.HEAD_KEY, returnInfo);
+        
+        return result;
+	}
+	
+	private void savePhotoInfo(String fileName, String filePath, Long size){
+		PhotoInfo photoInfo = new PhotoInfo();
+		photoInfo.setName(fileName);
+		photoInfo.setPath(filePath);
+		photoInfo.setSize(size);
+		photoInfo.setCreateBy("Wille");
+		photoInfo.setCreateDate(Calendar.getInstance().getTime());
+		photoInfoService.add(photoInfo);
 	}
 }

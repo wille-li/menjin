@@ -5,6 +5,9 @@ import java.util.Map;
 
 import javax.annotation.PostConstruct;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.base.entity.SimplePage;
 import com.base.mapper.BaseCrudMapper;
 
@@ -17,6 +20,8 @@ import com.base.mapper.BaseCrudMapper;
 public abstract class BaseServiceImpl<ModelType> implements BaseService<ModelType> {
 
 	private BaseCrudMapper<ModelType> mapper;
+	
+	protected Logger logger = LoggerFactory.getLogger(getClass());
 	
 	@PostConstruct
 	private void initConfig(){

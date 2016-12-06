@@ -12,13 +12,10 @@
 
 	<!-- 加载配置文件 -->
 	<context:property-placeholder location="classpath:devConfig/*.properties"
-		file-encoding="utf-8" ignore-unresolvable="true" />
+		file-encoding="utf-8"  />
 
 	<import resource="spring-dao.xml" />
 	<import resource="spring-service.xml" />
-	
-	<bean id="messageSource"
-	 	class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
-	 	<property name="basename" value="classpath:devConfig/message_zh_CN"/>
-	 </bean>
+	<import resource="spring-security.xml" />
+
 </beans>
