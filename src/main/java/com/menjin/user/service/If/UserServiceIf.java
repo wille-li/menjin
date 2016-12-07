@@ -1,5 +1,7 @@
 package com.menjin.user.service.If;
 
+import java.util.List;
+
 import org.springframework.security.core.userdetails.UserDetailsService;
 
 import com.base.service.BaseService;
@@ -18,4 +20,10 @@ public interface UserServiceIf extends BaseService<User> , UserDetailsService{
 	 * @return
 	 */
 	public User findByUsername(String username);
+	
+	/**
+	 * 查询全部用户信息
+	 * @return
+	 */
+	public List<User> findAllUser();
 }

@@ -1,5 +1,7 @@
 package com.menjin.user.mapper;
 
+import java.util.List;
+
 import com.base.mapper.BaseCrudMapper;
 import com.menjin.user.model.User;
 
@@ -16,4 +18,6 @@ public interface UserMapper extends BaseCrudMapper<User> {
 	 * @return
 	 */
 	public User selectByUserName(String username);
+	
+	public List<User> selectAllUser();
 }

@@ -70,8 +70,9 @@
 .icon-company{
 	background:url('icons/company.png') no-repeat center center;
 }
-
-
+.icon-person{
+	background:url('icons/person.png') no-repeat center center;
+}
 .icon-mini-add{
 	background:url('icons/mini_add.png') no-repeat center center;
 }

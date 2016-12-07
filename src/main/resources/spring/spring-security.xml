@@ -32,7 +32,7 @@
 		</headers>
 		<access-denied-handler error-page="/accessDenied.jsp" />
 
-		<form-login login-page="/login.jsp" default-target-url="/user/login.do"
+		<form-login login-page="/login.jsp" default-target-url="/test.do"
 			always-use-default-target="true" authentication-failure-url="/login.jsp" />
 		<!-- 资源所需要的权限 -->
 		<!-- <intercept-url pattern="/user/login.do" access="hasAnyRole('ROLE_USER','ROLE_ADMIN')"/> 

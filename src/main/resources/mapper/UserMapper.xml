@@ -36,6 +36,10 @@
 	   modified_date,modified_by,status,delete_status,expired_date
 	</sql>
 	
+	<select id="selectAllUser"  resultMap="userResultMap">
+		select * from t_user 
+	</select>
+	
 	<insert id="insert" parameterType="com.menjin.user.model.User" useGeneratedKeys="true"
 		keyColumn="id">
 		INSERT INTO t_user(
@@ -67,5 +71,19 @@
 		 security_answer=#{securityAnswer},modified_date=#{modifiedDate},modified_by=#{modifiedBy},
 		 status=#{status},delete_status=#{deleteStatus},expired_date=#{expiredDate} where id = #{id}
 	</update>
+	
+	<select id="selectByPage" resultMap="userResultMap">
+	    SELECT u.* FROM t_user u where 1 = 1
+		    <if test="null!=page and null!=page.pageSize">
+		      LIMIT #{page.startRowNum}, #{page.pageSize}
+		    </if>
+			<if test="null != orderByField">
+		    	ORDER BY #{orderByField}
+			</if>
+	</select>
+	
+	<select id="selectCount" resultType="java.lang.Integer" >
+	    SELECT COUNT(1) FROM t_user 
+	</select>
 
 </mapper>  

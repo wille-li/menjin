@@ -1,5 +1,6 @@
 package com.menjin.user.service.Impl;
 
+import java.util.List;
 import java.util.Set;
 
 import javax.annotation.Resource;
@@ -34,6 +35,12 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements UserServic
 	public BaseCrudMapper<User> init() {
 		// TODO Auto-generated method stub
 		return this.userMapper;
+	}
+	
+	@Override
+	public List<User> findAllUser() {
+		// TODO Auto-generated method stub
+		return userMapper.selectAllUser();
 	}
 
 	@Override
