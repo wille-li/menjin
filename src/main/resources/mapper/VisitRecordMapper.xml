@@ -9,6 +9,10 @@
 		<id column="id" property="id" jdbcType="INTEGER" javaType="java.lang.Integer" />
 		<result column="matter_txn_num" property="matterTxnNum"
 			jdbcType="VARCHAR" />
+		<result column="employee_name" property="employeeName"
+			jdbcType="VARCHAR" />	
+		<result column="employee_phone" property="employeePhone"
+			jdbcType="VARCHAR" />	
 		<result column="people_sum" property="peopleSum" jdbcType="VARCHAR" />
 		<result column="license_plate" property="licensePlate"
 			jdbcType="VARCHAR" />
@@ -18,6 +22,8 @@
 		<result column="actual_time" property="actualTime" jdbcType="TIMESTAMP" />
 		<result column="leave_time" property="leaveTime" jdbcType="TIMESTAMP" />
 		<result column="status" property="status" jdbcType="VARCHAR" />
+		<result column="record_type" property="recordType" jdbcType="VARCHAR" />
+		<result column="validate_mode" property="validateMode" jdbcType="VARCHAR" />
 		<result column="created_by" property="createBy" jdbcType="VARCHAR" />
 		<result column="modified_date" property="modifiedDate"
 			jdbcType="TIMESTAMP" />
@@ -41,35 +47,6 @@
 			<!-- <result column="created_time" property="createTime" jdbcType="TIMESTAMP" 
 				/> <result column="created_by" property="createBy" jdbcType="VARCHAR" /> 
 				<result column="modified_date" property="modifiedDate" jdbcType="TIMESTAMP" 
-				/> -->
-		</association>
-		<association property="department" column="department_id"
-			javaType="com.menjin.company.model.Department">
-			<id column="dep_id" property="id" jdbcType="INTEGER" javaType="java.lang.Integer" />
-			<result column="department_name" property="departmentName"
-				jdbcType="VARCHAR" />
-			<result column="department_header" property="departmentHeader"
-				jdbcType="VARCHAR" />
-			<result column="department_phone" property="departmentPhone"
-				jdbcType="VARCHAR" />
-			<!-- <result column="created_time" property="createTime" jdbcType="TIMESTAMP" 
-				/> <result column="created_by" property="createBy" jdbcType="VARCHAR" /> 
-				<result column="modified_date" property="modifiedDate" jdbcType="TIMESTAMP" 
-				/> -->
-		</association>
-		<association property="employee" column="employee_id"
-			javaType="com.menjin.company.model.Employee">
-			<id column="emp_id" property="id" jdbcType="INTEGER" javaType="java.lang.Integer" />
-			<result column="employee_no" property="employeeNo" jdbcType="VARCHAR" />
-			<result column="employee_name" property="employeeName"
-				jdbcType="VARCHAR" />
-			<result column="employee_sex" property="employeeSex" jdbcType="VARCHAR" />
-			<result column="email" property="email" jdbcType="VARCHAR" />
-			<result column="mobile" property="mobile" jdbcType="VARCHAR" />
-			<result column="id_card_type" property="IdCardType" jdbcType="VARCHAR" />
-			<result column="id_card_num" property="IdCardNum" jdbcType="VARCHAR" />
-			<!-- <result column="created_by" property="createBy" jdbcType="VARCHAR" 
-				/> <result column="modified_date" property="modifiedDate" jdbcType="TIMESTAMP" 
 				/> -->
 		</association>
 		<association property="visitor" column="visitor_id"
@@ -105,63 +82,70 @@
           #{newOrderNo ,jdbcType=VARCHAR,mode=OUT})}  
           ]]>
     </select> 
+    
 	<sql id="condition">
 		<if test="null!=params">
+		    <if test="null!=params.IdCardNum and ''!=params.IdCardNum">
+				AND s.id_card_num LIKE '%${params.IdCardNum}%'
+			</if>
+			<if test="null!=params.visitorName and ''!=params.visitorName">
+				AND s.visitor_name LIKE '%${params.visitorName}%'
+			</if>
+			<if test="null!=params.companyName and ''!=params.companyName">
+				AND c.company_name LIKE '%${params.companyName}%'
+			</if>
 			<if test="null!=params.status and ''!=params.status">
-				AND rank = '${params.status}'
+				AND status = '${params.status}'
 			</if>
-			<if test="null!=params.visitorId and ''!=params.visitorId">
-				AND visitor_id = '${params.visitorId}'
+			<if test="null!=params.validateMode and ''!=params.validateMode">
+				AND validate_mode = '${params.validateMode}'
 			</if>
-			<if test="null!=params.companyId and ''!=params.companyId">
-				AND company_id = '${params.companyId}'
+			<if test="null!=params.employeeName and ''!=params.employeeName">
+				AND employee_name LIKE '%${params.employeeName}%'
 			</if>
-			<if test="null!=params.departmentId and ''!=params.departmentId">
-				AND department_id = '${params.departmentId}'
+			<if test="null!=params.matterTxnNum and ''!=params.matterTxnNum">
+				AND matter_txn_num LIKE '%${params.matterTxnNum}%'
 			</if>
-			<if test="null!=params.employeeId and ''!=params.employeeId">
-				AND employee_id = '${params.employeeId}'
+			<if test="null!=params.startDate and ''!=params.startDate">
+				AND actual_time >= str_to_date('${params.startDate}','%m/%d/%Y')
+			</if>
+			 <if test="null!=params.endDate and ''!=params.endDate">
+				AND actual_time &lt;= date_sub(str_to_date('${params.endDate}','%m/%d/%Y'),interval -1 day)
 			</if>
 		</if>
 	</sql>
 	
-	
-
 	<insert id="insert" parameterType="com.menjin.visit.model.VisitRecord"
 		useGeneratedKeys="true" keyColumn="id">
 		INSERT INTO
-		t_visit(matter_txn_num,visitor_id,company_id,department_id,
-		employee_id,people_sum,license_plate,matter_id,
-		appointment_time,expire_time,actual_time,leave_time,
-		status,created_by,modified_date)
+		t_visit_record(matter_txn_num,visitor_id,company_id,people_sum,employee_name,employee_phone
+		license_plate,matter_id,appointment_time,expire_time,actual_time,
+		leave_time,status,record_type,validate_mode,created_by,modified_date)
 		VALUES (
-		#{matterTxnNum},#{visitor.id},#{company.id},#{department.id},
-		#{employee.id},#{peopleSum},#{licensePlate},#{matter.id},
-		#{appointmentTime},#{expireTime},#{actualTime},#{leaveTime},
-		#{status},#{createBy},#{modifiedDate})
+		#{matterTxnNum},#{visitor.id},#{company.id},#{peopleSum},#{employeeName},#{employeePhone}
+		#{licensePlate},#{matter.id},#{appointmentTime},#{expireTime},#{actualTime},
+		#{leaveTime},#{status},#{recordType},#{validateMode},#{createBy},#{modifiedDate})
 	</insert>
 
 	<update id="updateByPrimaryKey" parameterType="com.menjin.visit.model.VisitRecord">
-		UPDATE t_visit
+		UPDATE t_visit_record
 		SET
-		company_id = #{company.id},department_id = #{department.id},
-		employee_id = #{employee.id},people_sum = #{peopleSum},
-		license_plate = #{licensePlate},matter_id = #{matter.id},
+		company_id = #{company.id},people_sum = #{peopleSum},employee_name = #{employeeName}
+		license_plate = #{licensePlate},matter_id = #{matter.id},employee_phone = #{employeePhone}
 		appointment_time = #{appointmentTime},actual_time = #{actualTime},
-		leave_time = #{leaveTime},status = #{status},modified_date = #{modifiedDate}
+		leave_time = #{leaveTime},status = #{status},modified_date = #{modifiedDate},
+		validate_mode = #{validateMode}
 		 WHERE id=#{id}
 	</update>
 
 	<select id="selectByPrimaryKey" parameterType="com.menjin.visit.model.VisitRecord"
 		resultMap="resultMap">
-		SELECT t1.*,s.*,c.*,d.*,e.*,m.* ,
+		SELECT t1.*,s.*,c.*,m.* ,
 		s.id as vis_id,c.id as com_id,
-		d.id as dep_id,e.id as emp_id,m.id as mat_id
-		FROM t_visit t1
+		m.id as mat_id
+		FROM t_visit_record t1
 		LEFT JOIN t_visitor s ON t1.visitor_id = s.id
 		LEFT JOIN t_company c ON t1.company_id = c.id
-		LEFT JOIN t_department d ON t1.department_id = d.id
-		LEFT JOIN t_employee e ON t1.employee_id = e.id
 		LEFT JOIN t_matter m ON t1.matter_id = m.id 
 		WHERE
 		t1.id=#{id} 
@@ -173,21 +157,34 @@
 
 	<delete id="deleteByPrimaryKey" parameterType="com.menjin.visit.model.VisitRecord">
 		DELETE FROM
-		t_visit WHERE id=#{id}
+		t_visit_record WHERE id=#{id}
 	</delete>
 
 	<select id="selectCount" resultType="java.lang.Integer">
-		SELECT COUNT(1) FROM t_visit WHERE 1 = 1
+		
+		SELECT
+		COUNT(1)
+		FROM t_visit_record t1
+		INNER JOIN
+		(
+		SELECT id FROM t_visit_record WHERE 1
+		= 1
+		) AS t2
+		ON t1.id = t2.id
+		LEFT JOIN t_visitor s ON t1.visitor_id = s.id
+		LEFT JOIN t_company c ON t1.company_id = c.id
+		LEFT JOIN t_matter m ON t1.matter_id = m.id
+		WHERE 1 = 1
 		<include refid="condition" />
 	</select>
 
 	<select id="selectByPage" resultMap="resultMap">
 		SELECT
-		t1.*,s.*,c.*,d.*,e.*,m.*
-		FROM t_visit t1
+		t1.*,s.*,c.*,m.*
+		FROM t_visit_record t1
 		INNER JOIN
 		(
-		SELECT id FROM t_visit WHERE 1
+		SELECT id FROM t_visit_record WHERE 1
 		= 1
 		
 		<if test="null!=page and null!=page.pageSize">
@@ -197,8 +194,6 @@
 		ON t1.id = t2.id
 		LEFT JOIN t_visitor s ON t1.visitor_id = s.id
 		LEFT JOIN t_company c ON t1.company_id = c.id
-		LEFT JOIN t_department d ON t1.department_id = d.id
-		LEFT JOIN t_employee e ON t1.employee_id = e.id
 		LEFT JOIN t_matter m ON t1.matter_id = m.id
 		WHERE 1 = 1
 		<include refid="condition" />

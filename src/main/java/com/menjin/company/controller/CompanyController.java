@@ -1,6 +1,5 @@
 package com.menjin.company.controller;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -19,9 +18,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.base.annotation.log.SystemControllerLog;
+import com.base.entity.ReturnInfo;
 import com.base.entity.SimplePage;
 import com.menjin.company.model.Company;
-import com.menjin.company.model.TreeJson;
 import com.menjin.company.service.CompanyService;
 
 @Controller
@@ -32,6 +31,10 @@ public class CompanyController {
 	
 	@Autowired
 	CompanyService companyService;
+	
+    public final static int SUCCESS = 0;
+	
+	public final static int FAIL = 1;
 	
 	
 	
@@ -75,38 +78,68 @@ public class CompanyController {
 	@RequestMapping(value="/addCompany.do")
 	@SystemControllerLog
 	@ResponseBody
-	public Integer addCompany(@ModelAttribute Company company,
+	public Map<String, Object> addCompany(@ModelAttribute Company company,
 			HttpServletRequest request,HttpServletResponse response){
 		logger.info("Start to insert new Company!Company Name:"+company.getCompanyName());
+		Map<String, Object> returnMap = new HashMap<>();
+		ReturnInfo rInfo = new ReturnInfo();
 		company.setCreateBy("Admin");//根据现在操作用户修改
 		company.setCreateTime(new Date());
 		company.setModifiedDate(new Date());
 		int returnCode = companyService.add(company);
+		if(returnCode > SUCCESS){
+			rInfo.setMsg("公司数据添加成功!");
+			rInfo.setRet(SUCCESS);
+		}else{
+			rInfo.setMsg("公司数据添加失败,请重试！");
+			rInfo.setRet(FAIL);
+		}
+		returnMap.put("rInfo", rInfo);
 		logger.info("End to Insert Company!ReturnCode:"+returnCode);
-		return returnCode;
+		return returnMap;
 	}
 	
 	@RequestMapping(value="/updateCompany.do")
 	@SystemControllerLog
 	@ResponseBody
-	public Integer updateCompany(@ModelAttribute Company company,HttpServletRequest request,HttpServletResponse response){
+	public Map<String, Object> updateCompany(@ModelAttribute Company company,HttpServletRequest request,HttpServletResponse response){
 		logger.info("Start to update Company!");
+		Map<String, Object> returnMap = new HashMap<>();
+		ReturnInfo rInfo = new ReturnInfo();
 		company.setCreateTime(new Date());
 		company.setModifiedDate(new Date());
 		company.setCreateBy("Lin");
 		int returnCode = companyService.modifyById(company);
+		if(returnCode > SUCCESS){
+			rInfo.setMsg("更新公司数据成功!");
+			rInfo.setRet(SUCCESS);
+		}else{
+			rInfo.setMsg("更新公司数据失败,请重试!");
+			rInfo.setRet(FAIL);
+		}
+		returnMap.put("rInfo", rInfo);
 		logger.info("End to update Company!ReturnCode:"+returnCode);
-		return returnCode;
+		return returnMap;
 	}
 
 	@RequestMapping(value="/deleteCompany.do")
 	@SystemControllerLog
 	@ResponseBody
-	public Integer delectCompany(@ModelAttribute Company company,HttpServletRequest request,HttpServletResponse response){
+	public Map<String, Object> delectCompany(@ModelAttribute Company company,HttpServletRequest request,HttpServletResponse response){
 		logger.info("Start to delete Company!");
+		Map<String, Object> returnMap = new HashMap<>();
+		ReturnInfo rInfo = new ReturnInfo();
 		int returnCode = companyService.deleteById(company);
+		if(returnCode > SUCCESS){
+			rInfo.setMsg("刪除公司数据成功!");
+			rInfo.setRet(SUCCESS);
+		}else{
+			rInfo.setMsg("刪除公司数据失败,请重试!");
+			rInfo.setRet(FAIL);
+		}
+		returnMap.put("rInfo", rInfo);
 		logger.info("End to delete company。RetrunCode:"+returnCode);
-		return returnCode;
+		return returnMap;
 	}
 
 }

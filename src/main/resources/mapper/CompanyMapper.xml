@@ -18,32 +18,6 @@
 			jdbcType="TIMESTAMP" />
 	</resultMap>
 
-	<resultMap type="com.menjin.company.model.Company" id="resultDepartmentMap">
-		<id column="com_id" property="id" jdbcType="INTEGER" javaType="java.lang.Integer" />
-		<result column="company_name" property="companyName" jdbcType="VARCHAR" />
-		<result column="company_addr" property="companyAddress"
-			jdbcType="VARCHAR" />
-		<result column="company_mobile" property="companyPhone"
-			jdbcType="VARCHAR" />
-		<result column="created_time" property="createTime" jdbcType="TIMESTAMP" />
-		<result column="created_by" property="createBy" jdbcType="VARCHAR" />
-		<result column="modified_date" property="modifiedDate"
-			jdbcType="TIMESTAMP" />
-		<collection property="departments" javaType="java.util.ArrayList" ofType="com.menjin.company.model.Department">
-			<id column="dep_id" property="id" jdbcType="INTEGER" javaType="java.lang.Integer" />
-			<result column="department_name" property="departmentName"
-				jdbcType="VARCHAR" />
-			<result column="department_header" property="departmentHeader"
-				jdbcType="VARCHAR" />
-			<result column="department_phone" property="departmentPhone"
-				jdbcType="VARCHAR" />
-			<result column="created_time" property="createTime" jdbcType="TIMESTAMP" />
-			<result column="created_by" property="createBy" jdbcType="VARCHAR" />
-			<result column="modified_date" property="modifiedDate"
-				jdbcType="TIMESTAMP" />
-		</collection>
-	</resultMap>
-
 	<sql id="insertList">
 		company_name,company_addr,company_mobile,created_time,
 		created_by,modified_date
@@ -77,11 +51,6 @@
 		SELECT
 		<include refid="columnList" />
 		FROM t_company WHERE id = #{id}
-	</select>
-
-	<select id="selectAllAndDepartment"  resultMap="resultDepartmentMap">
-		SELECT c.id as com_id,c.company_name,d.id as dep_id,d.department_name
-		FROM t_company c LEFT JOIN t_department d ON c.id = d.company_id
 	</select>
 
 	<delete id="deleteByPrimaryKey" parameterType="com.menjin.company.model.Company">

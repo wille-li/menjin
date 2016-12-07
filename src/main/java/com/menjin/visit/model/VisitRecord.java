@@ -39,6 +39,16 @@ public class VisitRecord {
 	 * 被拜访人
 	 */
 	private Employee employee;
+	
+	/**
+	 * 被拜访人姓名
+	 */
+	private String employeeName;
+	
+	/**
+	 * 被拜访人电话
+	 */
+	private String employeePhone;
 
 	/**
 	 * 随行人数
@@ -88,6 +98,20 @@ public class VisitRecord {
 	 * 4.过期
 	 */
 	private String status;
+	
+	/**
+	 * 拜访类型
+	 * 1.预约
+	 * 2.现场登记
+	 */
+	private String recordType;
+	
+	/**
+	 * 检验方式
+	 * 1.自动检验
+	 * 2.手动检验
+	 */
+	private String validateMode;
 	
 	private String createBy;
 
@@ -229,17 +253,52 @@ public class VisitRecord {
 		this.modifiedDate = modifiedDate;
 	}
 
+	public String getEmployeeName() {
+		return employeeName;
+	}
+
+	public void setEmployeeName(String employeeName) {
+		this.employeeName = employeeName;
+	}
+
+	public String getEmployeePhone() {
+		return employeePhone;
+	}
+
+	public void setEmployeePhone(String employeePhone) {
+		this.employeePhone = employeePhone;
+	}
+
+	public String getRecordType() {
+		return recordType;
+	}
+
+	public void setRecordType(String recordType) {
+		this.recordType = recordType;
+	}
+	
+	public String getValidateMode() {
+		return validateMode;
+	}
+
+	public void setValidateMode(String validateMode) {
+		this.validateMode = validateMode;
+	}
+
 	@Override
 	public String toString() {
-		return "Visit [id=" + id + ", matterTxnNum=" + matterTxnNum
+		return "VisitRecord [id=" + id + ", matterTxnNum=" + matterTxnNum
 				+ ", visitor=" + visitor + ", company=" + company
 				+ ", department=" + department + ", employee=" + employee
-				+ ", peopleSum=" + peopleSum + ", licensePlate=" + licensePlate
-				+ ", matter=" + matter + ", appointmentTime=" + appointmentTime
-				+ ", expireTime=" + expireTime + ", actualTime=" + actualTime
+				+ ", employeeName=" + employeeName + ", employeePhone="
+				+ employeePhone + ", peopleSum=" + peopleSum
+				+ ", licensePlate=" + licensePlate + ", matter=" + matter
+				+ ", appointmentTime=" + appointmentTime + ", expireTime="
+				+ expireTime + ", actualTime=" + actualTime
 				+ ", machineRecordUrl=" + machineRecordUrl + ", leaveTime="
-				+ leaveTime + ", status=" + status + ", createBy=" + createBy
-				+ ", modifiedDate=" + modifiedDate + "]";
+				+ leaveTime + ", status=" + status + ", recordType="
+				+ recordType + ", validateMode=" + validateMode + ", createBy="
+				+ createBy + ", modifiedDate=" + modifiedDate + "]";
 	}
 
 }

@@ -25,7 +25,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 			<th field="companyPhone"  width="150">公司联系电话</th>  
 			<th field="createBy" width="100">记录创建人</th>  
 			<th field="createTime" width="150" formatter="formatDatebox">记录创建时间</th>  
-			<th field=modifiedDate width="150" formatter="formatDatebox">记录修改时间</th>  
+			<th field="modifiedDate" width="150" formatter="formatDatebox">记录修改时间</th>  
 		</tr>  
 	</thead>  
 </table>
@@ -40,12 +40,12 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 			<div class="datagrid-btn-separator"></div>
 			<div style="float:right;">
 			   <input class="easyui-searchbox" data-options="prompt:'Please Input Value',searcher:''" style="width:130px;vertical-align:middle;"></input>
-			   <a href="#" class="easyui-linkbutton" iconCls="icon-search">Search</a>
+			   <a href="#" class="easyui-linkbutton" iconCls="icon-search">查询</a>
 			</div>
 		</div>
 	</div>
     
-    <div id="addCompanyDialog" class="easyui-dialog" data-options="modal:true" closed="true" style="width:400px;height:300px;padding:10px">
+    <div id="CompanyDialog" class="easyui-dialog" data-options="modal:true" closed="true" style="width:400px;height:300px;padding:10px">
 		<div class="easyui-panel" style="padding:30px 10px;">
 			<form id="addComForm"  method="post">
 			<input class="easyui-textbox" type="hidden" id="id" name="id"/>
@@ -53,7 +53,8 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 				<input class="easyui-textbox" id="companyName" name="companyName" style="width:100%" label='公司名称'/>
 			</div>
 			<div style="margin-bottom:20px">
-				<input class="easyui-textbox" id="companyAddress" name="companyAddress" style="width:100%" label='公司楼层'/>
+				<!-- <input class="easyui-textbox" id="companyAddress" name="companyAddress" style="width:100%" label='公司楼层'/> -->
+			    <input id="companyAddress" class="easyui-combobox" name="companyAddress" label='公司楼层' style="width:100%" />
 			</div>
 			<div style="margin-bottom:10px">
 				<input class="easyui-textbox" id="companyPhone" name="companyPhone" style="width:100%" label='公司联系电话'/>

@@ -1,10 +1,44 @@
 ﻿  $(function(){
+	  
+	  var floatData = "[";
+	  
+	  for(var i = 1; i<101; i++){
+		  var item = '{"value":'+i+',"text":"'+i+'楼"},';
+		  /*if(i == 1){
+			  item = '{"value":'+i+',"text":"'+i+'楼","selected":true},';
+		  }*/
+		  if(i == 100){
+			  item = '{"value":'+i+',"text":"'+i+'楼"}';
+		  }
+		  floatData += item;
+	  }
+	  floatData += "]";
+	  floatData = $.parseJSON(floatData); 
+	  
+	  /*var floatData = [{
+			"value":1,
+			"text":"1楼",
+		},{
+			"value":2,
+			"text":"2楼",
+			"selected":true
+		},{
+			"value":3,
+			"text":"3楼",
+		},{
+			"value":4,
+			"text":"4楼",
+		},{
+			"value":5,
+			"text":"5楼",
+		}];*/
+	  
 	  $('#tt').datagrid({  
 	      title:'公司管理',  
 	      iconCls:'icon-man',  
 	      width:'100%',  
 	      height:'500',
-	      pageSize:10,  
+	      pageSize:20,  
 	      pageList:[10,20,30,40,50] ,
 	      nowrap:true,  
 	      striped:true,  
@@ -21,11 +55,18 @@
 	      fit:true
 	  });
 	  
-	  $('#addCompanyDialog').dialog({
+	  $('#CompanyDialog').dialog({
 		    title: '添加公司信息',
 		    buttons : '#addCDButton',
 		    iconCls:'icon-save'
 		});
+	  
+	  $('#companyAddress').combobox({
+		  data:floatData,
+		  textField:'text',
+		  valueField:'value',
+		  editable:false ,
+	  });
 	  
   })
 //弹出窗口中是添加操作还是修改操作？
@@ -37,8 +78,8 @@ function addBrand(){
 	  $("#companyName").textbox("setValue","");
 	  $("#companyAddress").textbox("setValue","");
 	  $("#companyPhone").textbox("setValue","");
-	  $('#addCompanyDialog').dialog({title:'添加公司信息'});
-	  $('#addCompanyDialog').dialog("open");
+	  $('#CompanyDialog').dialog({title:'添加公司信息'});
+	  $('#CompanyDialog').dialog("open");
 }
   
 function deleteCompany(){
@@ -53,10 +94,14 @@ function deleteCompany(){
 			var submitData = $('#addComForm').serialize();
 			$.post('./deleteCompany.do', submitData, function(data){
 				 if(data){
-		   			$('#tt').datagrid('load');
-		   			 showmessage('提醒','数据删除成功！');
+					 if(data.rInfo.ret == 0){
+						 $('#tt').datagrid('load');
+			   			 showmessage('提醒',data.rInfo.msg);
+					 }else{
+						 showmessage('操作失败',data.rInfo.msg); 
+					 }
 		   		 }else {
-		   			showmessage('操作失败','删除数据失败！');
+		   			showmessage('操作失败','网络连接失败，请与管理员联系！');
 		   		 }
 			   }); 
 			  $("#id").textbox("setValue","");
@@ -76,12 +121,12 @@ function updateBrand(){
 	$("#companyName").textbox("setValue",selections[0].companyName);
 	$("#companyAddress").textbox("setValue",selections[0].companyAddress);
 	$("#companyPhone").textbox("setValue",selections[0].companyPhone);
-	$('#addCompanyDialog').dialog({title:'修改公司信息'});
-	$('#addCompanyDialog').dialog("open");
+	$('#CompanyDialog').dialog({title:'修改公司信息'});
+	$('#CompanyDialog').dialog("open");
 }
 
 function quitDialog(){
-	$('#addCompanyDialog').dialog("close");
+	$('#CompanyDialog').dialog("close");
 }
 
 function submitDialog(){
@@ -95,18 +140,22 @@ function submitDialog(){
 	var submitData = $('#addComForm').serialize();
     $.post(url, submitData, function(data){
    	 if(data){
-            if(isAdd){
+   		if(data.rInfo.ret == 0){
+   			if(isAdd){
             	$('#tt').datagrid('load');//如果是添加则滚动到第一页并刷新
-                showmessage('提醒','数据添加成功！');
+                showmessage('提醒',data.rInfo.msg);
             }else{
             	$('#tt').datagrid('reload');//如果是修改则刷新当前页
-            	showmessage('提醒','数据修改成功！');
+            	showmessage('提醒',data.rInfo.msg);
             } 
+   		}else{
+   			showmessage("操作失败",data.rInfo.msg);
+   		}
    	 }else {
-   		showmessage('操作失败','数据操作失败！');
+   		showmessage('操作失败','网络连接失败，请与管理员联系！');
    	 }
 
-        $("#addCompanyDialog").dialog("close"); //关闭dialog
+        $("#CompanyDialog").dialog("close"); //关闭dialog
         //清空form表单中的数据
         $("#id").textbox("setValue","");
         $("#companyName").textbox("setValue","");

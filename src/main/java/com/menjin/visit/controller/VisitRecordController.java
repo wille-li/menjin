@@ -59,16 +59,19 @@ public class VisitRecordController {
 	@SystemControllerLog
 	@ResponseBody
 	public Map getVistorByPage(@Param(value="pageSize") Integer page,
-			@Param(value="rows") Integer rows,@Param(value="status") String status ){
+			@Param(value="rows") Integer rows,@Param(value="status") String status,
+			@Param(value="matterTxnNum") String matterTxnNum,@Param(value="startDate") String startDate,
+			@Param(value="endDate") String endDate,@Param(value="IdCardNum") String IdCardNum,
+			@Param(value="visitorName") String visitorName,@Param(value="employeeName") String employeeName,
+			@Param(value="companyName") String companyName,@Param(value="validateMode") String validateMode){
 		logger.info("Start to getVisitorByPage:vistorlist.do");
-		int count = vistService.findCount(null, null);
-		logger.info("Matters Count:"+count);
+		
+		Map<String, Object> params = toMap(status, matterTxnNum, startDate, endDate, 
+				IdCardNum, visitorName, employeeName, companyName, validateMode);
+	
+		int count = vistService.findCount(null, params);
+		logger.info("check visitRecord by params Count:"+count);
 		SimplePage simplepage = new SimplePage(page, rows, count);
-		Map<String, Object> params = null;
-		if(status != null && !status.equals("")){
-			params = new HashMap<String, Object>();
-			params.put("status", status);
-		}
 		String orderBy = "modified_date";
 		List<VisitRecord> visits = vistService.findByPage(simplepage, params, orderBy);
 		Map maps = new HashMap();
@@ -85,9 +88,10 @@ public class VisitRecordController {
 			@Param(value = "visitorName") String visitorName,@Param(value = "idCardType") String idCardType,
 			@Param(value = "idCardNum") String idCardNum,@Param(value = "sex") String sex,
 			@Param(value = "mobile") String mobile,@Param(value = "companyId") Integer companyId,
-			@Param(value = "departmentId") Integer departmentId,@Param(value = "employeeId") Integer employeeId,
+			@Param(value = "employeePhone") Integer employeePhone,@Param(value = "employeeName") Integer employeeName,
 			@Param(value = "matterId") Integer matterId,@Param(value = "peopleSum") String peopleSum,
-			@Param(value = "visitTime") String visitTime,
+			@Param(value = "visitTime") String visitTime,@Param(value = "validateMode")String validateMode,
+			@Param(value = "status")String status,@Param(value = "birth")String birth,
 			HttpServletRequest request,HttpServletResponse response){
 		Visitor visitor = visitorService.selectByIDCar(idCardNum);
 		Integer returnCode = 0;
@@ -122,10 +126,10 @@ public class VisitRecordController {
 		visit.setPeopleSum(Integer.parseInt(peopleSum));
 		Company company = new Company();
 		company.setId(companyId);
-		Department department = new Department();
+		/*Department department = new Department();
 		department.setId(departmentId);
 		Employee employee = new Employee();
-		employee.setId(employeeId);
+		employee.setId(employeeId);*/
 		Matter matter = new Matter();
 		matter.setId(matterId);
 		Visitor newvisitor = visitorService.selectByIDCar(idCardNum);
@@ -140,8 +144,8 @@ public class VisitRecordController {
 		//此处需要修改。由DB生成流水账号
 		visit.setMatterTxnNum(UUID.randomUUID().toString());
 		visit.setCompany(company);
-		visit.setDepartment(department);
-		visit.setEmployee(employee);
+		/*visit.setDepartment(department);
+		visit.setEmployee(employee);*/
 		visit.setVisitor(newvisitor);
 		visit.setMatter(matter);
 		visit.setStatus(VISIT_STATUS_NOT.toString());
@@ -155,10 +159,51 @@ public class VisitRecordController {
 	@RequestMapping(value="/updateVisit.do")
 	@SystemControllerLog
 	@ResponseBody
-	public Integer updateVisit(@ModelAttribute VisitRecord visit,HttpServletRequest request,HttpServletResponse response){
+	public Integer updateVisit(@Param(value = "id") Integer id,
+			@Param(value = "visitorName") String visitorName,@Param(value = "idCardType") String idCardType,
+			@Param(value = "idCardNum") String idCardNum,@Param(value = "sex") String sex,
+			@Param(value = "mobile") String mobile,@Param(value = "companyId") Integer companyId,
+			@Param(value = "employeePhone") String employeePhone,@Param(value = "employeeName") String employeeName,
+			@Param(value = "matterId") Integer matterId,@Param(value = "peopleSum") Integer peopleSum,
+			@Param(value = "visitTime") String visitTime,@Param(value = "leaveTime") String leaveTime,
+			@Param(value = "validateMode")String validateMode,
+			@Param(value = "status")String status,@Param(value = "birth")String birth,
+			HttpServletRequest request,HttpServletResponse response){
 		logger.info("Start to update Visitor!");
-		visit.setModifiedDate(new Date());
-		int returnCode = vistService.modifyById(visit);
+		VisitRecord visitRecord = new VisitRecord();
+		visitRecord.setId(id);
+		visitRecord = vistService.findById(visitRecord);
+		Visitor visitor = visitRecord.getVisitor();
+		visitor.setVisitorName(visitorName);
+		visitor.setIdCardType(idCardType);
+		visitor.setIdCardNum(idCardNum);
+		visitor.setSex(sex);
+		visitor.setMobile(mobile);
+		Integer returnCode = visitorService.modifyById(visitor);
+		if(returnCode > 0){
+			logger.info("Update visitor info success!");
+			Company company = new Company();
+			company.setId(companyId);
+			visitRecord.setCompany(company);
+			Matter matter = new Matter();
+			matter.setId(matterId);
+			visitRecord.setMatter(matter);
+			visitRecord.setEmployeeName(employeeName);
+			visitRecord.setEmployeePhone(employeePhone);
+			visitRecord.setPeopleSum(peopleSum);
+			visitRecord.setValidateMode(validateMode);
+			visitRecord.setStatus(status);
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+			try {
+				visitRecord.setActualTime(sdf.parse(visitTime));
+				visitRecord.setLeaveTime(sdf.parse(leaveTime));
+			} catch (ParseException e) {
+				e.printStackTrace();
+			}
+			visitRecord.setModifiedDate(new Date());
+		}else{
+			logger.info("Update visitor info fail!");
+		}
 		logger.info("End to update Visitor!ReturnCode:"+returnCode);
 		return returnCode;
 	}
@@ -184,7 +229,6 @@ public class VisitRecordController {
 			returnCode = vistService.modifyById(visit);
 		}
 		return returnCode;
-		
 	}
 	
 
@@ -196,6 +240,49 @@ public class VisitRecordController {
 		int returnCode = vistService.deleteById(visit);
 		logger.info("End to delete Visitor。RetrunCode:"+returnCode);
 		return returnCode;
+	}
+	
+	public Map<String, Object> toMap(String status,String matterTxnNum,String startDate,
+			String endDate,String IdCardNum,String visitorName,String employeeName,
+			String companyName,String validateMode){
+		Map<String, Object> params = new HashMap<String, Object>();
+		if(status != null && !status.equals("")){
+			logger.info("status:"+status);
+			params.put("status", status);
+		}
+		if(matterTxnNum != null && !matterTxnNum.equals("")){
+			logger.info("matterTxnNum:"+matterTxnNum);
+			params.put("matterTxnNum", matterTxnNum);
+		}
+		if(startDate!=null && !startDate.equals("")){
+			logger.info("startDate:"+matterTxnNum);
+			params.put("startDate", startDate);
+		}
+		if(endDate!=null && !endDate.equals("")){
+			logger.info("endDate:"+endDate);
+			params.put("endDate", endDate);
+		}
+		if(IdCardNum != null && ! IdCardNum.equals("")){
+			logger.info("IdCardNum:"+IdCardNum);
+			params.put("IdCardNum", IdCardNum);
+		}
+		if(employeeName != null && ! employeeName.equals("")){
+			logger.info("employeeName:"+employeeName);
+			params.put("employeeName", employeeName);
+		}
+		if(visitorName != null && !visitorName.equals("")){
+			logger.info("visitorName:"+visitorName);
+			params.put("visitorName", visitorName);
+		}
+		if(companyName != null && !companyName.equals("")){
+			logger.info("companyName:"+companyName);
+			params.put("companyName", companyName);
+		}
+		if(validateMode != null && ! validateMode.equals("")){
+			logger.info("validateMode:"+validateMode);
+			params.put("validateMode", validateMode);
+		}
+		return params;
 	}
 
 }

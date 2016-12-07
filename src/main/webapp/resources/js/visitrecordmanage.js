@@ -20,15 +20,6 @@
 	      rownumbers:true ,
 	      singleSelect : true,
 	      fit:true,
-	      rowStyler: function(index,row){
-				if (row.rank == 2){
-					return 'color:#FF0000;font-weight:bold;';
-				}
-				
-				if (row.rank == 3){
-					return 'color:#FFFF00;font-weight:bold;';
-				}
-			}
 	  });
 	  
 	  $('#VisitDialog').dialog({
@@ -37,16 +28,20 @@
 		    iconCls:'icon-save'
 		});
 	  
-	  $("#vstate").combobox({
+	  /*$("#vstate").combobox({
 		  onChange: function (n,o) {
 			  $('#visitortb').datagrid({
-				  url: './visitorlist.do?status='+n
+				  url: './visitlist.do?status='+n
 				});
 			  $("#visitortb").datagrid('reload'); 
 		  }
-	  });
+	  });*/
 	  
-	  $('#dd').datebox({
+	  $('#startDate').datebox({
+		    required:true
+		}); 
+	  
+	  $('#endDate').datebox({
 		    required:true
 		}); 
 	  
@@ -55,13 +50,42 @@
 		  textField:'companyName',
 		  valueField:'id',
 		  editable:false ,
-		  onSelect: showDepartmentByCompanyId
+		  /*onSelect: showDepartmentByCompanyId*/
 	  });
 	  
 	  $('#matterBox').combobox({
 		  url:'./matterlistForCombox.do',
 		  textField:'matterDecs',
 		  valueField:'id',
+		  editable:false 
+	  });
+	  
+	  $('#validateMode').combobox({
+		    valueField: 'value',
+			textField: 'label',
+			data: [{
+				label: '自动检验',
+				value: '1'
+			},{
+				label: '手动检验',
+				value: '2'
+			}],
+		  editable:false 
+	  });
+	  
+	  $('#status').combobox({
+		    valueField: 'value',
+			textField: 'label',
+			data: [{
+				label: '未拜访',
+				value: '1'
+			},{
+				label: '未离开',
+				value: '2'
+			},{
+				label: '已离开',
+				value: '3'
+			}],
 		  editable:false 
 	  });
   })
@@ -100,27 +124,40 @@ var isAdd = true;
 	  showmessage('提醒',selections[0].id+"Log");
   }
   
-  function checkMessage(){
-	  var selections = $('#visitortb').datagrid('getSelections');
-	  showmessage('提醒',selections[0].id+"的詳細個人資料。");
-  }
-  
-  function setStatus(status){
+  function checkByselect(type){
 	  
-	  $.messager.confirm('提醒', '你确定要将该访客设置吗?', function(r){
-		  if (r){
-	            var selections = $('#visitortb').datagrid('getSelections');
-	            var submitData = {id:selections[0].id,status:status};
-	            $.post('./updateVisitStatus.do', submitData, function(data){
-		   	        if(data){
-		                $('#visitortb').datagrid('load');//如果是添加则滚动到第一页并刷新
-		        	        showmessage('提醒','成功'); 
-		   	        }else {
-		   		        showmessage('操作失败','数据操作失败！');
-		   	        }
-		   });
-		  }
-	  });
+	  var startDate = $('#startDate').datebox('getValue');   
+	  var endDate = $('#endDate').datebox('getValue'); 
+	  var checktxnNo = $('#checktxnNo').textbox('getValue');
+	  var checkIdCard = $('#checkIdCard').textbox('getValue');
+	  var checkvisitorName = $('#checkvisitorName').textbox('getValue');
+	  var checkemployee = $('#checkemployee').textbox('getValue');
+	  var checkcompany = $('#checkcompany').textbox('getValue');
+	  var checkvalidate = $('#checkvalidate').combobox('getValue');
+	  var vstate = $('#vstate').combobox('getValue');
+	  /*var url;*/
+	  var queryParams;
+      if(type == 1){
+		  /*url = './visitlist.do?matterTxnNum='+checktxnNo+'&IdCardNum='+checkIdCard+
+		        '&visitorName='+checkvisitorName+'&employeeName='+checkemployee+'&companyName='+checkcompany+
+		        '&validateMode='+checkvalidate+'&status='+vstate;*/
+		  queryParams = {matterTxnNum:checktxnNo,IdCardNum:checkIdCard,visitorName:checkvisitorName,
+				  employeeName:checkemployee,companyName:checkcompany,validateMode:checkvalidate,
+				  status:vstate};
+	  }else{
+		/*  url = './visitlist.do?startDate='+startDate+'&endDate='+endDate+
+		        'matterTxnNum='+checktxnNo+'&IdCardNum='+checkIdCard+
+	            '&visitorName='+checkvisitorName+'&employeeName='+checkemployee+'&companyName='+checkcompany+
+	            '&validateMode='+checkvalidate+'&status='+vstate;*/
+		  queryParams = {startDate:startDate,endDate:endDate,matterTxnNum:checktxnNo,IdCardNum:checkIdCard,
+				  visitorName:checkvisitorName,employeeName:checkemployee,companyName:checkcompany,
+				  validateMode:checkvalidate,status:vstate};
+	  }
+      $('#visitortb').datagrid({
+    	  queryParams:queryParams
+		});
+	  $("#visitortb").datagrid('load'); 
+	  
   }
 //显示访客信息的
 function formatVisitor(value,row,index){
@@ -142,21 +179,26 @@ function formatEmployee(value,row,index){
 function formatMatter(value,row,index){
       return new Object(row["matter"]).matterDecs;     
 }
-  
+
   
 function addBrand(){
 	  isAdd = true;
 	  $("#id").textbox("setValue","");
-	  $("#visitorName").textbox("setValue","");
-	  $("#idCardType").textbox("setValue","");
-	  $("#idCardNum").textbox("setValue","");
-	  $("#sex").textbox("setValue","");
-	  $("#nation").textbox("setValue","");
-	  $("#birth").textbox("setValue","");
-	  $("#address").textbox("setValue","");
-	  $("#mobile").textbox("setValue","");
-	  $("#email").textbox("setValue","");
-	  $("#rank").textbox("setValue","");
+	  $('#visitorName').textbox('setValue',"");
+	  $('#idCardType').textbox('setValue',"");
+	  $('#idCardNum').textbox('setValue',"");
+	  $('#sex').textbox('setValue',"");
+	  $('#mobile').textbox('setValue');
+      $('#companyBox').combobox('setValue',"");
+	  $('#employeeName').textbox('setValue',"");
+	  $('#employeePhone').textbox('setValue',"");
+	  $('#matterBox').combobox('setValue',"");
+	  $('#peopleSum').textbox('setValue',"");
+	  $('#visitTime').datetimebox('setValue',"");
+	  $('#validateMode').textbox('setValue',"");
+	  $('#status').textbox('setValue',"");
+	  $('#leaveTime').textbox('setValue',"");
+	  $('#checkRecord').hide();
 	  $('#VisitDialog').dialog({title:'填写拜访信息'});
 	  $('#VisitDialog').dialog("open");
 }
@@ -193,19 +235,25 @@ function updateBrand(){
          return false;
        }
 	$("#id").textbox("setValue",selections[0].id);
-	$("#visitorName").textbox("setValue",selections[0].visitorName);
-	$("#idCardType").textbox("setValue",selections[0].idCardType);
-	$("#idCardNum").textbox("setValue",selections[0].idCardNum);
-	$("#sex").textbox("setValue",selections[0].sex);
-    $("#nation").textbox("setValue",selections[0].nation);
-	$("#birth").textbox("setValue",selections[0].birth);
-	$("#address").textbox("setValue",selections[0].address);
-	$("#mobile").textbox("setValue",selections[0].mobile);
-	$("#email").textbox("setValue",selections[0].email);
-	$("#rank").textbox("setValue",selections[0].rank);
+	$('#visitorName').textbox('setValue',selections[0].visitor.visitorName);
+	$('#idCardType').textbox('setValue',selections[0].visitor.idCardType);
+	$('#idCardNum').textbox('setValue',selections[0].visitor.idCardNum);
+	$('#sex').textbox('setValue',selections[0].visitor.sex);
+    $('#mobile').textbox('setValue',selections[0].visitor.mobile);
+    $('#companyBox').combobox('setValue',selections[0].company.companyName);
+	$('#employeeName').textbox('setValue',selections[0].employeeName);
+	$('#employeePhone').textbox('setValue',selections[0].employeePhone);
+	$('#matterBox').combobox('setValue',selections[0].matter.matterDecs);
+	$('#peopleSum').textbox('setValue',selections[0].peopleSum);
+	$('#visitTime').datetimebox('setValue',formatDatebox(selections[0].actualTime));
+	$('#validateMode').textbox('setValue',selections[0].validateMode);
+	$('#status').textbox('setValue',selections[0].status);
+	$('#leaveTime').textbox('setValue',formatDatebox(selections[0].leaveTime));
+	$('#checkRecord').show();
 	$('#VisitDialog').dialog({title:'修改拜访信息'});
 	$('#VisitDialog').dialog("open");
 }
+
 
 function quitDialog(){
 	$('#VisitDialog').dialog("close");
@@ -213,20 +261,28 @@ function quitDialog(){
 
 function submitDialog(){
 	
+	var id = $('#id').textbox('getValue');
 	var visitorName = $('#visitorName').textbox('getValue');
 	var idCardType = $('#idCardType').textbox('getValue');
 	var idCardNum = $('#idCardNum').textbox('getValue');
+	var birth1 = $('#birth1').textbox('getValue');
 	var sex = $('#sex').textbox('getValue');
 	var mobile = $('#mobile').textbox('getValue');
 	var companyId = $('#companyBox').combobox('getValue');
-	var departmentId = $('#departmentBox').combobox('getValue');
-	var employeeId = $('#employeeBox').combobox('getValue');
+	/*var departmentId = $('#departmentBox').combobox('getValue');
+	var employeeId = $('#employeeBox').combobox('getValue');*/
+	var employeeName = $('#employeeName').textbox('getValue');
+	var employeePhone = $('#employeePhone').textbox('getValue');
 	var matterId = $('#matterBox').combobox('getValue');
 	var peopleSum = $('#peopleSum').textbox('getValue');
 	var visitTime = $('#visitTime').datetimebox('getValue');
-	var submitData = {visitorName:visitorName,idCardType:idCardType,idCardNum:idCardNum,
-			sex:sex,mobile:mobile,companyId:companyId,departmentId:departmentId,employeeId:employeeId,
-			matterId:matterId,peopleSum:peopleSum,visitTime:visitTime};
+	var validateMode = $('#validateMode').textbox('getValue');
+	var status = $('#status').textbox('getValue');
+	var leaveTime = $('#leaveTime').textbox('getValue');
+	
+	var submitData = {id:id,visitorName:visitorName,idCardType:idCardType,idCardNum:idCardNum,
+			sex:sex,mobile:mobile,companyId:companyId,employeeName:employeeName,employeePhone:employeePhone,/*departmentId:departmentId,employeeId:employeeId,*/
+			matterId:matterId,peopleSum:peopleSum,visitTime:visitTime,validateMode:validateMode,status:status,birth:birth1};
     var url = './addVisit.do';
     if(!isAdd){
    	 url = './updateVisit.do';
@@ -261,7 +317,7 @@ function validation(){
 	var employeeId = $('#employeeBox').combobox('getValue');
 	var matterId = $('#matterBox').combobox('getValue');
 	var peopleSum = $('#peopleSum').textbox('getValue');
-	var peopleSum = $('#visitTime').datetimebox('getValue');
+	var visitTime = $('#visitTime').datetimebox('getValue');
 }
 
 

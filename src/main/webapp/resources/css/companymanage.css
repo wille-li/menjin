@@ -1,0 +1,19 @@
+.tool{
+	border-bottom:1px solid #ddd;
+	height:28px;
+	padding:2px 2px 2px 2px;
+	background:#fafafa;
+}
+
+.right{
+	float:right;
+}
+
+.left{
+	float:left;
+}
+
+.checkInput{
+	width:130px;
+	vertical-align:middle;
+}
