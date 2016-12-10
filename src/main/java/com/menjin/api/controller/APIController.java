@@ -7,10 +7,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.annotation.Resource;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -35,6 +38,7 @@ import com.menjin.visit.model.Visitor;
 import com.menjin.visit.service.VisitorService;
 
 @Controller
+@Scope("prototype")
 public class APIController {
 	
 	private Logger logger = LoggerFactory.getLogger(getClass());
@@ -60,7 +64,7 @@ public class APIController {
 	@Value("${photo.path}")
 	private String imagePath;
 	
-	@Autowired
+	@Resource
 	private PhotoInfoService photoInfoService;
 	
 	@Autowired
@@ -72,7 +76,7 @@ public class APIController {
 	@Autowired
 	APIEmployeeService aPIEmployeeService;
 	
-	@Autowired
+	@Resource
 	VisitorService visitorService;
 	
 	@RequestMapping(value="/api/getCompany.do", method=RequestMethod.GET)
@@ -144,40 +148,7 @@ public class APIController {
 		return returnMap;
 	}
 	
-	@RequestMapping(value="/api/upload.do", method = RequestMethod.POST)
-	@SystemControllerLog
-	@ResponseBody
-	private Map<String, Object> uploadFile(@RequestParam(value="file") MultipartFile[] files, Visitor visitor){
-		Map <String, Object> result = new HashMap<>();
-		ReturnInfo returnInfo = new ReturnInfo();
-		// 文件大小判断
-		for (MultipartFile file : files){
-			String filename = visitor.getIdCardNum() + Calendar.getInstance().getTimeInMillis() + ".jpg";
-			File tmpFile=new File(imagePath+filename); 
-			//logger.info(imagePath + filename);
-			if(filename!=null&&!file.isEmpty()){  
-				try {  
-					FileCopyUtils.copy(file.getBytes(), tmpFile); 
-					savePhotoInfo(filename, imagePath, file.getBytes().length + 0L);
-					//logger.info("上传成功"); 
-					returnInfo.setRet(APIController.SUCCESS);
-					returnInfo.setMsg("上传图片成功。");
-				} catch (IOException e) {  
-					returnInfo.setRet(APIController.FAIL);
-					returnInfo.setMsg("上传图片失败。");
-				}  
-			} 
-		}
-		/**
-		 * 识别图片过程。
-		 */
-		
-		int resultNum = visitorService.add(visitor);
-		
-        result.put(APIController.HEAD_KEY, returnInfo);
-        
-        return result;
-	}
+	
 	
 	private void savePhotoInfo(String fileName, String filePath, Long size){
 		PhotoInfo photoInfo = new PhotoInfo();
@@ -188,4 +159,7 @@ public class APIController {
 		photoInfo.setCreateDate(Calendar.getInstance().getTime());
 		photoInfoService.add(photoInfo);
 	}
+	
+	
+
 }
