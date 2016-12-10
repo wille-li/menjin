@@ -170,4 +170,6 @@ public class UserControler {
 		logger.info("End to delete user,retrunCode:"+returnCode);
 		return returnCode;
 	}
+	
+	
 }
