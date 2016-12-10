@@ -98,5 +98,19 @@ function formatDatebox(value) {
         dt = new Date(value);  
     }  
   
-    return dt.format("yyyy-MM-dd hh:mm");
+    return dt.format("MM/dd/yyyy hh:mm:ss");
+}
+
+function formatYMDatebox(value){
+	if (value == null || value == '') {  
+        return '';  
+    }  
+    var dt;  
+    if (value instanceof Date) {  
+        dt = value;  
+    } else {  
+        dt = new Date(value);  
+    }  
+  
+    return dt.format("MM/dd/yyyy");
 }

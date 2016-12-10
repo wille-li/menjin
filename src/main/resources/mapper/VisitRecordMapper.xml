@@ -74,7 +74,7 @@
 			jdbcType="VARCHAR" />
 	</resultMap>
 	
-    <select id="getNewTxnNo" parameterType="java.util.Map" statementType="CALLABLE"  resultMap="txnResultMap">  
+    <select id="getNewTxnNo" parameterType="java.util.Map" statementType="CALLABLE"  resultType="java.lang.String">  
        <![CDATA[
        {call generate_orderNo(  
           #{orderNamePre ,jdbcType=VARCHAR,mode=IN},  
@@ -118,11 +118,11 @@
 	<insert id="insert" parameterType="com.menjin.visit.model.VisitRecord"
 		useGeneratedKeys="true" keyColumn="id">
 		INSERT INTO
-		t_visit_record(matter_txn_num,visitor_id,company_id,people_sum,employee_name,employee_phone
+		t_visit_record(matter_txn_num,visitor_id,company_id,people_sum,employee_name,employee_phone,
 		license_plate,matter_id,appointment_time,expire_time,actual_time,
 		leave_time,status,record_type,validate_mode,created_by,modified_date)
 		VALUES (
-		#{matterTxnNum},#{visitor.id},#{company.id},#{peopleSum},#{employeeName},#{employeePhone}
+		#{matterTxnNum},#{visitor.id},#{company.id},#{peopleSum},#{employeeName},#{employeePhone},
 		#{licensePlate},#{matter.id},#{appointmentTime},#{expireTime},#{actualTime},
 		#{leaveTime},#{status},#{recordType},#{validateMode},#{createBy},#{modifiedDate})
 	</insert>
@@ -130,8 +130,8 @@
 	<update id="updateByPrimaryKey" parameterType="com.menjin.visit.model.VisitRecord">
 		UPDATE t_visit_record
 		SET
-		company_id = #{company.id},people_sum = #{peopleSum},employee_name = #{employeeName}
-		license_plate = #{licensePlate},matter_id = #{matter.id},employee_phone = #{employeePhone}
+		company_id = #{company.id},people_sum = #{peopleSum},employee_name = #{employeeName},
+		license_plate = #{licensePlate},matter_id = #{matter.id},employee_phone = #{employeePhone},
 		appointment_time = #{appointmentTime},actual_time = #{actualTime},
 		leave_time = #{leaveTime},status = #{status},modified_date = #{modifiedDate},
 		validate_mode = #{validateMode}
@@ -180,7 +180,9 @@
 
 	<select id="selectByPage" resultMap="resultMap">
 		SELECT
-		t1.*,s.*,c.*,m.*
+		t1.*,s.*,c.*,m.*,
+		s.id as vis_id,c.id as com_id,
+		m.id as mat_id
 		FROM t_visit_record t1
 		INNER JOIN
 		(

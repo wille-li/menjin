@@ -1,10 +1,3 @@
-.tool{
-	border-bottom:1px solid #ddd;
-	height:28px;
-	padding:2px 2px 2px 2px;
-	background:#fafafa;
-}
-
 .right{
 	float:right;
 }
@@ -35,8 +28,8 @@
 	padding:10px;
 }
 
-.companel{
-	padding:30px 10px;
+.matpanel{
+	padding:10px 10px 5px 10px;
 }
 
 .inwidth{
@@ -44,5 +37,5 @@
 }
 
 .mbottom{
-	margin-bottom:20px;
+	margin-bottom:10px;
 }

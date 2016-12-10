@@ -9,6 +9,7 @@
 	<title>来访事由管理</title>
     <link rel="stylesheet" type="text/css" href="<c:url value='/resources/easyui/themes/gray/easyui.css'></c:url>" />
     <link rel="stylesheet" type="text/css" href="<c:url value='/resources/easyui/themes/icon.css'></c:url>" />
+    <link rel="stylesheet" type="text/css" href="<c:url value='/resources/css/mattermanage.css'></c:url>" />
     <script type="text/javascript" src="<c:url value='/resources/easyui/jquery.min.js'></c:url>"></script>
     <script type="text/javascript" src="<c:url value='/resources/easyui/jquery.easyui.min.js'></c:url>"></script>
     <script type="text/javascript" src="<c:url value='/resources/js/service.js'></c:url>"></script>
@@ -27,25 +28,25 @@
 </table>
 
 	<div id="tb">
-		<div region="north" border="false" style="border-bottom:1px solid #ddd;height:28px;padding:2px 2px 2px 2px;background:#fafafa;">
-			<div style="float:left;">
+		<div region="north" border="false" class="north">
+			<div class="left">
 				<a href="javascript:void(0)" id="addcm" class="easyui-linkbutton" plain="true" icon="icon-add" onclick="addBrand()">新增</a>
 				<a href="javascript:void(0)" id="updatecm" class="easyui-linkbutton" plain="true" icon="icon-save" onclick="updateBrand()">编辑</a>
 				<a href="javascript:void(0)" id="deletecm" class="easyui-linkbutton" plain="true" icon="icon-remove" onclick="deleteCompany()">删除</a>
 			</div>
 			<div class="datagrid-btn-separator"></div>
-			<div style="float:right;">
-			   <input class="easyui-searchbox" data-options="prompt:'Please Input Value',searcher:''" style="width:130px;vertical-align:middle;"></input>
-			   <a href="#" class="easyui-linkbutton" iconCls="icon-search">Search</a>
+			<div class="right">
+			   <input class="easyui-searchbox" id="checkByMatterDecs" data-options="prompt:'Please Input Value',searcher:''" class="checktb"></input>
+			   <a href="#" onclick="checkByMatterDecs()" class="easyui-linkbutton" iconCls="icon-search">Search</a>
 			</div>
 		</div>
 	</div>
     
-    <div id="matterDialog" class="easyui-dialog" data-options="modal:true" closed="true" style="width:400px;height:150px;padding:10px">
-		<div class="easyui-panel" style="padding:10px 10px 5px 10px;">
+    <div id="matterDialog" class="easyui-dialog comdialog" data-options="modal:true" closed="true">
+		<div class="easyui-panel matpanel">
 			<form id="matterForm"  method="post">
 			<input class="easyui-textbox" type="hidden" id="id" name="id"/>
-			<div style="margin-bottom:10px">
+			<div class="mbottom">
 				<input class="easyui-textbox" id="matterDecs" name="matterDecs" style="width:100%" label='拜访事由'/>
 			</div>
 			</form>

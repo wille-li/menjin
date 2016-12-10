@@ -4,9 +4,6 @@
 	  
 	  for(var i = 1; i<101; i++){
 		  var item = '{"value":'+i+',"text":"'+i+'楼"},';
-		  /*if(i == 1){
-			  item = '{"value":'+i+',"text":"'+i+'楼","selected":true},';
-		  }*/
 		  if(i == 100){
 			  item = '{"value":'+i+',"text":"'+i+'楼"}';
 		  }
@@ -14,24 +11,6 @@
 	  }
 	  floatData += "]";
 	  floatData = $.parseJSON(floatData); 
-	  
-	  /*var floatData = [{
-			"value":1,
-			"text":"1楼",
-		},{
-			"value":2,
-			"text":"2楼",
-			"selected":true
-		},{
-			"value":3,
-			"text":"3楼",
-		},{
-			"value":4,
-			"text":"4楼",
-		},{
-			"value":5,
-			"text":"5楼",
-		}];*/
 	  
 	  $('#tt').datagrid({  
 	      title:'公司管理',  
@@ -71,7 +50,14 @@
   })
 //弹出窗口中是添加操作还是修改操作？
 var isAdd = true; 
-  
+ 
+function checkCompany(){
+	var checkCompany = $('#checkCompanyInput').searchbox('getValue');
+	var queryParams = {companyName:checkCompany};
+	 $('#tt').datagrid({
+   	  queryParams:queryParams
+		});
+}
 function addBrand(){
 	  isAdd = true;
 	  $("#id").textbox("setValue","");

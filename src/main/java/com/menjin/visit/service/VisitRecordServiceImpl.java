@@ -27,7 +27,7 @@ public class VisitRecordServiceImpl extends BaseServiceImpl<VisitRecord> impleme
 	}
 
 	@Override
-	public String getNewTxnNo(Map<String, String> params) {
+	public String getNewTxnNo(Map<String, Object> params) {
 		return visitMapper.getNewTxnNo(params);
 	}
 

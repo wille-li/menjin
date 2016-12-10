@@ -9,6 +9,7 @@
 	<!-- 不需要进行安全认证的资源 -->
 	<http pattern="/login.jsp" security="none" />
 	<http pattern="/sessionTimeout.jsp" security="none" />
+	<http pattern="/resources/**" security="none" />
 
 	<beans:bean id="myFilter"
 		class="org.springframework.security.web.access.intercept.FilterSecurityInterceptor">
