@@ -20,7 +20,8 @@
 	<thead>  
 		<tr>  
 			<th field="companyName" width="300">公司名称</th>  
-			<th field="companyAddress"  width="100">公司楼层</th>  
+			<th field="companyAddress"  width="100" formatter="formatAddr">公司楼层</th> 
+			<th field="doorPlate"  width="100">公司门号</th>  
 			<th field="companyPhone"  width="150">公司联系电话</th>  
 			<th field="createBy" width="100">记录创建人</th>  
 			<th field="createTime" width="150" formatter="formatDatebox">记录创建时间</th>  
@@ -52,8 +53,10 @@
 				<input class="easyui-textbox" id="companyName" name="companyName" style="width:100%" label='公司名称'/>
 			</div>
 			<div class="mbottom">
-				<!-- <input class="easyui-textbox" id="companyAddress" name="companyAddress" style="width:100%" label='公司楼层'/> -->
 			    <input id="companyAddress" class="easyui-combobox" name="companyAddress" label='公司楼层' style="width:100%" />
+			</div>
+			<div class="mbottom">
+				<input class="easyui-textbox" id="doorPlate" name="doorPlate" style="width:100%" label='公司门号'/>
 			</div>
 			<div class="mbottom">
 				<input class="easyui-textbox" id="companyPhone" name="companyPhone" style="width:100%" label='公司联系电话'/>
