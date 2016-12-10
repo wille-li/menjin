@@ -1,5 +1,6 @@
 package com.menjin.user.controller;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -63,6 +64,32 @@ public class ResourceControler {
 		logger.info("End getResourcesByPage");
 		return maps;
 	}
+	
+	@ResponseBody
+    @RequestMapping(value="/resource/getResourceNodes.do")
+	/**
+	 * 获取权限列表
+	 * @return
+	 */
+    public List<Map<String, Object>> getPrivilegeNodes(){
+        List<Map<String, Object>> results = new ArrayList<Map<String, Object>>();
+        int count = resourceService.findCount(null, null);
+		logger.info("Resources Count:"+count);
+		SimplePage simplepage = new SimplePage(1, count, count);
+		Map<String, Object> params = null;
+		String orderBy = "parentId";
+		List<Resource> resources = resourceService.findByPage(simplepage, params, orderBy);
+        Map<String, List<Map<String, String>>> privileges = trimPrivileges(resources);
+        
+        for (Map.Entry<String, List<Map<String, String>>> privilege : privileges.entrySet()) {
+            Map<String, Object> node = new HashMap<String, Object>();
+            node.put("id", "");
+            node.put("text", privilege.getKey());
+            node.put("children", privilege.getValue());
+            results.add(node);
+        }
+        return results;
+    }
 	
 	/*
 	
@@ -157,4 +184,31 @@ public class ResourceControler {
 		logger.info("End to delete user,retrunCode:"+returnCode);
 		return returnCode;
 	}*/
+	
+	
+	  /**
+	   * 将权限转换成tree格式、
+	   * @param privileges
+	   * @return
+	   */
+	  private Map<String, List<Map<String, String>>> trimPrivileges(List<Resource> privileges){
+	    	Map<String, List<Map<String, String>>> result = new HashMap<String, List<Map<String, String>>>();
+	    	for (Resource privilege : privileges) {
+				 String catalog = String.valueOf(privilege.getParentId());
+				 Map<String, String> node = new HashMap<String, String>();
+				 node.put("id",privilege.getId().toString());
+				 node.put("text", privilege.getName());
+				 if(result.get(catalog)!=null){
+					 List<Map<String, String>> childrens = result.get(catalog);
+					 childrens.add(node);
+					 result.put(catalog, childrens);
+				 }else{
+					 List<Map<String, String>> childrens = new ArrayList<Map<String, String>>();
+					 childrens.add(node);
+					 result.put(catalog, childrens);
+					 
+				 }
+			}
+	    	return result;
+	    }
 }

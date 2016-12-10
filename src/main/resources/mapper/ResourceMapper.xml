@@ -37,12 +37,12 @@
 				 	and ${key} = #{params[${key}]}  
 				 </foreach>
 	    	</if>
+	    	<if test="null != orderByField">
+		    	ORDER BY #{orderByField}
+			</if>
 		    <if test="null!=page and null!=page.pageSize">
 		      LIMIT #{page.startRowNum}, #{page.pageSize}
 		    </if>
-			<if test="null != orderByField">
-		    	ORDER BY #{orderByField}
-			</if>
 	</select>
 	
 	<select id="selectCount" resultType="java.lang.Integer" >
