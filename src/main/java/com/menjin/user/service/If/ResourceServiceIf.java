@@ -43,6 +43,13 @@ public interface ResourceServiceIf extends BaseService<Resource> , FilterInvocat
 	public List<Resource> findResourcesByUsername(String username);
 	
 	/**
+	 * 根据角色Id获取可访问的资源（权限）
+	 * @param roleId
+	 * @return
+	 */
+	public List<Resource> findResourcesByRoleId(Integer roleId);
+	
+	/**
 	 * 插入记录到t_role_resource表，建立role与resource的关联关系
 	 * @param rolesResource
 	 * @return

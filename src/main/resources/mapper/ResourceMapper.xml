@@ -29,6 +29,31 @@
 		select * from t_resource
 	</select>
 	
+	<select id="selectByPage" resultMap="resourceResultMap">
+	    SELECT r.* FROM t_resource r where 1 = 1
+	    
+	    	<if test="null!=params">
+				 <foreach collection="params.keys" item="key" separator=" " >
+				 	and ${key} = #{params[${key}]}  
+				 </foreach>
+	    	</if>
+		    <if test="null!=page and null!=page.pageSize">
+		      LIMIT #{page.startRowNum}, #{page.pageSize}
+		    </if>
+			<if test="null != orderByField">
+		    	ORDER BY #{orderByField}
+			</if>
+	</select>
+	
+	<select id="selectCount" resultType="java.lang.Integer" >
+	    SELECT COUNT(1) FROM t_resource where 1 = 1
+	    <if test="null!=params">
+				 <foreach collection="params.keys" item="key" separator=" " >
+				 	and ${key} = #{params[${key}]}  
+				 </foreach>
+	    </if>
+	</select>
+	
 	<select id="selectByPrimaryKey" parameterType="com.menjin.user.model.Resource" resultMap="resourceResultMap">
 		select * from t_resource where id = #{id}
 	</select>
@@ -45,6 +70,11 @@
 		update t_resource set resource_url=#{resourceUrl},name=#{name},parentId=#{parentId},
 		resKey=#{resKey},description=#{description} where id = #{id}
 	</update>
+	
+	<select id="getResourcesByRoleId" parameterType="Integer" resultMap="resourceResultMap">
+		SELECT r.* FROM t_resource r WHERE r.id in 
+		(SELECT t.resource_id FROM t_role_resource t where t.role_id =#{roleId})
+	</select>
 	
 	<select id="getResourcesByUserId" parameterType="Integer" resultMap="resourceResultMap">
 		SELECT r.* FROM t_resource r WHERE r.id in 

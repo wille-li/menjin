@@ -85,6 +85,11 @@ public class ResourceServiceImpl extends BaseServiceImpl<Resource> implements Re
 		return resourceMapper.insertRolesResource(rolesResource);
 	}
 	
+	@Override
+	public List<Resource> findResourcesByRoleId(Integer roleId){
+		return resourceMapper.getResourcesByRoleId(roleId);
+	};
+	
 	@PostConstruct 
 	public void initResource() throws Exception{
 		this.resourceMap = new HashMap<String,Collection<ConfigAttribute>>();

@@ -46,4 +46,12 @@ public interface ResourceMapper extends BaseCrudMapper<Resource> {
 	 * @return
 	 */
 	public int insertRolesResource(RolesResource rolesResource);
+	
+	/**
+	 * 根据角色Id获取可访问的资源（权限）
+	 * @param roleId
+	 * @return
+	 */
+	public List<Resource> getResourcesByRoleId(Integer roleId);
+	
 }
