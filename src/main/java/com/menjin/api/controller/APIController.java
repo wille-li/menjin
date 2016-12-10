@@ -2,7 +2,10 @@ package com.menjin.api.controller;
 
 import java.io.File;
 import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -32,9 +35,13 @@ import com.menjin.api.model.APIVisit;
 import com.menjin.api.service.APICompanyService;
 import com.menjin.api.service.APIDepartmentService;
 import com.menjin.api.service.APIEmployeeService;
+import com.menjin.company.model.Company;
 import com.menjin.photo.model.PhotoInfo;
 import com.menjin.photo.service.PhotoInfoService;
+import com.menjin.visit.model.Matter;
+import com.menjin.visit.model.VisitRecord;
 import com.menjin.visit.model.Visitor;
+import com.menjin.visit.service.VisitRecordService;
 import com.menjin.visit.service.VisitorService;
 
 @Controller
@@ -61,6 +68,8 @@ public class APIController {
 	
 	public static Integer versionNum = 0;
 	
+	private static final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh24:mm");
+	
 	@Value("${photo.path}")
 	private String imagePath;
 	
@@ -79,7 +88,10 @@ public class APIController {
 	@Resource
 	VisitorService visitorService;
 	
-	@RequestMapping(value="/api/getCompany.do", method=RequestMethod.GET)
+	@Autowired
+	VisitRecordService visitRecordService;
+	
+	@RequestMapping(value="/api/getCompany.do", method = RequestMethod.GET)
 	@SystemControllerLog
 	@ResponseBody
 	public Map<String, Object> getCompanyInfo(Integer version){
@@ -88,7 +100,7 @@ public class APIController {
 		ReturnInfo rInfo = new ReturnInfo();
 		List<APICompany> company  = (List<APICompany>) findAllInfo(aPICompanyService);
 		dataMap.put("company", company);
-		dataMap.put(VERSION_KEY, "1");
+		dataMap.put(VERSION_KEY, versionNum);
 		rInfo.setMsg("获取成功");
 		rInfo.setRet(SUCCESS);
 		returnMap.put(HEAD_KEY, rInfo);
@@ -106,10 +118,12 @@ public class APIController {
 	@RequestMapping(value="/api/visit.do", method=RequestMethod.POST)
 	@SystemControllerLog
 	@ResponseBody
-	public Map<String, Object> visit(@ModelAttribute APIVisit visit){
+	public Map<String, Object> visit(@ModelAttribute APIVisit apiVisit, 
+			String appointmentTime, Integer companyId, Integer matterId,
+			String employeeName, String employeePhone){
 		Map<String, Object> returnMap = new HashMap<>();
 		ReturnInfo rInfo = new ReturnInfo();
-		String idCardNum = visit.getIdCardNum();
+		String idCardNum = apiVisit.getIdCardNum();
 		Visitor visitor = visitorService.selectByIDCar(idCardNum);
 		if (null == visitor){
 			rInfo.setRet(FAIL);
@@ -117,10 +131,59 @@ public class APIController {
 			returnMap.put(HEAD_KEY, rInfo);
 			return returnMap;
 		} 
+		Date tmpDate = null;
+		if (null == appointmentTime ){
+			try {
+				tmpDate = sdf.parse(appointmentTime);
+			} catch (ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				rInfo.setRet(FAIL);
+				rInfo.setMsg("请输入有效的访问时间.");
+				returnMap.put(HEAD_KEY, rInfo);
+				return returnMap;
+			}
+			rInfo.setRet(FAIL);
+			rInfo.setMsg("请输入有效的访问时间.");
+			returnMap.put(HEAD_KEY, rInfo);
+			return returnMap;
+		}
+		
 		String phone = visitor.getMobile();
 		if (null == phone){
-			visitor.setMobile(visit.getPhoneNum());
+			visitor.setMobile(apiVisit.getPhoneNum());
 		}
+		String txnNum = getMatterTxnNum();
+		if(txnNum == null){
+			logger.info("get Matter Txn Num failed,MatterTxnNum:"+txnNum);
+			rInfo.setMsg("获取拜访单号失败，请重试！");
+			rInfo.setRet(FAIL);
+			returnMap.put("rInfo", rInfo);
+			return returnMap;
+		}
+		VisitRecord visit = new VisitRecord();
+		visit.setMatterTxnNum(txnNum);
+		Company company = new Company();
+		company.setId(companyId);
+		Matter matter = new Matter();
+		matter.setId(matterId);
+		
+		visit.setActualTime(tmpDate);
+		visit.setLeaveTime(tmpDate);
+			
+		visit.setCompany(company);
+		/*visit.setDepartment(department);
+		visit.setEmployee(employee);*/
+		visit.setVisitor(visitor);
+		visit.setMatter(matter);
+		visit.setStatus("未验证");
+		visit.setEmployeeName(employeeName);
+		visit.setEmployeePhone(employeePhone);
+		visit.setValidateMode("1");
+		visit.setPeopleSum(1);
+		visit.setCreateBy("Admin");//根据现在操作用户修改
+		visit.setModifiedDate(new Date());
+		visitRecordService.add(visit);
 		rInfo.setMsg("预约成功");
 		rInfo.setRet(SUCCESS);
 		returnMap.put(HEAD_KEY, rInfo);
@@ -215,5 +278,13 @@ public class APIController {
         return result;
 	}
 	
-
+	public String getMatterTxnNum(){
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("orderNamePre", "YH");
+		map.put("num", "8");
+		map.put("newOrderNo", "");
+		visitRecordService.getNewTxnNo(map);
+		System.out.println("MatterTxnNum is : " + map.get("newOrderNo"));
+		return (String) map.get("newOrderNo");
+	}
 }
