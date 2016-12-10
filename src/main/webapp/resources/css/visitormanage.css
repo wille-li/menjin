@@ -1,0 +1,68 @@
+.textbox-label {
+    display: inline-block;
+    width: 50px !important;
+    height: 22px;
+    line-height: 22px;
+    vertical-align: middle;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    margin: 0;
+    padding-right: 5px;
+}
+.right{
+	float:right;
+}
+
+.left{
+	float:left;
+}
+
+.checkInput{
+	width:130px;
+	vertical-align:middle;
+}
+
+.north{
+	border-bottom:1px solid #ddd;
+	height:28px;
+	padding:2px 2px 2px 2px;
+	background:#fafafa;
+}
+
+.checktb{
+	width:130px;
+	vertical-align:middle;
+}
+
+.visdialog{
+	width:750px;
+	padding:10px
+}
+
+.vispanel{
+	padding:10px 10px;
+}
+
+.inwidth{
+	width:100%;
+}
+
+.mbottom{
+	margin-bottom:10px;
+}
+
+.leftin{
+	margin-bottom:20px;
+	float:left;
+	width:350px;
+}
+
+.rightin{
+	margin-bottom:20px;
+	float:left;
+	width:350px;
+	margin-left:10px
+}
+
+

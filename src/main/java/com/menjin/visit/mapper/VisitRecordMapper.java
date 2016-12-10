@@ -11,5 +11,5 @@ import com.menjin.visit.model.VisitRecord;
  */
 public interface VisitRecordMapper extends BaseCrudMapper<VisitRecord>{
 
-	public String getNewTxnNo(Map<String, String> params);
+	public String getNewTxnNo(Map<String, Object> params);
 }

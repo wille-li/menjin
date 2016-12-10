@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.base.annotation.log.SystemControllerLog;
+import com.base.entity.ReturnInfo;
 import com.base.entity.SimplePage;
 import com.menjin.company.model.Company;
 import com.menjin.company.model.Department;
@@ -48,6 +49,10 @@ public class VisitRecordController {
 	private static Integer  VISIT_STATUS_NOT = 1;
 	private static Integer  VISIT_STATUS_HAND = 2;
 	private static Integer  VISIT_STATUS_LEAVE = 3;
+	
+    public final static int SUCCESS = 0;
+	
+	public final static int FAIL = 1;
 	@RequestMapping(value="/vist.do")
 	@SystemControllerLog
 	public String testVistorController(){
@@ -84,162 +89,152 @@ public class VisitRecordController {
 	@RequestMapping(value="/addVisit.do")
 	@SystemControllerLog
 	@ResponseBody
-	public Integer addVisitor(/*@ModelAttribute Visit visit,@ModelAttribute Visitor visitor,*/
-			@Param(value = "visitorName") String visitorName,@Param(value = "idCardType") String idCardType,
-			@Param(value = "idCardNum") String idCardNum,@Param(value = "sex") String sex,
-			@Param(value = "mobile") String mobile,@Param(value = "companyId") Integer companyId,
-			@Param(value = "employeePhone") Integer employeePhone,@Param(value = "employeeName") Integer employeeName,
-			@Param(value = "matterId") Integer matterId,@Param(value = "peopleSum") String peopleSum,
+	public Map<String, Object> addVisitRecord(
+			@Param(value = "visitorId") Integer visitorId,@Param(value = "companyId") Integer companyId,
+			@Param(value = "employeePhone") String employeePhone,@Param(value = "employeeName") String employeeName,
+			@Param(value = "matterId") Integer matterId,@Param(value = "peopleSum") Integer peopleSum,
 			@Param(value = "visitTime") String visitTime,@Param(value = "validateMode")String validateMode,
-			@Param(value = "status")String status,@Param(value = "birth")String birth,
+			@Param(value = "status")String status,@Param(value = "leaveTime")String leaveTime,
 			HttpServletRequest request,HttpServletResponse response){
-		Visitor visitor = visitorService.selectByIDCar(idCardNum);
-		Integer returnCode = 0;
-		if(visitor != null){
-			logger.info("IDCard No has been save in database!");
-			if(visitor.getRank().equals(BLACK_LIST)){
-				logger.info("Visitor Name:"+visitorName+" rank is black。");
-				return 3;
-			}else if(visitor.getRank().equals(WHITE_LIST)){
-				logger.info("Visitor Name:"+visitorName+" rank is white。");
-				return 2;
-			}else{
-				logger.info("Visitor Name:"+visitorName+" rank is ordinary。");
-			}
-		}else{
-			visitor = new Visitor();
-			visitor.setIdCardType(idCardType);
-			visitor.setIdCardNum(idCardNum);
-			visitor.setVisitorName(visitorName);
-			visitor.setSex(sex);
-			visitor.setMobile(mobile);
-			visitor.setRank("1");//设置为一般的普通用户
-			visitor.setCreateBy("Admin");
-			visitor.setCreatedTime(new Date());
-			visitor.setModifiedDate(new Date());
-			Integer svReturnCode = visitorService.add(visitor);
-			if(svReturnCode <= 0){
-				return returnCode;
-			}
+		Map<String, Object> returnMap = new HashMap<>();
+		ReturnInfo rInfo = new ReturnInfo();
+		logger.info("get Matter Txn Num Start!");
+		String txnNum = getMatterTxnNum();
+		if(txnNum == null){
+			logger.info("get Matter Txn Num failed,MatterTxnNum:"+txnNum);
+			rInfo.setMsg("获取拜访单号失败，请重试！");
+			rInfo.setRet(FAIL);
+			returnMap.put("rInfo", rInfo);
+			return returnMap;
 		}
+		logger.info("get Matter Txn Num End!");
+		Integer returnCode = 0;
+		Visitor visitor = new Visitor();
+		visitor.setId(visitorId);
 		VisitRecord visit = new VisitRecord();
-		visit.setPeopleSum(Integer.parseInt(peopleSum));
+		visit.setMatterTxnNum(txnNum);
 		Company company = new Company();
 		company.setId(companyId);
-		/*Department department = new Department();
-		department.setId(departmentId);
-		Employee employee = new Employee();
-		employee.setId(employeeId);*/
 		Matter matter = new Matter();
 		matter.setId(matterId);
-		Visitor newvisitor = visitorService.selectByIDCar(idCardNum);
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
 		try {
-			Date appoitmentTime = sdf.parse(visitTime);
-			visit.setAppointmentTime(appoitmentTime);
+			visit.setActualTime(sdf.parse(visitTime));
+			visit.setLeaveTime(sdf.parse(leaveTime));
+			
 		} catch (ParseException e) {
-			// TODO Auto-generated catch block
+			rInfo.setMsg("时间输入有误，请检查后重试！");
+			rInfo.setRet(FAIL);
+			returnMap.put("rInfo", rInfo);
 			e.printStackTrace();
+			return returnMap;
 		}
-		//此处需要修改。由DB生成流水账号
-		visit.setMatterTxnNum(UUID.randomUUID().toString());
 		visit.setCompany(company);
 		/*visit.setDepartment(department);
 		visit.setEmployee(employee);*/
-		visit.setVisitor(newvisitor);
+		visit.setVisitor(visitor);
 		visit.setMatter(matter);
-		visit.setStatus(VISIT_STATUS_NOT.toString());
+		visit.setStatus(status);
+		visit.setEmployeeName(employeeName);
+		visit.setEmployeePhone(employeePhone);
+		visit.setValidateMode(validateMode);
+		visit.setPeopleSum(peopleSum);
 		visit.setCreateBy("Admin");//根据现在操作用户修改
 		visit.setModifiedDate(new Date());
 		returnCode = vistService.add(visit);
 		logger.info("End to Insert Visitor!ReturnCode:");
-		return returnCode;
+		if(returnCode > SUCCESS){
+			rInfo.setMsg("拜访单数据添加成功!");
+			rInfo.setRet(SUCCESS);
+		}else{
+			rInfo.setMsg("拜访单数据添加失败,请重试！");
+			rInfo.setRet(FAIL);
+		}
+		returnMap.put("rInfo", rInfo);
+		return returnMap;
 	}
 	
 	@RequestMapping(value="/updateVisit.do")
 	@SystemControllerLog
 	@ResponseBody
-	public Integer updateVisit(@Param(value = "id") Integer id,
-			@Param(value = "visitorName") String visitorName,@Param(value = "idCardType") String idCardType,
-			@Param(value = "idCardNum") String idCardNum,@Param(value = "sex") String sex,
-			@Param(value = "mobile") String mobile,@Param(value = "companyId") Integer companyId,
+	public Map<String, Object> updateVisitRecord(@Param(value = "id") Integer id,@Param(value = "companyId") Integer companyId,
 			@Param(value = "employeePhone") String employeePhone,@Param(value = "employeeName") String employeeName,
 			@Param(value = "matterId") Integer matterId,@Param(value = "peopleSum") Integer peopleSum,
-			@Param(value = "visitTime") String visitTime,@Param(value = "leaveTime") String leaveTime,
-			@Param(value = "validateMode")String validateMode,
-			@Param(value = "status")String status,@Param(value = "birth")String birth,
+			@Param(value = "visitTime") String visitTime,@Param(value = "validateMode")String validateMode,
+			@Param(value = "status")String status,@Param(value = "leaveTime")String leaveTime,
 			HttpServletRequest request,HttpServletResponse response){
-		logger.info("Start to update Visitor!");
+		Map<String, Object> returnMap = new HashMap<>();
+		ReturnInfo rInfo = new ReturnInfo();
+		logger.info("Start to update VisitRecord!");
 		VisitRecord visitRecord = new VisitRecord();
 		visitRecord.setId(id);
 		visitRecord = vistService.findById(visitRecord);
-		Visitor visitor = visitRecord.getVisitor();
-		visitor.setVisitorName(visitorName);
-		visitor.setIdCardType(idCardType);
-		visitor.setIdCardNum(idCardNum);
-		visitor.setSex(sex);
-		visitor.setMobile(mobile);
-		Integer returnCode = visitorService.modifyById(visitor);
-		if(returnCode > 0){
-			logger.info("Update visitor info success!");
-			Company company = new Company();
-			company.setId(companyId);
-			visitRecord.setCompany(company);
-			Matter matter = new Matter();
-			matter.setId(matterId);
-			visitRecord.setMatter(matter);
-			visitRecord.setEmployeeName(employeeName);
-			visitRecord.setEmployeePhone(employeePhone);
-			visitRecord.setPeopleSum(peopleSum);
-			visitRecord.setValidateMode(validateMode);
-			visitRecord.setStatus(status);
-			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-			try {
-				visitRecord.setActualTime(sdf.parse(visitTime));
-				visitRecord.setLeaveTime(sdf.parse(leaveTime));
-			} catch (ParseException e) {
-				e.printStackTrace();
-			}
-			visitRecord.setModifiedDate(new Date());
+		Company company = new Company();
+		company.setId(companyId);
+		visitRecord.setCompany(company);
+		Matter matter = new Matter();
+		matter.setId(matterId);
+		visitRecord.setMatter(matter);
+		visitRecord.setEmployeeName(employeeName);
+		visitRecord.setEmployeePhone(employeePhone);
+		visitRecord.setPeopleSum(peopleSum);
+		visitRecord.setValidateMode(validateMode);
+		visitRecord.setStatus(status);
+		SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
+		try {
+			visitRecord.setActualTime(sdf.parse(visitTime));
+			visitRecord.setLeaveTime(sdf.parse(leaveTime));
+		} catch (ParseException e) {
+			rInfo.setMsg("时间输入有误，请检查后重试！");
+			rInfo.setRet(FAIL);
+			returnMap.put("rInfo", rInfo);
+			e.printStackTrace();
+			return returnMap;
+		}
+		visitRecord.setModifiedDate(new Date());
+		Integer returnCode = vistService.modifyById(visitRecord);
+		
+		if(returnCode > SUCCESS){
+			rInfo.setMsg("拜访单数据修改成功!");
+			rInfo.setRet(SUCCESS);
 		}else{
-			logger.info("Update visitor info fail!");
+			rInfo.setMsg("拜访单数据修改失败,请重试！");
+			rInfo.setRet(FAIL);
 		}
+		returnMap.put("rInfo", rInfo);
 		logger.info("End to update Visitor!ReturnCode:"+returnCode);
-		return returnCode;
-	}
-	
-	@RequestMapping(value="/updateVisitStatus.do")
-	@SystemControllerLog
-	@ResponseBody
-	public Integer updateVisitStatus(@Param(value = "status") Integer status,@Param(value = "id") Integer id){
-	    VisitRecord visit = new VisitRecord();
-	    Integer returnCode = 0;
-	    visit.setId(id);
-	    visit = vistService.findById(visit);
-		if(status != null && status == 2){
-			//访客到来，更改状态为正在访问
-			visit.setStatus(VISIT_STATUS_HAND.toString());
-			visit.setActualTime(new Date());
-			visit.setModifiedDate(new Date());
-			returnCode = vistService.modifyById(visit);
-		}else if(status != null && status == 3){
-			visit.setStatus(VISIT_STATUS_LEAVE.toString());
-			visit.setLeaveTime(new Date());
-			visit.setModifiedDate(new Date());
-			returnCode = vistService.modifyById(visit);
-		}
-		return returnCode;
+		return returnMap;
 	}
 	
 
 	@RequestMapping(value="/deleteVisit.do")
 	@SystemControllerLog
 	@ResponseBody
-	public Integer delectMatter(@ModelAttribute VisitRecord visit,HttpServletRequest request,HttpServletResponse response){
+	public Map<String, Object> delectMatter(@ModelAttribute VisitRecord visit,HttpServletRequest request,HttpServletResponse response){
 		logger.info("Start to delete Visitor!");
+		Map<String, Object> returnMap = new HashMap<>();
+		ReturnInfo rInfo = new ReturnInfo();
 		int returnCode = vistService.deleteById(visit);
+		if(returnCode > SUCCESS){
+			rInfo.setMsg("拜访单数据删除成功!");
+			rInfo.setRet(SUCCESS);
+		}else{
+			rInfo.setMsg("拜访单数据删除失败,请重试！");
+			rInfo.setRet(FAIL);
+		}
+		returnMap.put("rInfo", rInfo);
 		logger.info("End to delete Visitor。RetrunCode:"+returnCode);
-		return returnCode;
+		return returnMap;
+	}
+	
+	public String getMatterTxnNum(){
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("orderNamePre", "YH");
+		map.put("num", "8");
+		map.put("newOrderNo", "");
+		vistService.getNewTxnNo(map);
+		System.out.println("MatterTxnNum is : " + map.get("newOrderNo"));
+		return (String) map.get("newOrderNo");
 	}
 	
 	public Map<String, Object> toMap(String status,String matterTxnNum,String startDate,

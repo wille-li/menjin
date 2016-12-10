@@ -18,17 +18,81 @@
 	background:#fafafa;
 }
 
-.toolLeft{
-	width: 30%;
-	float:left
-}
-
-.toolRight{
-	width: 100%;
-	float:right;
-}
-
 .toolSelect{
-	width:80px;
-	margin-left:20px
+	text-align: center;
+	margin-top: 10px;
 }
+
+.starttimelabel{
+	text-align: left; 
+	height: 24px; 
+	line-height: 24px;
+}
+
+.endtimelabel{
+	text-align: left;
+	height: 24px; 
+	line-height: 24px;
+	margin-left: 10px
+}
+
+.notdatebtn{
+	width: 125px;
+}
+
+.datebtn{
+	width: 125px;
+	margin-lef:10px
+}
+
+.visitrecord{
+	width:560px;
+	padding:10px;
+}
+
+.vrpanel{
+	padding:10px 10px;
+}
+
+.vsmesleft{
+	float:left;
+	width: 75%;
+}
+
+.vsinput{
+	margin-bottom:15px;
+	width:300px;
+}
+
+.vsmesright{
+	float:left;
+	width: 25%;
+}
+
+.record{
+	float:left;
+	width: 100%;
+	margin-top: 10px;
+}
+
+.recordinputleft{
+	margin-bottom:10px;
+	float:left;
+	width:240px;
+}
+
+.recordinputright{
+	margin-bottom:10px;
+	float:left;
+	width:240px;
+	margin-left:10px;
+}
+
+.checkrecord{
+	margin-left:180px;
+	float:left;
+}
+
+
+
+

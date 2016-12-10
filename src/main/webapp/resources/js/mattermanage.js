@@ -3,7 +3,7 @@
 	      title:'来访事由管理',  
 	      iconCls:'icon-man',  
 	      width:'100%',  
-	      pageSize:10,  
+	      pageSize:20,  
 	      pageList:[10,20,30,40,50] ,
 	      nowrap:true,  
 	      striped:true,  
@@ -30,6 +30,14 @@
 //弹出窗口中是添加操作还是修改操作？
 var isAdd = true; 
   
+  function checkByMatterDecs(){
+	  var matterDecs = $('#checkByMatterDecs').searchbox('getValue');
+		var queryParams = {matterDecs:matterDecs};
+		 $('#mattertb').datagrid({
+	   	  queryParams:queryParams
+			});
+  }
+  
 function addBrand(){
 	  isAdd = true;
 	  $("#id").textbox("setValue","");
@@ -51,9 +59,9 @@ function deleteCompany(){
 			$.post('./deleteMatter.do', submitData, function(data){
 				 if(data){
 		   			$('#mattertb').datagrid('load');
-		   			 showmessage('提醒','数据删除成功！');
+		   			showmessage('提醒',data.rInfo.msg);
 		   		 }else {
-		   			showmessage('操作失败','删除数据失败！');
+		   			showmessage('操作失败','网络连接失败，请与管理员联系！');
 		   		 }
 			   }); 
 			  $("#id").textbox("setValue","");
@@ -86,17 +94,12 @@ function submitDialog(){
     }
 	var submitData = $('#matterForm').serialize();
     $.post(url, submitData, function(data){
-   	 if(data){
-            if(isAdd){
-            	$('#mattertb').datagrid('load');//如果是添加则滚动到第一页并刷新
-                showmessage('提醒','数据添加成功！');
-            }else{
-            	$('#mattertb').datagrid('reload');//如果是修改则刷新当前页
-            	showmessage('提醒','数据修改成功！');
-            } 
-   	 }else {
-   		showmessage('操作失败','数据操作失败！');
-   	 }
+    	if(data){
+   			$('#mattertb').datagrid('load');
+   			showmessage('提醒',data.rInfo.msg);
+   		 }else {
+   			showmessage('操作失败','网络连接失败，请与管理员联系！');
+   		 }
 
         $("#matterDialog").dialog("close"); //关闭dialog
         //清空form表单中的数据

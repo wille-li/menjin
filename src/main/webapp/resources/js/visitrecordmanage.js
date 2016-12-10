@@ -59,10 +59,18 @@
 		  valueField:'id',
 		  editable:false 
 	  });
+	  $('#visitorName').combobox({
+		  url:'./visitorlistforcombox.do',
+		  textField:'visitorName',
+		  valueField:'id',
+		  editable:false,
+		  onSelect:showVisitorMessage
+	  });
+	  
 	  
 	  $('#validateMode').combobox({
+		    textField: 'label',
 		    valueField: 'value',
-			textField: 'label',
 			data: [{
 				label: '自动检验',
 				value: '1'
@@ -74,8 +82,8 @@
 	  });
 	  
 	  $('#status').combobox({
+		    textField: 'label',
 		    valueField: 'value',
-			textField: 'label',
 			data: [{
 				label: '未拜访',
 				value: '1'
@@ -92,6 +100,14 @@
 //弹出窗口中是添加操作还是修改操作？
 var isAdd = true; 
  
+  function showVisitorMessage(param){
+	    $('#visitorName').textbox('setValue',param.visitorName);
+		$('#idCardType').textbox('setValue',param.idCardType);
+		$('#idCardNum').textbox('setValue',param.idCardNum);
+		$('#sex').textbox('setValue',param.sex);
+		$('#birth').textbox('setValue',formatYMDatebox(param.birth));
+	    $('#mobile').textbox('setValue',param.mobile);
+  }
   function showDepartmentByCompanyId(param){
 	  $('#departmentBox').combobox({
 		  url:'./departmentlistBycompanyIdForCombox.do?companyId='+param.id,
@@ -179,16 +195,57 @@ function formatEmployee(value,row,index){
 function formatMatter(value,row,index){
       return new Object(row["matter"]).matterDecs;     
 }
+//显示拜访单状态
+function formatStatus(value,rows,index){
+	if(rows.status==1){
+		return "未拜访";  
+	}else if(rows.status==2){  
+        return "未离开";  
+    }else if(rows.status==3){  
+        return "已离开";  
+    }  
+}
+
+function formatValidate(value,rows,index){
+	if(rows.validateMode==1){
+		return "自动验证";  
+	}else if(rows.validateMode==2){  
+        return "手动验证";  
+    }
+}
+
+function formatValidateForUpdate(validateMode){
+	if(validateMode==1){
+		return "自动验证";  
+	}else if(validateMode==2){  
+        return "手动验证";  
+    }else{
+    	return "未验证"; 
+    }
+}
+
+function formatStatusForUpdate(Status){
+	if(Status==1){
+		return "未拜访";  
+	}else if(Status==2){  
+        return "未离开";  
+    }else if(Status==3){  
+        return "已离开";  
+    }  
+}
 
   
 function addBrand(){
+	  $('#visitorName').combobox('enable');
 	  isAdd = true;
 	  $("#id").textbox("setValue","");
+	  $("#matterTxnNum").textbox('setValue','');
 	  $('#visitorName').textbox('setValue',"");
 	  $('#idCardType').textbox('setValue',"");
 	  $('#idCardNum').textbox('setValue',"");
 	  $('#sex').textbox('setValue',"");
 	  $('#mobile').textbox('setValue');
+	  $('#birth').textbox('setValue');
       $('#companyBox').combobox('setValue',"");
 	  $('#employeeName').textbox('setValue',"");
 	  $('#employeePhone').textbox('setValue',"");
@@ -215,10 +272,14 @@ function deleteCompany(){
 			var submitData = $('#visitorForm').serialize();
 			$.post('./deleteVisit.do', submitData, function(data){
 				 if(data){
+				   if(data.rInfo.ret == 0){
 		   			$('#visitortb').datagrid('load');
 		   			 showmessage('提醒','数据删除成功！');
+				   }else{
+					   showmessage("操作失败",data.rInfo.msg);
+				   }
 		   		 }else {
-		   			showmessage('操作失败','删除数据失败！');
+		   			showmessage('操作失败','网络连接失败，请与管理员联系！');
 		   		 }
 			   }); 
 			  $("#id").textbox("setValue","");
@@ -234,21 +295,24 @@ function updateBrand(){
 		showmessage('提醒','请选择你要修改的记录！');
          return false;
        }
+	$('#visitorName').combobox('disable');
 	$("#id").textbox("setValue",selections[0].id);
+	$("#matterTxnNum").textbox('setValue',selections[0].matterTxnNum);
 	$('#visitorName').textbox('setValue',selections[0].visitor.visitorName);
 	$('#idCardType').textbox('setValue',selections[0].visitor.idCardType);
 	$('#idCardNum').textbox('setValue',selections[0].visitor.idCardNum);
 	$('#sex').textbox('setValue',selections[0].visitor.sex);
     $('#mobile').textbox('setValue',selections[0].visitor.mobile);
-    $('#companyBox').combobox('setValue',selections[0].company.companyName);
+    $('#companyBox').combobox('setValue',selections[0].company.id).combobox('setText',selections[0].company.companyName);
 	$('#employeeName').textbox('setValue',selections[0].employeeName);
 	$('#employeePhone').textbox('setValue',selections[0].employeePhone);
-	$('#matterBox').combobox('setValue',selections[0].matter.matterDecs);
+	$('#matterBox').combobox('setValue',selections[0].matter.id).combobox('setText',selections[0].matter.matterDecs);
 	$('#peopleSum').textbox('setValue',selections[0].peopleSum);
 	$('#visitTime').datetimebox('setValue',formatDatebox(selections[0].actualTime));
-	$('#validateMode').textbox('setValue',selections[0].validateMode);
-	$('#status').textbox('setValue',selections[0].status);
+	$('#validateMode').combobox('setValue',selections[0].validateMode).combobox('setText',formatValidateForUpdate(selections[0].validateMode));
+	$('#status').combobox('setValue',selections[0].status).combobox('setText',formatStatusForUpdate(selections[0].status));;
 	$('#leaveTime').textbox('setValue',formatDatebox(selections[0].leaveTime));
+	$('#birth').textbox('setValue',formatYMDatebox(selections[0].visitor.birth));
 	$('#checkRecord').show();
 	$('#VisitDialog').dialog({title:'修改拜访信息'});
 	$('#VisitDialog').dialog("open");
@@ -262,7 +326,7 @@ function quitDialog(){
 function submitDialog(){
 	
 	var id = $('#id').textbox('getValue');
-	var visitorName = $('#visitorName').textbox('getValue');
+	var visitorId = $('#visitorName').combobox('getValue');
 	var idCardType = $('#idCardType').textbox('getValue');
 	var idCardNum = $('#idCardNum').textbox('getValue');
 	var birth1 = $('#birth1').textbox('getValue');
@@ -276,13 +340,13 @@ function submitDialog(){
 	var matterId = $('#matterBox').combobox('getValue');
 	var peopleSum = $('#peopleSum').textbox('getValue');
 	var visitTime = $('#visitTime').datetimebox('getValue');
-	var validateMode = $('#validateMode').textbox('getValue');
-	var status = $('#status').textbox('getValue');
+	var validateMode = $('#validateMode').combobox('getValue');
+	var status = $('#status').combobox('getValue');
 	var leaveTime = $('#leaveTime').textbox('getValue');
 	
-	var submitData = {id:id,visitorName:visitorName,idCardType:idCardType,idCardNum:idCardNum,
+	var submitData = {id:id,visitorId:visitorId,idCardType:idCardType,idCardNum:idCardNum,
 			sex:sex,mobile:mobile,companyId:companyId,employeeName:employeeName,employeePhone:employeePhone,/*departmentId:departmentId,employeeId:employeeId,*/
-			matterId:matterId,peopleSum:peopleSum,visitTime:visitTime,validateMode:validateMode,status:status,birth:birth1};
+			matterId:matterId,peopleSum:peopleSum,visitTime:visitTime,validateMode:validateMode,status:status,birth:birth1,leaveTime:leaveTime};
     var url = './addVisit.do';
     if(!isAdd){
    	 url = './updateVisit.do';
@@ -290,15 +354,19 @@ function submitDialog(){
 	/*var submitData = $('#visitorForm').serialize();*/
     $.post(url, submitData, function(data){
    	 if(data){
+   		if(data.rInfo.ret == 0){
             if(isAdd){
             	$('#visitortb').datagrid('load');//如果是添加则滚动到第一页并刷新
-                showmessage('提醒','数据添加成功！');
+                showmessage('提醒',data.rInfo.msg);
             }else{
             	$('#visitortb').datagrid('reload');//如果是修改则刷新当前页
-            	showmessage('提醒','数据修改成功！');
+            	showmessage('提醒',data.rInfo.msg);
             } 
+   		}else{
+   			showmessage("操作失败",data.rInfo.msg);
+   		} 
    	 }else {
-   		showmessage('操作失败','数据操作失败！');
+   		showmessage('操作失败','网络连接失败，请与管理员联系！');
    	 }
 
         $("#VisitDialog").dialog("close"); //关闭dialog

@@ -1,20 +1,19 @@
 <%@ page language="java" contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
-<%
-String path = request.getContextPath();
-String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/";
-%>
-   <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib uri="http://tiles.apache.org/tags-tiles" prefix="tiles"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 	<title>公司管理</title>
-	<link href="<%=request.getContextPath()%>/resources/css/default.css" rel="stylesheet" type="text/css" />
-    <link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/resources/easyui/themes/gray/easyui.css" />
-    <link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/resources/easyui/themes/icon.css" />
-    <script type="text/javascript" src="<%=request.getContextPath()%>/resources/easyui/jquery.min.js"></script>
-    <script type="text/javascript" src="<%=request.getContextPath()%>/resources/easyui/jquery.easyui.min.js"></script>
-    <script type="text/javascript" src="<%=request.getContextPath()%>/resources/js/service.js"></script>
-    <script type="text/javascript" src="<%=request.getContextPath()%>/resources/js/companymanage.js"></script>
+    <link rel="stylesheet" type="text/css" href="<c:url value='/resources/easyui/themes/gray/easyui.css'></c:url>" />
+    <link rel="stylesheet" type="text/css" href="<c:url value='/resources/easyui/themes/icon.css'></c:url>" />
+    <link rel="stylesheet" type="text/css" href="<c:url value='/resources/css/companymanage.css'></c:url>" />
+    <script type="text/javascript" src="<c:url value='/resources/easyui/jquery.min.js'></c:url>"></script>
+    <script type="text/javascript" src="<c:url value='/resources/easyui/jquery.easyui.min.js'></c:url>"></script>
+    <script type="text/javascript" src="<c:url value='/resources/js/service.js'></c:url>"></script>
+    <script type="text/javascript" src="<c:url value='/resources/js/companymanage.js'></c:url>"></script>
   </head>
 <body>
     <table id='tt' class="easyui-datagrid" >  
@@ -31,32 +30,32 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 </table>
 
 	<div id="tb">
-		<div region="north" border="false" style="border-bottom:1px solid #ddd;height:28px;padding:2px 2px 2px 2px;background:#fafafa;">
+		<div region="north" border="false" class="north">
 			<div style="float:left;">
 				<a href="javascript:void(0)" id="addcm" class="easyui-linkbutton" plain="true" icon="icon-add" onclick="addBrand()">新增</a>
 				<a href="javascript:void(0)" id="updatecm" class="easyui-linkbutton" plain="true" icon="icon-save" onclick="updateBrand()">编辑</a>
 				<a href="javascript:void(0)" id="deletecm" class="easyui-linkbutton" plain="true" icon="icon-remove" onclick="deleteCompany()">删除</a>
 			</div>
 			<div class="datagrid-btn-separator"></div>
-			<div style="float:right;">
-			   <input class="easyui-searchbox" data-options="prompt:'Please Input Value',searcher:''" style="width:130px;vertical-align:middle;"></input>
-			   <a href="#" class="easyui-linkbutton" iconCls="icon-search">查询</a>
+			<div class="right">
+			   <input id="checkCompanyInput" class="easyui-searchbox checktb" data-options="prompt:'输入公司名称'" ></input>
+			   <a href="#" onclick="checkCompany()" class="easyui-linkbutton" iconCls="icon-search">查询</a>
 			</div>
 		</div>
 	</div>
     
-    <div id="CompanyDialog" class="easyui-dialog" data-options="modal:true" closed="true" style="width:400px;height:300px;padding:10px">
-		<div class="easyui-panel" style="padding:30px 10px;">
+    <div id="CompanyDialog" class="easyui-dialog comdialog" data-options="modal:true" closed="true">
+		<div class="easyui-panel companel">
 			<form id="addComForm"  method="post">
 			<input class="easyui-textbox" type="hidden" id="id" name="id"/>
-			<div style="margin-bottom:20px">
+			<div class="mbottom">
 				<input class="easyui-textbox" id="companyName" name="companyName" style="width:100%" label='公司名称'/>
 			</div>
-			<div style="margin-bottom:20px">
+			<div class="mbottom">
 				<!-- <input class="easyui-textbox" id="companyAddress" name="companyAddress" style="width:100%" label='公司楼层'/> -->
 			    <input id="companyAddress" class="easyui-combobox" name="companyAddress" label='公司楼层' style="width:100%" />
 			</div>
-			<div style="margin-bottom:10px">
+			<div class="mbottom">
 				<input class="easyui-textbox" id="companyPhone" name="companyPhone" style="width:100%" label='公司联系电话'/>
 			</div>
 			</form>

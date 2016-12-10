@@ -46,6 +46,50 @@
 		  }
 	  });
 	  
+	  $('#idCardType').combobox({
+		  data:[{
+			    "id":"身份证",
+			    "text":"身份证"
+			},{
+			    "id":"护照",
+			    "text":"护照"
+			}],
+		  textField:'text',
+		  valueField:'id',
+		  editable:false ,
+	  });
+	  
+	  $('#sex').combobox({
+		  data:[{
+			    "id":"男",
+			    "text":"男"
+			},{
+			    "id":"女",
+			    "text":"女"
+			}],
+		  textField:'text',
+		  valueField:'id',
+		  editable:false ,
+	  });
+	  
+	  $('#rank').combobox({
+		  data:[{
+			    "id":"1",
+			    "text":"普通访客"
+			},{
+			    "id":"2",
+			    "text":"黑名单"
+			},{
+			    "id":"3",
+			    "text":"白名单"
+			}],
+		  textField:'text',
+		  valueField:'id',
+		  editable:false ,
+	  });
+	  
+	  
+	  
   })
 //弹出窗口中是添加操作还是修改操作？
 var isAdd = true; 
@@ -80,6 +124,14 @@ var isAdd = true;
 	  showmessage('提醒',selections[0].visitorName+"的詳細個人資料。");
   }
   
+  function checkByVisitorName(){
+	  var visitorName = $('#checkByVisitorName').searchbox('getValue');
+		var queryParams = {visitorName:visitorName};
+		 $('#visitortb').datagrid({
+	   	  queryParams:queryParams
+			});
+  }
+  
   function setRank(rank){
 	  var rankName = "普通用户";
 	  if(rank == 3){
@@ -95,10 +147,14 @@ var isAdd = true;
 	            var submitData = {id:selections[0].id,rank:rank};
 	            $.post('./updateVisitorRank.do', submitData, function(data){
 		   	        if(data){
+		   	          if(data.rInfo.ret == 0){
 		                $('#visitortb').datagrid('load');//如果是添加则滚动到第一页并刷新
-		        	        showmessage('提醒',"访客"+selections[0].visitorName+'已被设为'+rankName+'!'); 
+		        	    showmessage('提醒',"访客"+selections[0].visitorName+'已被设为'+rankName+'!'); 
+		   	          }else{
+		   	        	showmessage('提醒',data.rInfo.msg); 	
+		   	         }
 		   	        }else {
-		   		        showmessage('操作失败','数据操作失败！');
+		   		        showmessage('操作失败','网络连接失败，请与管理员联系！');
 		   	        }
 		   });
 		  }
@@ -110,15 +166,15 @@ function addBrand(){
 	  isAdd = true;
 	  $("#id").textbox("setValue","");
 	  $("#visitorName").textbox("setValue","");
-	  $("#idCardType").textbox("setValue","");
+	  $("#idCardType").combobox("setValue","");
 	  $("#idCardNum").textbox("setValue","");
-	  $("#sex").textbox("setValue","");
+	  $("#sex").combobox("setValue","");
 	  $("#nation").textbox("setValue","");
-	  $("#birth").textbox("setValue","");
+	  $("#birth").datebox("setValue","");
 	  $("#address").textbox("setValue","");
 	  $("#mobile").textbox("setValue","");
 	  $("#email").textbox("setValue","");
-	  $("#rank").textbox("setValue","");
+	  $("#rank").combobox("setValue","");
 	  $('#VisitorDialog').dialog({title:'添加公司信息'});
 	  $('#VisitorDialog').dialog("open");
 }
@@ -135,10 +191,14 @@ function deleteCompany(){
 			var submitData = $('#visitorForm').serialize();
 			$.post('./deleteVisitor.do', submitData, function(data){
 				 if(data){
+				  if(data.rInfo.ret == 0){
 		   			$('#visitortb').datagrid('load');
-		   			 showmessage('提醒','数据删除成功！');
+		   			showmessage('提醒',data.rInfo.msg);
+				  }else{
+					showmessage('提醒',data.rInfo.msg);  
+				  }
 		   		 }else {
-		   			showmessage('操作失败','删除数据失败！');
+		   			 showmessage('操作失败','网络连接失败，请与管理员联系！');
 		   		 }
 			   }); 
 			  $("#id").textbox("setValue","");
@@ -156,15 +216,15 @@ function updateBrand(){
        }
 	$("#id").textbox("setValue",selections[0].id);
 	$("#visitorName").textbox("setValue",selections[0].visitorName);
-	$("#idCardType").textbox("setValue",selections[0].idCardType);
+	$("#idCardType").combobox("setValue",selections[0].idCardType);
 	$("#idCardNum").textbox("setValue",selections[0].idCardNum);
-	$("#sex").textbox("setValue",selections[0].sex);
+	$("#sex").combobox("setValue",selections[0].sex);
     $("#nation").textbox("setValue",selections[0].nation);
-	$("#birth").textbox("setValue",selections[0].birth);
+	$("#birth").datebox("setValue",formatYMDatebox(selections[0].birth));
 	$("#address").textbox("setValue",selections[0].address);
 	$("#mobile").textbox("setValue",selections[0].mobile);
 	$("#email").textbox("setValue",selections[0].email);
-	$("#rank").textbox("setValue",selections[0].rank);
+	$("#rank").combobox("setValue",selections[0].rank);
 	$('#VisitorDialog').dialog({title:'修改访客信息'});
 	$('#VisitorDialog').dialog("open");
 }
@@ -174,6 +234,9 @@ function quitDialog(){
 }
 
 function submitDialog(){
+	if(!validation()){
+		return ;
+	}
     var url = './addVisitor.do';
     if(!isAdd){
    	 url = './updateVisitor.do';
@@ -181,21 +244,37 @@ function submitDialog(){
 	var submitData = $('#visitorForm').serialize();
     $.post(url, submitData, function(data){
    	 if(data){
-            if(isAdd){
-            	$('#visitortb').datagrid('load');//如果是添加则滚动到第一页并刷新
-                showmessage('提醒','数据添加成功！');
-            }else{
-            	$('#visitortb').datagrid('reload');//如果是修改则刷新当前页
-            	showmessage('提醒','数据修改成功！');
-            } 
+   		if(data.rInfo.ret == 0){
+            $('#visitortb').datagrid('load');//如果是添加则滚动到第一页并刷新
+            showmessage('提醒',data.rInfo.msg);
+   		}else{
+   			showmessage('提醒',data.rInfo.msg);
+   		}
    	 }else {
-   		showmessage('操作失败','数据操作失败！');
+   		 showmessage('操作失败','网络连接失败，请与管理员联系！');
    	 }
 
         $("#VisitorDialog").dialog("close"); //关闭dialog
         //清空form表单中的数据
    }); 
 }  
+
+function validation(){
+	var phone = $("#mobile").textbox("getValue");
+	if(!/(^(\d{3,4}-)?\d{7,8})$|(13[0-9]{9})$/.test(phone)){
+		$.messager.alert('提醒','输入的联系电话格式有误，请重新输入!','info');
+		return false;
+	}
+	var email = $("#email").textbox("getValue");
+	if(email != null){
+		if(!/\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/.test(email)){
+			$.messager.alert('提醒','邮箱格式有误，请重新输入!','info');
+			return false;
+		}
+	}
+	
+	return true;
+}
 
 
 
