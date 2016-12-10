@@ -110,41 +110,21 @@ function deleteUser(){
 }
 
 function searchUser(){
-	var inou = $("#searchInput").val();
-	
-	/*var pageSize = $(".pagination-num").val();
-	alert(pageSize);
-	var rows = $(".pagination-page-list").val();
-	var param = {"username":inou ,"pageSize":pageSize,"rows":rows};
-	$.post('./user/getUserByUsername.do', param, function(data){
-		
-	},'json');*/
-	
+	var searchValue = $("#searchInput").searchbox("getValue");
+	var searchBy = $("#state").combobox("getValue");
+	console.log('searchValue='+searchValue);
+	console.log('searchBy='+searchBy);
+	var queryParams ;
+	var access;
+	if(searchBy=='username'){
+		access = './user/getUserByUsername.do';
+		queryParams = {username: searchValue};
+	}else if(searchBy=='roleName'){
+		access = './user/getUserByRolename.do';
+		queryParams = {roleName: searchValue}
+	}
 	 $('#userListDatagrid').datagrid({  
-	      width:'100%',  
-	      height:'470',
-	      pageSize:15, 
-	      method:'post',
-	      pageList:[15,25,35,45] ,
-	      nowrap:true,  
-	      striped:true,  
-	      url:'./user/getUserByUsername.do', //搜索前,触发此action请求所有用户信息  
-	      loadMsg:'数据加载中......',  
-	      emptyMsg: '未找到记录！',
-	      fitColumns:true,//允许表格自动缩放,以适应父容器  
-	      pagination : true, 
-	      rownumbers:true ,
-	      singleSelect : true,
-	      fit:true,
-	      columns:[[    
-	 	           {field:'username',title:'用户名',width:200,align:'center'},    
-	 	           {field:'roles',title:'所属角色',width:200,align:'center',formatter:"formatRoles"},    
-	 	           {field:'createdDate',title:'创建时间',width:200,align:'center',formatter:"formatDatebox"}   ,
-	 	          {field:'modifiedDate',title:'修改时间',width:200,align:'center' , formatter:"formatDatebox"},    
-	 	           {field:'status',title:'是否禁用',width:150,align:'center' , formatter:"formatStatus"}
-	 	           ]] , 
-	      queryParams: {
-	  		username: inou
-	      }
+	      url:access, 
+	      queryParams: queryParams
 	  });
 }

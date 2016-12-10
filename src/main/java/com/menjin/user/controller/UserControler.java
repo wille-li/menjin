@@ -84,14 +84,14 @@ public class UserControler {
 	@RequestMapping(value="/user/getUserByUsername.do")
 	@SystemControllerLog
 	@ResponseBody
-	public Map getUserByUsername(@RequestParam(value="pageSize") Integer page,@RequestParam(value="rows") Integer rows,
-			@RequestParam(value="username")String username){
-		logger.info("Start to getUserByUsername"+",searchValue="+username);
-		int count = userService.findCount(null, null);
-		logger.info("Users Count:"+count);
-		SimplePage simplepage = new SimplePage(page, rows, count);
+	public Map getUserByUsername(@Param(value="pageSize") Integer page,@Param(value="rows") Integer rows,
+			@Param(value="username") String username){
+		logger.info("Start to getUserByUsername"+",username="+username);
 		Map<String, Object> params = new HashMap<String,Object>();
 		params.put("username",username);
+		int count = userService.findCount(null, params);
+		logger.info("Users Count:"+count);
+		SimplePage simplepage = new SimplePage(page, rows, count);
 		String orderBy = null;
 		logger.info("page="+page+", rows="+rows);
 		List<User> users = userService.findByPage(simplepage, params, orderBy);
@@ -103,6 +103,29 @@ public class UserControler {
 		maps.put("rows", users);
 		maps.put("total", count);
 		logger.info("End getUserByUsername");
+		return maps;
+	}
+	
+	@RequestMapping(value="/user/getUserByRolename.do")
+	@SystemControllerLog
+	@ResponseBody
+	public Map getUserByRolename(@Param(value="pageSize") Integer page,@Param(value="rows") Integer rows,
+			@Param(value="roleName") String roleName){
+		logger.info("Start to getUserByRolename"+",roleName="+roleName);
+		int count = userService.findCountByRolename(roleName);
+		logger.info("Users Count:"+count);
+		SimplePage simplepage = new SimplePage(page, rows, count);
+		String orderBy = null;
+		logger.info("page="+page+", rows="+rows);
+		List<User> users = userService.findUserByRolename(roleName, simplepage, orderBy);
+		for(User u:users){
+			Set<Role> roles = roleService.findRoleByUserId(u.getId());
+			u.setRoles(roles);
+		}
+		Map maps = new HashMap();
+		maps.put("rows", users);
+		maps.put("total", count);
+		logger.info("End getUserByRolename");
 		return maps;
 	}
 	

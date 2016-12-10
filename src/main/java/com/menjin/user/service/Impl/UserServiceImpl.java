@@ -1,6 +1,7 @@
 package com.menjin.user.service.Impl;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import javax.annotation.Resource;
@@ -9,6 +10,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import com.base.entity.SimplePage;
 import com.base.mapper.BaseCrudMapper;
 import com.base.service.BaseServiceImpl;
 import com.menjin.user.mapper.RoleMapper;
@@ -47,7 +49,17 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements UserServic
 	public User findByUsername(String username){
 		return userMapper.selectByUserName(username);
 	}
+	
+	@Override
+	public List<User> findUserByRolename(String roleName,SimplePage page,String orderBy){
+		return userMapper.searchUserByRolename(roleName,page,orderBy);
+	}
 
+	@Override
+	public int findCountByRolename(String roleName){
+		return userMapper.searchCountByRolename(roleName);
+	}
+	
 	@Override
 	public UserDetails loadUserByUsername(String username)
 			throws UsernameNotFoundException {

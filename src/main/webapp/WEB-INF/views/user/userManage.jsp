@@ -24,7 +24,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 <span><a id="role" href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-man'">分配角色</a></span>
 <span style="float:right;">
 <input id="searchInput" class="easyui-searchbox" style="width:200px" data-options="prompt:'条件查询'"></input>
-<select class="easyui-combobox" name="state"  labelPosition="top" style="width:100px;">
+<select class="easyui-combobox" id="state" name="state"  labelPosition="top" style="width:100px;">
 <option value="username">用户名</option>
 <option value="roleName">角色名</option>
 </select>
