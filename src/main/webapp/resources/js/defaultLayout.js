@@ -2,26 +2,20 @@
   START!
 **/
 var _menus = {"menus":[
-						{"menuid":"1","icon":"icon-role","menuname":"权限管理",
+						{"menuid":"1","icon":"icon-role","menuname":"系统管理",
 							"menus":[
-									{"menuid":"12","menuname":"员工管理","icon":"icon-add","url":"http://localhost:8080/MenJin/company.do"},
 									{"menuid":"13","menuname":"用户管理","icon":"icon-users","url":"./user.do"},
 									{"menuid":"14","menuname":"角色管理","icon":"icon-role","url":"./role.do"},
 									{"menuid":"15","menuname":"权限管理","icon":"icon-set","url":"./resource.do"},
-									{"menuid":"16","menuname":"公司管理","icon":"icon-log","url":"./vistor.do"}
 								]
-						},{"menuid":"8","icon":"icon-users","menuname":"预约管理",
-							"menus":[{"menuid":"21","menuname":"预约数据","icon":"icon-nav","url":"demo.html"},
-									{"menuid":"22","menuname":"预约状态","icon":"icon-nav","url":"demo1.html"}
+						},{"menuid":"8","icon":"icon-users","menuname":"公司管理",
+							"menus":[{"menuid":"21","menuname":"公司管理","icon":"icon-large-chart","url":"./company.do"},
+									{"menuid":"22","menuname":"部门管理","icon":"icon-nav","url":"demo1.html"},
+									{"menuid":"22","menuname":"员工管理","icon":"icon-nav","url":"demo1.html"}
 								]
 						},{"menuid":"56","icon":"icon-magic","menuname":"访客管理",
-							"menus":[{"menuid":"31","menuname":"访客管理","icon":"icon-nav","url":"demo1.html"},
-									{"menuid":"32","menuname":"预约管理","icon":"icon-nav","url":"demo2.html"}
-								]
-						},{"menuid":"28","icon":"icon-nav","menuname":"黑白名单管理",
-							"menus":[{"menuid":"41","menuname":"黑名单","icon":"icon-nav","url":"demo.html"},
-									{"menuid":"42","menuname":"白名单","icon":"icon-nav","url":"demo1.html"},
-									{"menuid":"43","menuname":"SB名单","icon":"icon-nav","url":"demo2.html"}
+							"menus":[{"menuid":"31","menuname":"访客管理","icon":"icon-large-clipart","url":"./vistor.do"},
+									{"menuid":"32","menuname":"拜访记录管理","icon":"icon-large-shapes","url":"./vist.do"}
 								]
 						}
 				]};
