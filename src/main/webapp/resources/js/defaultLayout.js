@@ -9,9 +9,7 @@ var _menus = {"menus":[
 									{"menuid":"15","menuname":"权限管理","icon":"icon-set","url":"./resource.do"},
 								]
 						},{"menuid":"8","icon":"icon-users","menuname":"公司管理",
-							"menus":[{"menuid":"21","menuname":"公司管理","icon":"icon-large-chart","url":"./company.do"},
-									{"menuid":"22","menuname":"部门管理","icon":"icon-nav","url":"demo1.html"},
-									{"menuid":"22","menuname":"员工管理","icon":"icon-nav","url":"demo1.html"}
+							"menus":[{"menuid":"21","menuname":"公司管理","icon":"icon-large-chart","url":"./company.do"}
 								]
 						},{"menuid":"56","icon":"icon-magic","menuname":"访客管理",
 							"menus":[{"menuid":"31","menuname":"访客管理","icon":"icon-large-clipart","url":"./vistor.do"},
