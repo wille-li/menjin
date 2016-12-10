@@ -94,11 +94,11 @@
 				<input class="easyui-textbox" id="sex" name="sex" style="width:100%" label='性别' data-options="editable:false"/>
 			</div>
 			<div class="vsinput">
-				<input class="easyui-textbox" id="birth1" name="birth1" style="width:100%" label='出身日月' data-options="editable:false"/>
+				<input class="easyui-textbox" id="birth" name="birth" style="width:100%" label='出身日月' data-options="editable:false"/>
 			</div>
 			</div>
 			<div class="vsmesright">
-			  <img src="img/sxd.jpg" alt="" width="100%" height="140px"/>
+			  <img src="./resources/images/image.jpg" alt="" width="100%" height="140px"/>
 			</div>
 			<div class="record">
 			<div class="recordinputleft">

@@ -105,6 +105,7 @@ var isAdd = true;
 		$('#idCardType').textbox('setValue',param.idCardType);
 		$('#idCardNum').textbox('setValue',param.idCardNum);
 		$('#sex').textbox('setValue',param.sex);
+		$('#birth').textbox('setValue',formatYMDatebox(param.birth));
 	    $('#mobile').textbox('setValue',param.mobile);
   }
   function showDepartmentByCompanyId(param){
@@ -244,6 +245,7 @@ function addBrand(){
 	  $('#idCardNum').textbox('setValue',"");
 	  $('#sex').textbox('setValue',"");
 	  $('#mobile').textbox('setValue');
+	  $('#birth').textbox('setValue');
       $('#companyBox').combobox('setValue',"");
 	  $('#employeeName').textbox('setValue',"");
 	  $('#employeePhone').textbox('setValue',"");
@@ -310,6 +312,7 @@ function updateBrand(){
 	$('#validateMode').combobox('setValue',selections[0].validateMode).combobox('setText',formatValidateForUpdate(selections[0].validateMode));
 	$('#status').combobox('setValue',selections[0].status).combobox('setText',formatStatusForUpdate(selections[0].status));;
 	$('#leaveTime').textbox('setValue',formatDatebox(selections[0].leaveTime));
+	$('#birth').textbox('setValue',formatYMDatebox(selections[0].visitor.birth));
 	$('#checkRecord').show();
 	$('#VisitDialog').dialog({title:'修改拜访信息'});
 	$('#VisitDialog').dialog("open");
