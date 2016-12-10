@@ -74,6 +74,12 @@
 	
 	<select id="selectByPage" resultMap="userResultMap">
 	    SELECT u.* FROM t_user u where 1 = 1
+	    
+	    	<if test="null!=params">
+				 <foreach collection="params.keys" item="key" separator=" " >
+				 	and ${key} = #{params[${key}]}  
+				 </foreach>
+	    	</if>
 		    <if test="null!=page and null!=page.pageSize">
 		      LIMIT #{page.startRowNum}, #{page.pageSize}
 		    </if>

@@ -35,18 +35,20 @@ public class UserTestCase {
 	
 	@Test
 	public void testInsert(){
+		for(int i=6;i<50;i++){
 		com.menjin.user.model.User usr = new com.menjin.user.model.User();
 		Calendar cal = Calendar.getInstance();
 		Date date = cal.getTime();
-		usr.setUsername("Jack");
+		usr.setUsername("Jack00"+i);
 		usr.setPassword("123456");
 		usr.setEmail("Becky@.qq.com");
 		usr.setModifiedDate(date);
-		usr.setStatus("0");
+		usr.setStatus("1");
 		usr.setCreatedDate(date);
 		int effect = -1;
 		effect = userServiceIf.add(usr);
 		log.info("testInsert effect="+effect);
+		}
 	}
 	
 	
