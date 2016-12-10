@@ -18,6 +18,7 @@ import org.springframework.security.core.context.SecurityContextImpl;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -168,6 +169,22 @@ public class UserControler {
 		logger.info("Start to delete user,username="+user.getUsername());
 		int returnCode = userService.deleteById(user);
 		logger.info("End to delete user,retrunCode:"+returnCode);
+		return returnCode;
+	}
+	
+	@RequestMapping(value="/user/resetPassword.do", method = RequestMethod.POST)
+	@SystemControllerLog
+	@ResponseBody
+	public Integer resetPassword(String oldPassword, String newPassword,
+			HttpServletRequest request){
+		String currentLoginUser = getCurrentUsername(request);
+		User temUser = userService.findByUsername(currentLoginUser);
+		int returnCode = - 1;
+		if (temUser.getPassword().equals(oldPassword)){
+			temUser.setPassword(newPassword);
+			returnCode = userService.resetPassword(temUser);
+		}
+		logger.info("retrunCode:"+returnCode);
 		return returnCode;
 	}
 	

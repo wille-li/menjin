@@ -161,5 +161,59 @@ public class APIController {
 	}
 	
 	
+	@RequestMapping(value="/api/upload.do", method=RequestMethod.POST)
+	@SystemControllerLog
+	@ResponseBody
+	public Map<String, Object> uploadFileForRegister(@RequestParam("file") MultipartFile[] files, Visitor visitor){
+		Map <String, Object> result = new HashMap<>();
+		ReturnInfo returnInfo = new ReturnInfo();
+		
+		if (visitor == null){
+			returnInfo.setRet(APIController.FAIL);
+			returnInfo.setMsg("请检查输入内容");
+			result.put(APIController.HEAD_KEY, returnInfo);
+	        return result;
+		}
+		
+		if (visitor.getIdCardNum() == null){
+			returnInfo.setRet(APIController.FAIL);
+			returnInfo.setMsg("身份证有误");
+			result.put(APIController.HEAD_KEY, returnInfo);
+	        return result;
+		}
+		
+		
+		// 文件大小判断
+		for (MultipartFile file : files){
+			String filename = visitor.getIdCardNum() + Calendar.getInstance().getTimeInMillis() + ".jpg";
+			File tmpFile=new File(imagePath+filename); 
+			//logger.info(imagePath + filename);
+			if(filename!=null&&!file.isEmpty()){  
+				try {  
+					FileCopyUtils.copy(file.getBytes(), tmpFile); 
+					savePhotoInfo(filename, imagePath, file.getBytes().length + 0L);
+					//logger.info("上传成功"); 
+					returnInfo.setRet(APIController.SUCCESS);
+					returnInfo.setMsg("上传图片成功。");
+				} catch (IOException e) {  
+					returnInfo.setRet(APIController.FAIL);
+					returnInfo.setMsg("上传图片失败。");
+				}  
+			} else {
+				returnInfo.setRet(APIController.FAIL);
+				returnInfo.setMsg("没有收到上传图片，请上传图片。");
+			}
+		}
+		/**
+		 * 识别图片过程。
+		 */
+		
+		int resultNum = visitorService.add(visitor);
+		
+        result.put(APIController.HEAD_KEY, returnInfo);
+        
+        return result;
+	}
+	
 
 }

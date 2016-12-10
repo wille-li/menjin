@@ -39,4 +39,11 @@ public interface UserServiceIf extends BaseService<User> , UserDetailsService{
 	 * @return
 	 */
 	public int findCountByRolename(String roleName);
+	
+	/**
+	 * 修改密码
+	 * @param user
+	 * @return
+	 */
+	public int resetPassword(User user);
 }

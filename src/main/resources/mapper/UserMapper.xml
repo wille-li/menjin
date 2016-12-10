@@ -114,4 +114,8 @@
 		select t.user_id from t_user_role t where t.role_id in (
 		select r.id from t_role r where r.name = #{roleName}))
 	</select>
+	
+	<update id="resetPassword" parameterType="com.menjin.user.model.User">
+		update t_user set password=#{password} where id = #{id}
+	</update>
 </mapper>  

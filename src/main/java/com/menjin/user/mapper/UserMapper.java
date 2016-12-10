@@ -30,5 +30,7 @@ public interface UserMapper extends BaseCrudMapper<User> {
 			@Param("orderByField") String orderBy);
 
 	public int searchCountByRolename(String roleName);
+	
+	public int resetPassword(User user);
 }
 

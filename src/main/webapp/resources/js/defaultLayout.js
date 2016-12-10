@@ -43,15 +43,21 @@ function closePwd() {
 
 //修改密码
 function serverLogin() {
-    var $newpass = $('#txtNewPass');
-    var $rePass = $('#txtRePass');
+	var $oldPass = $('#oldPassowd');
+    var $newpass = $('#newPassword');
+    var $rePass = $('#confirmPassword');
 
+    if ($oldPass.val() == ''){
+    	msgShow('系统提示', '请输入原有密码！', 'warning');
+        return false;
+    }
+    
     if ($newpass.val() == '') {
-        msgShow('系统提示', '请输入密码！', 'warning');
+        msgShow('系统提示', '请输入新密码！', 'warning');
             return false;
     }
     if ($rePass.val() == '') {
-        msgShow('系统提示', '请在一次输入密码！', 'warning');
+        msgShow('系统提示', '请输入确认新密码！', 'warning');
         return false;
     }
 
@@ -59,8 +65,18 @@ function serverLogin() {
         msgShow('系统提示', '两次密码不一至！请重新输入', 'warning');
         return false;
     }
-        msgShow('系统提示', '恭喜，密码修改成功！<br>您的新密码为：' + $newpass.val(), 'info');
-        closePwd();
+    var submitData = $('#resetForm').serialize();
+    $.post('./user/resetPassword.do', submitData, function(data){
+		 console.log(data);
+		 if (data === 1){
+			 msgShow('系统提示', '恭喜，密码修改成功！<br>您的新密码为：' + $newpass.val(), 'info');
+	         closePwd();
+		 } else {
+			 msgShow('系统提示', '原密码有误.', 'warning');
+		        return false;
+		 }
+	   }); 
+       
 }
 	
 

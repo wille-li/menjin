@@ -40,16 +40,22 @@
         maximizable="false" icon="icon-save"  >
         <div class="easyui-layout" fit="true">
             <div class="open-window-content" region="center" border="false" >
+            <form id="resetForm">
                 <table cellpadding=3>
                     <tr>
-                        <td>新密码：</td>
-                        <td><input id="txtNewPass" type=‘Password’ class="txt01" /></td>
+                        <td>原有密码：</td>
+                        <td><input id="oldPassword" name="oldPassword" type="password" class="txt01" /></td>
                     </tr>
                     <tr>
-                        <td>确认密码：</td>
-                        <td><input id="txtRePass" type=‘Password’ class="txt01" /></td>
+                        <td>新密码：</td>
+                        <td><input id="newPassword" name="newPassword" type="password" class="txt01" /></td>
+                    </tr>
+                    <tr>
+                        <td>确认新密码：</td>
+                        <td><input id="confirmPassword" name="confirmPassword" type="password" class="txt01" /></td>
                     </tr>
                 </table>
+            </form>
             </div>
             <div class="open-window-button" region="south" border="false" >
                 <a id="btnEp" class="easyui-linkbutton" icon="icon-ok" href="javascript:void(0)" >

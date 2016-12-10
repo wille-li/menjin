@@ -71,4 +71,9 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements UserServic
 		user.setRoles(roles);
 		return user;
 	}
+
+	@Override
+	public int resetPassword(User user) {
+		return userMapper.resetPassword(user);
+	}
 }
