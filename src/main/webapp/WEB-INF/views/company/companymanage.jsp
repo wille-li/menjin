@@ -7,7 +7,6 @@
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 	<title>公司管理</title>
-	<link href="<c:url value='/resources/css/default.css'></c:url>" rel="stylesheet" type="text/css" />
     <link rel="stylesheet" type="text/css" href="<c:url value='/resources/easyui/themes/gray/easyui.css'></c:url>" />
     <link rel="stylesheet" type="text/css" href="<c:url value='/resources/easyui/themes/icon.css'></c:url>" />
     <link rel="stylesheet" type="text/css" href="<c:url value='/resources/css/companymanage.css'></c:url>" />

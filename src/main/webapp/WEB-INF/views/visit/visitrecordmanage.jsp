@@ -7,7 +7,6 @@
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 	<title>拜访记录管理</title>
-	<link href="<%=request.getContextPath()%>/resources/css/default.css" rel="stylesheet" type="text/css" />
     <link rel="stylesheet" type="text/css" href="<c:url value="/resources/easyui/themes/gray/easyui.css"></c:url>" />
     <link rel="stylesheet" type="text/css" href="<c:url value="/resources/easyui/themes/icon.css"></c:url>"/>
     <link rel="stylesheet" type="text/css" href="<c:url value="/resources/css/visitrecordmanage.css"></c:url>" />

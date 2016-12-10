@@ -8,12 +8,12 @@
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <title><tiles:getAsString name="title" /></title>
-    <link href="<c:url value="/resources/css/default.css"></c:url>" rel="stylesheet" type="text/css" />
+    <link href="<c:url value="/resources/css/defaultLayout.css"></c:url>" rel="stylesheet" type="text/css" />
     <link rel="stylesheet" type="text/css" href="<c:url value="/resources/easyui/themes/gray/easyui.css"></c:url>" />
     <link rel="stylesheet" type="text/css" href="<c:url value="/resources/easyui/themes/icon.css"></c:url>" />
     <script type="text/javascript" src="<c:url value="/resources/easyui/jquery.min.js"></c:url>"></script>
     <script type="text/javascript" src="<c:url value="/resources/easyui/jquery.easyui.min.js"></c:url>"></script>
-	<script type="text/javascript" src="<c:url value="/resources/js/outlook2.js"></c:url>" ></script>
+	<script type="text/javascript" src="<c:url value="/resources/js/defaultLayout.js"></c:url>" ></script>
 </head>
 <body class="easyui-layout body-tab" scroll="no">
 	<noscript>
