@@ -10,11 +10,12 @@
 		<result column="resource_url" property="resourceUrl" jdbcType="VARCHAR" />
 		<result column="name" property="name" jdbcType="VARCHAR" />
 		<result column="parentId" property="parentId" jdbcType="INTEGER"  javaType="java.lang.Integer"/>
+		<result column="parent_desc" property="parentDesc" jdbcType="VARCHAR" />
 		<result column="resKey" property="resKey" jdbcType="VARCHAR" />
 		<result column="description" property="description" jdbcType="VARCHAR" />
 	</resultMap>
 	<sql id="allField" >
-	    resource_url, name, parentId, resKey, description
+	    resource_url, name, parentId, parent_desc, resKey, description
 	</sql>
 	
 	<insert id="insert" parameterType="com.menjin.user.model.Resource" useGeneratedKeys="true"
@@ -22,7 +23,7 @@
 		INSERT INTO t_resource(
         <include refid="allField"/>) VALUES (
         #{resourceUrl}, #{name}, #{parentId},
-        #{resKey}, #{description})
+        #{parentDesc},#{resKey}, #{description})
 	</insert>
 	
 	<select id="selectAllResources" resultMap="resourceResultMap">
@@ -37,12 +38,12 @@
 				 	and ${key} = #{params[${key}]}  
 				 </foreach>
 	    	</if>
+	    	<if test="null != orderByField">
+		    	ORDER BY #{orderByField}
+			</if>
 		    <if test="null!=page and null!=page.pageSize">
 		      LIMIT #{page.startRowNum}, #{page.pageSize}
 		    </if>
-			<if test="null != orderByField">
-		    	ORDER BY #{orderByField}
-			</if>
 	</select>
 	
 	<select id="selectCount" resultType="java.lang.Integer" >
@@ -62,12 +63,16 @@
 		select * from t_resource where resource_url = #{resourceUrl}
 	</select>
 	
+	<select id="selectParent" resultMap="resourceResultMap">
+		select * from t_resource where parentId = 1
+	</select>
+	
 	<delete id="deleteByPrimaryKey" parameterType="com.menjin.user.model.Resource">
 		delete from t_resource  where id = #{id}
 	</delete>
 	
 	<update id="updateByPrimaryKey" parameterType="com.menjin.user.model.Resource">
-		update t_resource set resource_url=#{resourceUrl},name=#{name},parentId=#{parentId},
+		update t_resource set resource_url=#{resourceUrl},name=#{name},parentId=#{parentId},parent_desc=#{parentDesc},
 		resKey=#{resKey},description=#{description} where id = #{id}
 	</update>
 	
