@@ -180,7 +180,7 @@ public class UserControler {
 		String currentLoginUser = getCurrentUsername(request);
 		User temUser = userService.findByUsername(currentLoginUser);
 		int returnCode = - 1;
-		if (temUser.getPassword().equals(oldPassword)){
+		if (null != temUser && temUser.getPassword().equals(oldPassword)){
 			temUser.setPassword(newPassword);
 			returnCode = userService.resetPassword(temUser);
 		}

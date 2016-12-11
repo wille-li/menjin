@@ -213,12 +213,14 @@ public class APIController {
 	
 	
 	
-	private void savePhotoInfo(String fileName, String filePath, Long size){
+	private void savePhotoInfo(String fileName, String filePath, String idCardNum, Long size, int picType){
 		PhotoInfo photoInfo = new PhotoInfo();
 		photoInfo.setName(fileName);
 		photoInfo.setPath(filePath);
 		photoInfo.setSize(size);
 		photoInfo.setCreateBy("Wille");
+		photoInfo.setIdCardNum(idCardNum);
+		photoInfo.setPicType(picType);
 		photoInfo.setCreateDate(Calendar.getInstance().getTime());
 		photoInfoService.add(photoInfo);
 	}
@@ -237,30 +239,44 @@ public class APIController {
 			result.put(APIController.HEAD_KEY, returnInfo);
 	        return result;
 		}
-		
-		if (visitor.getIdCardNum() == null){
+		String idCardNum = visitor.getIdCardNum();
+		if (idCardNum == null){
 			returnInfo.setRet(APIController.FAIL);
 			returnInfo.setMsg("身份证有误");
 			result.put(APIController.HEAD_KEY, returnInfo);
 	        return result;
 		}
 		
+		Visitor tempVisitor = visitorService.selectByIDCar(idCardNum);
+		if (tempVisitor != null){
+			returnInfo.setRet(APIController.FAIL);
+			returnInfo.setMsg("身份证已经注册了。");
+			result.put(APIController.HEAD_KEY, returnInfo);
+	        return result;
+		}
+		
+		if (null == files || files.length != 2){
+			returnInfo.setRet(APIController.FAIL);
+			returnInfo.setMsg("请上传两张图片，第一张为身份证，第二张为验证图片。");
+			result.put(APIController.HEAD_KEY, returnInfo);
+	        return result;
+		}
 		
 		// 文件大小判断
-		for (MultipartFile file : files){
-			String filename = visitor.getIdCardNum() + Calendar.getInstance().getTimeInMillis() + ".jpg";
-			File tmpFile=new File(imagePath+filename); 
-			//logger.info(imagePath + filename);
-			if(filename!=null&&!file.isEmpty()){  
+		for (int i = 0; i < files.length; i++){
+			MultipartFile file = files[i];
+			String filename = idCardNum + Calendar.getInstance().getTimeInMillis() + ".jpg";
+			File tmpFile=new File(imagePath + filename); 
+			if (filename !=null && !file.isEmpty()){  
 				try {  
 					FileCopyUtils.copy(file.getBytes(), tmpFile); 
-					savePhotoInfo(filename, imagePath, file.getBytes().length + 0L);
-					//logger.info("上传成功"); 
+					savePhotoInfo(filename, imagePath, idCardNum, file.getBytes().length + 0L, i);
 					returnInfo.setRet(APIController.SUCCESS);
 					returnInfo.setMsg("上传图片成功。");
 				} catch (IOException e) {  
 					returnInfo.setRet(APIController.FAIL);
 					returnInfo.setMsg("上传图片失败。");
+					logger.error("上传图片失败",  e);
 				}  
 			} else {
 				returnInfo.setRet(APIController.FAIL);

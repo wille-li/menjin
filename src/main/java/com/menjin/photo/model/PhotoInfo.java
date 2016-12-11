@@ -36,10 +36,15 @@ public class PhotoInfo implements Serializable {
 	private Long size;
 	
 	/**
-	 * 图片属于哪个访客
+	 * 身份证
 	 */
-	private Integer uid;
+	private String idCardNum;
 	
+	/**
+	 * 1. 身份证
+	 * 2. 验证图片
+	 */
+	private Integer picType;
 	/**
 	 * 创建者
 	 */
@@ -49,6 +54,24 @@ public class PhotoInfo implements Serializable {
 	 * 创建日期
 	 */
 	private Date createDate;
+
+	
+	
+	public String getIdCardNum() {
+		return idCardNum;
+	}
+
+	public void setIdCardNum(String idCardNum) {
+		this.idCardNum = idCardNum;
+	}
+
+	public Integer getPicType() {
+		return picType;
+	}
+
+	public void setPicType(Integer picType) {
+		this.picType = picType;
+	}
 
 	public Integer getId() {
 		return id;
@@ -82,13 +105,6 @@ public class PhotoInfo implements Serializable {
 		this.size = size;
 	}
 
-	public Integer getUid() {
-		return uid;
-	}
-
-	public void setUid(Integer uid) {
-		this.uid = uid;
-	}
 
 	public String getCreateBy() {
 		return createBy;
@@ -106,10 +122,4 @@ public class PhotoInfo implements Serializable {
 		this.createDate = createDate;
 	}
 
-	@Override
-	public String toString() {
-		return "PhotoInfo [id=" + id + ", name=" + name + ", path=" + path + ", size=" + size + ", uid=" + uid
-				+ ", createBy=" + createBy + ", createDate=" + createDate + "]";
-	}
-	
 }

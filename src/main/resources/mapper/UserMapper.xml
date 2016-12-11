@@ -77,7 +77,9 @@
 	    
 	    	<if test="null!=params">
 				 <foreach collection="params.keys" item="key" separator=" " >
-				 	and ${key} = #{params[${key}]}  
+				    <if test="key != 'username'">
+				    and ${key} = #{params[${key}]} 
+				    </if>
 				 </foreach>
 	    	</if>
 		    <if test="null!=page and null!=page.pageSize">
