@@ -60,5 +60,5 @@ public interface ResourceServiceIf extends BaseService<Resource> , FilterInvocat
 	 * 获取父目录资源
 	 * @return
 	 */
-	public List<Resource> findParent();
+	public List<String> findParent();
 }

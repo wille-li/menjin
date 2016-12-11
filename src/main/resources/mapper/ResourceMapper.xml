@@ -62,8 +62,8 @@
 		select * from t_resource where resource_url = #{resourceUrl}
 	</select>
 	
-	<select id="selectParent" resultMap="resourceResultMap">
-		select * from t_resource where parentId = 1
+	<select id="selectParent" resultType="String">
+		SELECT distinct parent_desc FROM t_resource
 	</select>
 	
 	<delete id="deleteByPrimaryKey" parameterType="com.menjin.user.model.Resource">

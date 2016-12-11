@@ -58,6 +58,6 @@ public interface ResourceMapper extends BaseCrudMapper<Resource> {
 	 * 获取父目录资源
 	 * @return
 	 */
-	public List<Resource>  selectParent();
+	public List<String>  selectParent();
 	
 }

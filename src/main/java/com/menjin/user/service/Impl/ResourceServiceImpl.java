@@ -91,7 +91,7 @@ public class ResourceServiceImpl extends BaseServiceImpl<Resource> implements Re
 	};
 	
 	@Override
-	public List<Resource> findParent() {
+	public List<String> findParent() {
 		// TODO Auto-generated method stub
 		return resourceMapper.selectParent();
 	}
