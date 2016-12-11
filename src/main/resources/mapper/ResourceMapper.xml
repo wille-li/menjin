@@ -96,4 +96,8 @@
 	<insert id="insertRolesResource" parameterType="com.menjin.user.model.RolesResource">
 		insert into t_role_resource(role_id,resource_id) values (#{roleId},#{resourceId})
 	</insert>
+	
+	<insert id="deleteRolesResource" parameterType="com.menjin.user.model.RolesResource">
+		DELETE FROM t_role_resource WHERE role_id = #{roleId} AND resource_id = #{resourceId}
+	</insert>
 </mapper>  

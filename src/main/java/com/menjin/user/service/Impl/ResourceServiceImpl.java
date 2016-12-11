@@ -144,4 +144,9 @@ public class ResourceServiceImpl extends BaseServiceImpl<Resource> implements Re
 		// TODO Auto-generated method stub
 		return true;
 	}
+
+	@Override
+	public int deleteRolesResource(RolesResource rolesResource) {
+		return resourceMapper.deleteRolesResource(rolesResource);
+	}
 }

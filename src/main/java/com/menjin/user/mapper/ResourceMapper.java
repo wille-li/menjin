@@ -48,6 +48,13 @@ public interface ResourceMapper extends BaseCrudMapper<Resource> {
 	public int insertRolesResource(RolesResource rolesResource);
 	
 	/**
+	 * 删除t_role_resource的记录
+	 * @param rolesResource
+	 * @return
+	 */
+	public int deleteRolesResource(RolesResource rolesResource);
+	
+	/**
 	 * 根据角色Id获取可访问的资源（权限）
 	 * @param roleId
 	 * @return

@@ -1,59 +1,4 @@
   $(function(){
-	  
-	  var data =   [{
-			"id":1,
-			"text":"所有权限",
-			"children":[{
-				"id":11,
-				"text":"公司管理",
-				"state":"closed",
-				"children":[{
-					"id":111,
-					"text":"添加公司"
-				},{
-					"id":112,
-					"text":"删除公司"
-				},{
-					"id":113,
-					"text":"修改"
-				},{
-					"id":113,
-					"text":"查看公司"
-				}]
-			},{
-				"id":12,
-				"text":"Program Files",
-				"children":[{
-					"id":121,
-					"text":"Intel"
-				},{
-					"id":122,
-					"text":"Java",
-					"attributes":{
-						"p1":"Custom Attribute1",
-						"p2":"Custom Attribute2"
-					}
-				},{
-					"id":123,
-					"text":"Microsoft Office"
-				},{
-					"id":124,
-					"text":"Games",
-					"checked":true
-				}]
-			},{
-				"id":13,
-				"text":"index.html"
-			},{
-				"id":14,
-				"text":"about.html"
-			},{
-				"id":15,
-				"text":"welcome.html"
-			}]
-		}];
-
-	  
 	  $('#Roletb').datagrid({  
 	      title:'公司管理',  
 	      iconCls:'icon-man',  
@@ -97,8 +42,45 @@
 //弹出窗口中是添加操作还是修改操作？
 var isAdd = true; 
 function disresource(){
+	var selections = $('#Roletb').datagrid('getSelections');
+	if (selections.length == 0) {
+		showmessage('提醒','请选择你要分配权限的角色！');
+         return false;
+     }
+	var resources = selections[0].resources;
+	if(resources != null){
+		resources.forEach(function (element, index, array) {  
+			 var nodeDep = $('#resources').tree('find',element.id); 
+			 $('#resources').tree('check',nodeDep.target);  
+		});  
+	}
 	$('#ResourceDialog').dialog({title:'分配权限'});
 	$('#ResourceDialog').dialog("open");
+}
+
+function submitResource(){
+	var nodes = $('#resources').tree('getChecked');
+	var resourceIds = '';
+	for(var i=0; i<nodes.length; i++){
+		if (resourceIds != '') resourceIds += ',';
+		resourceIds += nodes[i].id;
+	}
+	showmessage('操作失败',resourceIds);
+	var selections = $('#Roletb').datagrid('getSelections');
+	var roleId = selections[0].id;
+	var submitData = {roleId : roleId,resourceIds : resourceIds};
+	$.post('./role/controlResourceRole.do', submitData, function(data){
+		 if(data){
+			 if(data.rInfo.ret == 0){
+	   			 showmessage('提醒',data.rInfo.msg);
+			 }else{
+				 showmessage('操作失败',data.rInfo.msg); 
+			 }
+  		 }else {
+  			showmessage('操作失败','网络连接失败，请与管理员联系！');
+  		 }
+		 $("#ResourceDialog").dialog("close"); //关闭dialog
+	   }); 
 }
 
 function searchRole(){
@@ -161,6 +143,10 @@ function updateRole(){
 
 function quitDialog(){
 	$('#RoleDialog').dialog("close");
+}
+
+function quitResource(){
+	$('#ResourceDialog').dialog("close");
 }
 
 function submitDialog(){
