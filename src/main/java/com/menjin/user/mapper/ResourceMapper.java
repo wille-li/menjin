@@ -54,4 +54,10 @@ public interface ResourceMapper extends BaseCrudMapper<Resource> {
 	 */
 	public List<Resource> getResourcesByRoleId(Integer roleId);
 	
+	/**
+	 * 获取父目录资源
+	 * @return
+	 */
+	public List<Resource>  selectParent();
+	
 }

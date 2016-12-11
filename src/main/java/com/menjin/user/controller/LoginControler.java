@@ -25,5 +25,4 @@ private Logger logger = LoggerFactory.getLogger(getClass());
 		logger.info("username="+u.getUsername());
 		return "index2";
 	}
-
 }

@@ -1,10 +1,8 @@
 package com.menjin.user.controller;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import org.apache.ibatis.annotations.Param;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,7 +11,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
-
 import com.alibaba.fastjson.JSON;
 import com.base.annotation.log.SystemControllerLog;
 import com.base.entity.SimplePage;
@@ -107,7 +104,8 @@ public class ResourceControler {
 	  private Map<String, List<Map<String, String>>> trimPrivileges(List<Resource> privileges){
 	    	Map<String, List<Map<String, String>>> result = new HashMap<String, List<Map<String, String>>>();
 	    	for (Resource privilege : privileges) {
-				 String catalog = String.valueOf(privilege.getParentId());
+				 //String catalog = String.valueOf(privilege.getParentId());
+	    		String catalog = "";
 				 Map<String, String> node = new HashMap<String, String>();
 				 node.put("id",privilege.getId().toString());
 				 node.put("text", privilege.getName());
@@ -150,54 +148,4 @@ public class ResourceControler {
 	        }
 	        return results;
 	    }
-	
-	/*
-	@RequestMapping(value="/user/getUserByUsername.do")
-	@SystemControllerLog
-	@ResponseBody
-	public Map getUserByUsername(@Param(value="pageSize") Integer page,@Param(value="rows") Integer rows,
-			@Param(value="username") String username){
-		logger.info("Start to getUserByUsername"+",username="+username);
-		Map<String, Object> params = new HashMap<String,Object>();
-		params.put("username",username);
-		int count = userService.findCount(null, params);
-		logger.info("Users Count:"+count);
-		SimplePage simplepage = new SimplePage(page, rows, count);
-		String orderBy = null;
-		logger.info("page="+page+", rows="+rows);
-		List<User> users = userService.findByPage(simplepage, params, orderBy);
-		for(User u:users){
-			Set<Role> roles = roleService.findRoleByUserId(u.getId());
-			u.setRoles(roles);
-		}
-		Map maps = new HashMap();
-		maps.put("rows", users);
-		maps.put("total", count);
-		logger.info("End getUserByUsername");
-		return maps;
-	}
-	
-	@RequestMapping(value="/user/getUserByRolename.do")
-	@SystemControllerLog
-	@ResponseBody
-	public Map getUserByRolename(@Param(value="pageSize") Integer page,@Param(value="rows") Integer rows,
-			@Param(value="roleName") String roleName){
-		logger.info("Start to getUserByRolename"+",roleName="+roleName);
-		int count = userService.findCountByRolename(roleName);
-		logger.info("Users Count:"+count);
-		SimplePage simplepage = new SimplePage(page, rows, count);
-		String orderBy = null;
-		logger.info("page="+page+", rows="+rows);
-		List<User> users = userService.findUserByRolename(roleName, simplepage, orderBy);
-		for(User u:users){
-			Set<Role> roles = roleService.findRoleByUserId(u.getId());
-			u.setRoles(roles);
-		}
-		Map maps = new HashMap();
-		maps.put("rows", users);
-		maps.put("total", count);
-		logger.info("End getUserByRolename");
-		return maps;
-	}
-	*/
 }

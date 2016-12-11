@@ -27,6 +27,11 @@ public class Company {
 	 */
 	private String companyPhone;
 
+	/**
+	 * 公司门牌号
+	 */
+	private String doorPlate;
+
 	private Date createTime;
 
 	private String createBy;
@@ -97,6 +102,14 @@ public class Company {
 
 	public void setDepartments(List<Department> departments) {
 		this.departments = departments;
+	}
+
+	public String getDoorPlate() {
+		return doorPlate;
+	}
+
+	public void setDoorPlate(String doorPlate) {
+		this.doorPlate = doorPlate;
 	}
 
 	@Override
