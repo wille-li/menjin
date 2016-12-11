@@ -90,6 +90,12 @@ public class ResourceServiceImpl extends BaseServiceImpl<Resource> implements Re
 		return resourceMapper.getResourcesByRoleId(roleId);
 	};
 	
+	@Override
+	public List<String> findParent() {
+		// TODO Auto-generated method stub
+		return resourceMapper.selectParent();
+	}
+
 	@PostConstruct 
 	public void initResource() throws Exception{
 		this.resourceMap = new HashMap<String,Collection<ConfigAttribute>>();
@@ -137,5 +143,10 @@ public class ResourceServiceImpl extends BaseServiceImpl<Resource> implements Re
 	public boolean supports(Class<?> clazz) {
 		// TODO Auto-generated method stub
 		return true;
+	}
+
+	@Override
+	public int deleteRolesResource(RolesResource rolesResource) {
+		return resourceMapper.deleteRolesResource(rolesResource);
 	}
 }

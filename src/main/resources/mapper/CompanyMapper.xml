@@ -8,10 +8,9 @@
 	<resultMap type="com.menjin.company.model.Company" id="resultMap">
 		<id column="id" property="id" jdbcType="INTEGER" javaType="java.lang.Integer" />
 		<result column="company_name" property="companyName" jdbcType="VARCHAR" />
-		<result column="company_addr" property="companyAddress"
-			jdbcType="VARCHAR" />
-		<result column="company_mobile" property="companyPhone"
-			jdbcType="VARCHAR" />
+		<result column="company_addr" property="companyAddress" jdbcType="VARCHAR" />
+		<result column="door_plate" property="doorPlate" jdbcType="VARCHAR" />
+		<result column="company_mobile" property="companyPhone" jdbcType="VARCHAR" />
 		<result column="created_time" property="createTime" jdbcType="TIMESTAMP" />
 		<result column="created_by" property="createBy" jdbcType="VARCHAR" />
 		<result column="modified_date" property="modifiedDate"
@@ -19,12 +18,12 @@
 	</resultMap>
 
 	<sql id="insertList">
-		company_name,company_addr,company_mobile,created_time,
+		company_name,company_addr,door_plate,company_mobile,created_time,
 		created_by,modified_date
 	</sql>
 
 	<sql id="columnList">
-		id,company_name,company_addr,company_mobile,created_time,
+		id,company_name,company_addr,door_plate,company_mobile,created_time,
 		created_by,modified_date
 	</sql>
 	
@@ -42,13 +41,13 @@
 		INSERT INTO t_company(
 		<include refid="insertList" />
 		) VALUES (
-		#{companyName}, #{companyAddress}, #{companyPhone},
+		#{companyName}, #{companyAddress},#{doorPlate},#{companyPhone},
 		#{createTime}, #{createBy}, #{modifiedDate})
 	</insert>
 
 	<update id="updateByPrimaryKey" parameterType="com.menjin.company.model.Company">
 		UPDATE t_company
-		SET company_name = #{companyName},company_addr = #{companyAddress},
+		SET company_name = #{companyName},company_addr = #{companyAddress},door_plate = #{doorPlate},
 		company_mobile = #{companyPhone}, created_time = #{createTime},
 		created_by = #{createBy},modified_date = #{modifiedDate}
 		WHERE id=#{id}

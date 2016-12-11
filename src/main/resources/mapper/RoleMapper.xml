@@ -14,6 +14,15 @@
 	    name, description
 	</sql>
 	
+	<sql id="condition">
+	    <if test="null!=params" >
+	        <if test="null!=params.checkmessage and ''!=params.checkmessage" >
+	            OR name LIKE '%${params.checkmessage}%'
+	            OR description LIKE '%${params.checkmessage}%'
+	        </if>
+	    </if>
+	</sql>
+	
 	<insert id="insert" parameterType="com.menjin.user.model.Role" useGeneratedKeys="true"
 		keyColumn="id">
 		INSERT INTO t_role(
@@ -59,6 +68,30 @@
 	<select id="searchRoleByResourceId" parameterType="Integer" resultMap="roleResultMap">
 		select r.* from t_role r ,t_role_resource rr 
 		where rr.role_id = r.id and rr.resource_id = #{resourceId}
+	</select>
+	
+	<select id="selectByPage" resultMap="roleResultMap">
+	    SELECT 
+		t1.*
+		FROM t_role t1
+		INNER JOIN 
+		(
+		    SELECT id FROM t_role WHERE 1 = 1
+		    <include refid="condition" />
+		    <if test="null!=page and null!=page.pageSize">
+		      LIMIT #{page.startRowNum}, #{page.pageSize}
+		    </if>
+		) AS t2
+		ON t1.id = t2.id
+		WHERE 1 = 1
+		<if test="null != orderByField">
+		    ORDER BY #{orderByField}
+		</if>
+	</select>
+	
+	<select id="selectCount" resultType="java.lang.Integer" >
+	    SELECT COUNT(1) FROM t_role where 1 = 1
+	    <include refid="condition" />
 	</select>
 	
 </mapper>  

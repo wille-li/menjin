@@ -55,4 +55,12 @@ public interface ResourceServiceIf extends BaseService<Resource> , FilterInvocat
 	 * @return
 	 */
 	public int addRolesResource(RolesResource rolesResource);
+	
+	public int deleteRolesResource(RolesResource rolesResource);
+	
+	/**
+	 * 获取父目录资源
+	 * @return
+	 */
+	public List<String> findParent();
 }

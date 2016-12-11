@@ -24,8 +24,8 @@ public class Resource implements Serializable , GrantedAuthority {
 	//访问的资源名
 	private String name;
 	
-	//上一级id
-	private Integer parentId;
+	//上一级目录资源名
+	private String parentDesc;
 	
 	//访问资源的关键字
 	private String resKey;
@@ -37,6 +37,14 @@ public class Resource implements Serializable , GrantedAuthority {
 
 	public Resource() {
 
+	}
+
+	public String getParentDesc() {
+		return parentDesc;
+	}
+
+	public void setParentDesc(String parentDesc) {
+		this.parentDesc = parentDesc;
 	}
 
 	public Integer getId() {
@@ -63,14 +71,6 @@ public class Resource implements Serializable , GrantedAuthority {
 		this.name = name;
 	}
 
-	public Integer getParentId() {
-		return parentId;
-	}
-
-	public void setParentId(Integer parentId) {
-		this.parentId = parentId;
-	}
-
 	public String getResKey() {
 		return resKey;
 	}
@@ -95,16 +95,19 @@ public class Resource implements Serializable , GrantedAuthority {
 		this.roles = roles;
 	}
 
-	@Override
-	public String toString() {
-		return "Resource [id=" + id + ", resourceUrl=" + resourceUrl
-				+ ", name=" + name + ", parentId=" + parentId + ", resKey="
-				+ resKey + ", description=" + description + "]";
-	}
 	
 	public String getAuthority() {  
         return getName();  
-    }  
+    }
+
+	@Override
+	public String toString() {
+		return "Resource [id=" + id + ", resourceUrl=" + resourceUrl
+				+ ", name=" + name + ", parentDesc="
+				+ parentDesc + ", resKey=" + resKey + ", description="
+				+ description + ", roles=" + roles + "]";
+	}  
+	
 }
 	
 	

@@ -6,7 +6,7 @@ var _menus = {"menus":[
 							"menus":[
 									{"menuid":"13","menuname":"用户管理","icon":"icon-users","url":"./user.do"},
 									{"menuid":"14","menuname":"角色管理","icon":"icon-role","url":"./role.do"},
-									{"menuid":"15","menuname":"权限管理","icon":"icon-set","url":"./resource.do"},
+									{"menuid":"15","menuname":"权限管理","icon":"icon-set","url":"./resource.do"}
 								]
 						},{"menuid":"8","icon":"icon-users","menuname":"公司管理",
 							"menus":[{"menuid":"21","menuname":"公司管理","icon":"icon-large-chart","url":"./company.do"}

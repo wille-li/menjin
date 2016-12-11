@@ -40,13 +40,13 @@
 			<tr>
 				<th data-options="field:'resourceUrl',width:200,align:'center'">权限资源路径</th>
 				<th data-options="field:'name',width:200,align:'center'" >权限资源名</th> 
-				<th data-options="field:'parentId',width:200,align:'center'" >上一级目录</th>
+				<th data-options="field:'parentDesc',width:200,align:'center'" >上一级目录</th>
 				<th data-options="field:'description',width:200,align:'center'" >描述</th>
 			</tr>
 		</thead>
 	</table>
 </div>
- <div id="ResourceDialog" class="easyui-dialog" data-options="modal:true" closed="true" style="width:800px;height:290px;padding:10px">
+ <div id="ResourceDialog" class="easyui-dialog" data-options="modal:true" closed="true" style="width:800px;height:260px;padding:10px">
 		<div class="easyui-panel" style="padding:10px 10px;">
 			<form id="resourceForm"  method="post">
 			<input class="easyui-textbox" type="hidden" id="id" name="id"/>
@@ -56,18 +56,17 @@
 			<div style="margin-bottom:10px;float:left;width:350px;margin-left:10px">
 				<div style="width:70px;float:left">上一级目录</div>
 				<div style="float:left;margin-left:12px;width:268px;">
-					<select id="status" class="easyui-combobox" name="status" style="width:100%"> 
-    					<option value="1">启用</option>   
-    					<option value="0">禁用</option>   
-					 </select>
+					<input id="parentDesc" class="easyui-combobox" name="parentDesc"   
+    				data-options="url:'./resource/getParentResources.do',method:'post',valueField:'name',
+    				textField:'name',editable:false,autocomplete:false" />  
 				</div>
 			</div>
-			<div style="width:700px;height:100px">
+			<div style="width:740px;height:100px">
 				<div style="margin-bottom:10px;float:left;width:350px;height:100px">
 					<input class="easyui-textbox" id="name" name="name" style="width:100%" label='权限资源名'/>
 				</div>
 				<div style="margin-bottom:10px;float:left;width:350px;height:100px;margin-left:10px">
-					<input class="easyui-textbox" id="description" name="description" style="width:100%;height:100px" label='描述'/>
+					<input class="easyui-textbox" id="description" name="description"  data-options="multiline:true" style="width:100%;height:100px" label='描述'/>
 				</div>
 			</div>
 			</form>

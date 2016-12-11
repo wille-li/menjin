@@ -114,8 +114,6 @@
 			<version>${spring.security.version}</version>
 		</dependency>
 
-
-		
 		<!-- fastjson所需要用到的jar包  -->
 		<dependency>
     		<groupId>com.alibaba</groupId>
@@ -250,4 +248,5 @@
 			</plugin>
 		</plugins>
 	</build>
+
 </project>
