@@ -118,12 +118,11 @@ public class APIController {
 	@RequestMapping(value="/api/visit.do", method=RequestMethod.POST)
 	@SystemControllerLog
 	@ResponseBody
-	public Map<String, Object> visit(@ModelAttribute APIVisit apiVisit, 
+	public Map<String, Object> visit(String idCardNum, String phoneNum, 
 			String appointmentTime, Integer companyId, Integer matterId,
 			String employeeName, String employeePhone){
 		Map<String, Object> returnMap = new HashMap<>();
 		ReturnInfo rInfo = new ReturnInfo();
-		String idCardNum = apiVisit.getIdCardNum();
 		Visitor visitor = visitorService.selectByIDCar(idCardNum);
 		if (null == visitor){
 			rInfo.setRet(FAIL);
@@ -151,7 +150,7 @@ public class APIController {
 		
 		String phone = visitor.getMobile();
 		if (null == phone){
-			visitor.setMobile(apiVisit.getPhoneNum());
+			visitor.setMobile(phoneNum);
 		}
 		String txnNum = getMatterTxnNum();
 		if(txnNum == null){
@@ -188,6 +187,7 @@ public class APIController {
 		rInfo.setRet(SUCCESS);
 		returnMap.put(HEAD_KEY, rInfo);
 		returnMap.put("validateCode", 666333);
+		returnMap.put("visitRecord", txnNum);
 		return returnMap;
 	}
 	
@@ -229,24 +229,20 @@ public class APIController {
 	@RequestMapping(value="/api/upload.do", method=RequestMethod.POST)
 	@SystemControllerLog
 	@ResponseBody
-	public Map<String, Object> uploadFileForRegister(@RequestParam("file") MultipartFile[] files, Visitor visitor){
+	public Map<String, Object> uploadFileForRegister(@RequestParam("file") MultipartFile[] files, String idCardNum,
+			String visitorName, String birth){
 		Map <String, Object> result = new HashMap<>();
 		ReturnInfo returnInfo = new ReturnInfo();
 		
-		if (visitor == null){
-			returnInfo.setRet(APIController.FAIL);
-			returnInfo.setMsg("请检查输入内容");
-			result.put(APIController.HEAD_KEY, returnInfo);
-	        return result;
-		}
-		String idCardNum = visitor.getIdCardNum();
 		if (idCardNum == null){
 			returnInfo.setRet(APIController.FAIL);
 			returnInfo.setMsg("身份证有误");
 			result.put(APIController.HEAD_KEY, returnInfo);
 	        return result;
 		}
-		
+		if (idCardNum.indexOf("\"") > -1){
+			idCardNum = idCardNum.replace("\"", "");
+		}
 		Visitor tempVisitor = visitorService.selectByIDCar(idCardNum);
 		if (tempVisitor != null){
 			returnInfo.setRet(APIController.FAIL);
@@ -254,6 +250,18 @@ public class APIController {
 			result.put(APIController.HEAD_KEY, returnInfo);
 	        return result;
 		}
+		
+		Visitor visitor = new Visitor();
+		
+		try {
+			Date date = new SimpleDateFormat("yyyy-MM-dd").parse(birth);
+			visitor.setBirth(date);
+		} catch (ParseException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		visitor.setVisitorName(visitorName);
+		visitor.setIdCardNum(idCardNum);
 		
 		if (null == files || files.length != 2){
 			returnInfo.setRet(APIController.FAIL);

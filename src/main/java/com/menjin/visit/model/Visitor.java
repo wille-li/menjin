@@ -2,6 +2,8 @@ package com.menjin.visit.model;
 
 import java.util.Date;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 /**
  * 
  * @author Lin
@@ -113,7 +115,8 @@ public class Visitor {
 	public void setNation(String nation) {
 		this.nation = nation;
 	}
-
+	
+	@JsonFormat(pattern="yyyy-MM-dd")
 	public Date getBirth() {
 		return birth;
 	}

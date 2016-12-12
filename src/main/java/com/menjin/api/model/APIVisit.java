@@ -2,6 +2,8 @@ package com.menjin.api.model;
 
 import java.util.Date;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 public class APIVisit {
 	
 	private String idCardNum;
@@ -12,6 +14,7 @@ public class APIVisit {
 	
 	private String phoneNum;
 	
+	@JsonFormat(pattern="yyyy-MM-dd hh24:mm")
 	private Date appointmentTime;
 	
 	private Integer status;
