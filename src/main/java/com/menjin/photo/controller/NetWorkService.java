@@ -18,8 +18,8 @@ import rx.schedulers.Schedulers;
 
 public class NetWorkService extends RetrofitUtils{
     public static  NetService service = null;
-    public static String API_URL = "http://localhost:8080/MenJin";
-    //public static String API_URL = "http://112.74.84.48";
+    //public static String API_URL = "http://localhost:8080/MenJin";
+    public static String API_URL = "http://112.74.84.48:8080";
 	 //创建实现接口调用
     public static <T> void setSubscribe(Observable<T> observable, Observer<T> observer) {
         observable.subscribeOn(Schedulers.immediate())

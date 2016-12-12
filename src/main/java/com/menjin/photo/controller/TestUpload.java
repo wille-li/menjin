@@ -27,6 +27,9 @@ public class TestUpload {
 			.addConverterFactory(GsonConverterFactory.create()).build();
 
 	public static void main(String[] args) {
+		//testCompany2();
+		//testVisit();
+		//testUpload2();
 		testVisit();
 	}
 
@@ -101,7 +104,7 @@ public class TestUpload {
 		List<MultipartBody.Part> path = filesToMultipartBodyParts(list);
 		
 		Map<String, String> params = new HashMap<>();
-		params.put("idCardNum", "126sd623");
+		params.put("idCardNum", "126ssd623");
 		params.put("visitorName", "csap");
 		params.put("birth", "1990-02-09");
 		
@@ -143,7 +146,7 @@ public class TestUpload {
 		Map<String,String> map = new HashMap<>();
         map.put("tokenid","tokenid");
         map.put("visitorName","visitorName");
-        map.put("idCardNum","126sd623");
+        map.put("idCardNum","126ssd623");
         map.put("mobile","13318498837");
         map.put("companyId","123");
         map.put("employee","“王五”");
