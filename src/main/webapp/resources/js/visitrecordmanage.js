@@ -324,7 +324,9 @@ function quitDialog(){
 }
 
 function submitDialog(){
-	
+	if(!validation()){
+		return ;
+	}
 	var id = $('#id').textbox('getValue');
 	var visitorId = $('#visitorName').combobox('getValue');
 	var idCardType = $('#idCardType').textbox('getValue');
@@ -375,17 +377,47 @@ function submitDialog(){
 }
 
 function validation(){
-	var visitorName = $('#visitorName').textbox('getValue');
-	var idCardType = $('#idCardType').textbox('getValue');
-	var idCardNum = $('#idCardNum').textbox('getValue');
-	var sex = $('#sex').textbox('getValue');
-	var mobile = $('#mobile').textbox('getValue');
+	var visitorName = $('#visitorName').combobox('getValue');
+	if(visitorName == null){
+		showmessage('提醒',"访客信息不能为空");
+		return false;
+	}
 	var companyId = $('#companyBox').combobox('getValue');
-	var departmentId = $('#departmentBox').combobox('getValue');
-	var employeeId = $('#employeeBox').combobox('getValue');
+	if(companyId == null){
+		showmessage('提醒',"请选择拜访公司");
+		return false;
+	}
+	var employeeName = $('#employeeName').textbox('getValue');
+	if(employeeName == null){
+		showmessage('提醒',"被拜访人姓名不能为空！");
+		return false;
+	}
+	var employeePhone = $('#employeePhone').textbox('getValue');
+	if(!/(^(\d{3,4}-)?\d{7,8})$|(13[0-9]{9})$/.test(employeePhone)){
+		showmessage('提醒',"被拜访人联系电话不正确！");
+		return false;
+	}
 	var matterId = $('#matterBox').combobox('getValue');
+	if(matterId == null){
+		showmessage('提醒',"请选择拜访缘由！");
+		return false;
+	}
 	var peopleSum = $('#peopleSum').textbox('getValue');
+	if(peopleSum == null){
+		showmessage('提醒',"随行人数不能为空！");
+		return false;
+	}
 	var visitTime = $('#visitTime').datetimebox('getValue');
+	if(visitTime == null){
+		showmessage('提醒',"请选择拜访时间！");
+		return false;
+	}
+	var status = $('#status').combobox('getValue');
+	if(status == null){
+		showmessage('提醒',"请选择拜访状态！");
+		return false;
+	}
+	return true;
 }
 
 

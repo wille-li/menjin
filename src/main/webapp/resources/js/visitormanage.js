@@ -106,11 +106,11 @@ var isAdd = true;
 //显示拜访缘由信息的
   function formatRank(value,row,index){
 	    if(value == '3'){
-	    	return "白名单用户";
+	    	return "白名单访客";
 	    }else if(value == '2'){
-	    	return "黑名单用户";
+	    	return "黑名单访客";
 	    }else{
-	    	return "普通用户";
+	    	return "普通访客";
 	    }
   }
   

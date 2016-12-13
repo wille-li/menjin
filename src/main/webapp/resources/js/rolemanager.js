@@ -42,6 +42,11 @@
 //弹出窗口中是添加操作还是修改操作？
 var isAdd = true; 
 function disresource(){
+	var checkeds = $('#resources').tree('getChecked');
+	for ( var i = 0; i < checkeds.length; i++) {  
+        var node = $('#resources').tree('find', checkeds[i].id);//查找节点  
+        $('#resources').tree('uncheck', node.target);//将得到的节点选中  
+    }  
 	var selections = $('#Roletb').datagrid('getSelections');
 	if (selections.length == 0) {
 		showmessage('提醒','请选择你要分配权限的角色！');
@@ -65,7 +70,6 @@ function submitResource(){
 		if (resourceIds != '') resourceIds += ',';
 		resourceIds += nodes[i].id;
 	}
-	showmessage('操作失败',resourceIds);
 	var selections = $('#Roletb').datagrid('getSelections');
 	var roleId = selections[0].id;
 	var submitData = {roleId : roleId,resourceIds : resourceIds};
