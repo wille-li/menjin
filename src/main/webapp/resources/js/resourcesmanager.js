@@ -1,3 +1,60 @@
+$(function(){
+	var p = $("#resourceListDatagrid").datagrid('getPager');
+	$(p).pagination({
+		beforePageText:'第',
+		afterPageText :'页',
+		displayMsg : '当前显示 {from} - {to} 条记录   共 {total} 条记录'
+	});
+	
+	
+	$("#parentSelect").combobox({
+			  onLoadSuccess:function(){ //默认选中第一条数据
+				    var data= $(this).combobox("getData");
+	                if (data.length > 0) {
+	                	$('#parentSelect').combobox('select', data[0].parentDesc);
+	                }
+	                var parentValue = $('#parentSelect').combobox('getValue');
+	                console.log('parentValue='+parentValue);
+	                $("#childSelect").combobox({
+	                	url:'./resource/getChildrenResources.do',
+	                	method : "post",
+	                	valueField : 'resourceUrl',
+	                    textField : 'name',
+	                    queryParams :{
+	                    	"parentDesc" : parentValue
+	                    },
+	                    onLoadSuccess:function(){ //默认选中第一条数据
+	    				    var datas= $("#childSelect").combobox("getData");
+	    	                if (datas.length > 0) {
+	    	                	$('#childSelect').combobox('select', datas[0].resourceUrl);
+	    	                }
+	                    }
+	                });
+			  },
+			  
+			  onChange : function(newValue,oldValue){
+				if(oldValue!=null && oldValue!=''){
+				     $("#childSelect").combobox({
+		                	url:'./resource/getChildrenResources.do',
+		                	method : "post",
+		                	valueField : 'resourceUrl',
+		                    textField : 'name',
+		                    queryParams :{
+		                    	"parentDesc" : newValue
+		                    },
+		                    onLoadSuccess:function(){ //默认选中第一条数据
+		    				    var datas= $("#childSelect").combobox("getData");
+		    	                if (datas.length > 0) {
+		    	                	$('#childSelect').combobox('select', datas[0].resourceUrl);
+		    	                }
+		                    }
+		                });
+				}
+			  }
+	
+	});
+});
+
 var isAdd = true; 
 
 function addResource(){
@@ -6,6 +63,15 @@ function addResource(){
 	  $("#resourceForm").form("clear");
 	  $('#ResourceDialog').dialog({title:'添加权限资源信息'});
 	  $('#ResourceDialog').dialog("open");
+	  $("#parentCombob").combobox({
+		  onLoadSuccess:function(){ //默认选中第一条数据
+			    var data= $(this).combobox("getData");
+                if (data.length > 0) {
+                 $('#parentCombob').combobox('select', data[0].parentDesc);
+                 }
+		  }
+	  }
+	  );
 }
 
 function closeDialog(){
@@ -45,7 +111,7 @@ function updateResource(){
        }
 	$("#id").textbox("setValue",selections[0].id);
 	$("#resourceUrl").textbox("setValue",selections[0].resourceUrl).textbox("setText",selections[0].resourceUrl);
-	$("#parentId").combobox("setValue",selections[0].parentId).combobox("setText",selections[0].parentId);
+	$("#parentCombob").combobox("setValue",selections[0].parentDesc).combobox("setText",selections[0].parentDesc);
 	$("#description").textbox("setValue",selections[0].description).textbox("setText",selections[0].description);
 	$("#name").textbox("setValue",selections[0].name).textbox("setText",selections[0].name);;
 	$("#saveResource").html("保存修改");
@@ -75,3 +141,15 @@ function deleteResource(){
 		}
 	});
 }
+
+function searchResource(){
+	var child = $('#childSelect').combobox('getValue');
+	console.log('searchResource child='+child);
+	 $('#resourceListDatagrid').datagrid({  
+	      url:'./resource/getResourceByUrl.do', 
+	      queryParams: {
+	    	  resourceUrl : child
+	      }
+	  });
+}
+

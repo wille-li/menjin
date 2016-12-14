@@ -95,6 +95,12 @@ public class ResourceServiceImpl extends BaseServiceImpl<Resource> implements Re
 		// TODO Auto-generated method stub
 		return resourceMapper.selectParent();
 	}
+	
+	@Override
+	public List<Resource> findChildren(String parentDesc) {
+		// TODO Auto-generated method stub
+		return resourceMapper.selectChildren(parentDesc);
+	}
 
 	@PostConstruct 
 	public void initResource() throws Exception{
@@ -143,5 +149,10 @@ public class ResourceServiceImpl extends BaseServiceImpl<Resource> implements Re
 	public boolean supports(Class<?> clazz) {
 		// TODO Auto-generated method stub
 		return true;
+	}
+
+	@Override
+	public int deleteRolesResource(RolesResource rolesResource) {
+		return resourceMapper.deleteRolesResource(rolesResource);
 	}
 }

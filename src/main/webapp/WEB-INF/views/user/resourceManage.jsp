@@ -11,6 +11,7 @@
     <link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/resources/easyui/themes/icon.css" />
     <script type="text/javascript" src="<%=request.getContextPath()%>/resources/easyui/jquery.min.js"></script>
     <script type="text/javascript" src="<%=request.getContextPath()%>/resources/easyui/jquery.easyui.min.js"></script>
+    <script type="text/javascript" src="<%=request.getContextPath()%>/resources/js/service.js"></script>
 	  <script type="text/javascript" src="<%=request.getContextPath()%>/resources/js/resourcesmanager.js"></script>
 </head>
 <body>
@@ -19,14 +20,11 @@
 <span><a id="info" href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-large-clipart'" onclick="updateResource()">权限资料</a></span>
 <span><a id="delete" href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-remove'" onclick="deleteResource()">删除权限</a></span>
 <span style="float:right;">
-<select class="easyui-combobox" id="parentSelect" name="parentSelect"  labelPosition="top" style="width:100px;">
-<option value="userManager">用户管理</option>
-<option value="roleManager">角色管理</option>
-</select>
-<select class="easyui-combobox" id="childSelect" name="childSelect"  labelPosition="top" style="width:100px;">
-<option value="add">新增</option>
-<option value="update">修改</option>
-</select>
+<input id="parentSelect" class="easyui-combobox" name="parentSelect"   
+    data-options="url:'./resource/getParentResources.do',method:'post',valueField:'parentDesc',
+     textField:'parentDesc',editable:false" style="width:150px"  />  
+<input id="childSelect" class="easyui-combobox" name="childSelect"   
+    data-options="url:'',editable:false" style="width:150px"  />  
 <a id="search" href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-search'" onclick="searchResource()">查询</a>
 </span>
 </div> 
@@ -35,7 +33,7 @@
 <table id="resourceListDatagrid" class="easyui-datagrid" title="权限资源列表" 
 			data-options="width:'100%',height:'470',rownumbers:true,singleSelect:true,url:'./resource/getAllResourceList.do',
 			method:'post',pagination:true,fitColumns:true,striped:true,nowrap:true,loadMsg:'数据正在加载...',emptyMsg:'未找到记录！',
-			pageSize:15,pageList:[15,25,35,45]">
+			pageSize:15,pageList:[15,25,35,45],beforePageText:'第',afterPageText:'页'">
 		<thead>
 			<tr>
 				<th data-options="field:'resourceUrl',width:200,align:'center'">权限资源路径</th>
@@ -56,9 +54,9 @@
 			<div style="margin-bottom:10px;float:left;width:350px;margin-left:10px">
 				<div style="width:70px;float:left">上一级目录</div>
 				<div style="float:left;margin-left:12px;width:268px;">
-					<input id="parentDesc" class="easyui-combobox" name="parentDesc"   
-    				data-options="url:'./resource/getParentResources.do',method:'post',valueField:'name',
-    				textField:'name',editable:false,autocomplete:false" />  
+					<input id="parentCombob" class="easyui-combobox" name="parentDesc"   
+    				data-options="url:'./resource/getParentResources.do',method:'post',valueField:'parentDesc',
+    				textField:'parentDesc',editable:false" style="width:100%"  />  
 				</div>
 			</div>
 			<div style="width:740px;height:100px">

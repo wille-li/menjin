@@ -25,11 +25,11 @@ public interface UserMapper extends BaseCrudMapper<User> {
 	
 	public List<User> selectAllUser();
 	
-	public List<User> searchUserByRolename(@Param("roleName") String roleName,
+	public List<User> searchUserByRolename(@Param("description") String description,
 			@Param("page") SimplePage page,
 			@Param("orderByField") String orderBy);
 
-	public int searchCountByRolename(String roleName);
+	public int searchCountByRolename(String description);
 	
 	public int resetPassword(User user);
 }

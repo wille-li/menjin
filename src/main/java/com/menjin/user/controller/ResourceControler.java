@@ -1,8 +1,13 @@
 package com.menjin.user.controller;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+
+import javax.servlet.http.HttpServletResponse;
+
 import org.apache.ibatis.annotations.Param;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,11 +16,15 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+
 import com.alibaba.fastjson.JSON;
 import com.base.annotation.log.SystemControllerLog;
 import com.base.entity.SimplePage;
 import com.menjin.user.model.Resource;
+import com.menjin.user.model.Role;
+import com.menjin.user.model.User;
 import com.menjin.user.service.If.ResourceServiceIf;
+import com.menjin.user.service.If.RoleServiceIf;
 
 @Controller
 public class ResourceControler {
@@ -24,8 +33,11 @@ public class ResourceControler {
 	
 	@Autowired
 	private ResourceServiceIf resourceService;
-	
-	@RequestMapping(value="/resource.do")
+
+	@Autowired
+	private RoleServiceIf roleService;
+
+	@RequestMapping(value = "/resource.do")
 	@SystemControllerLog
 	public String searchResources(){
 		return "user/resourceManage";
@@ -66,6 +78,8 @@ public class ResourceControler {
 	@ResponseBody
 	public Integer addResource(@ModelAttribute Resource resource){
 		logger.info("Start to add new resource,resourceUrl="+resource.getResourceUrl());
+		String url = resource.getResourceUrl()+"*";
+		resource.setResourceUrl(url);
 		int returnCode = resourceService.add(resource);
 		logger.info("End to add resource,ReturnCode="+returnCode);
 		return returnCode;
@@ -84,16 +98,47 @@ public class ResourceControler {
 	@RequestMapping(value="/resource/getParentResources.do")
 	@SystemControllerLog
 	@ResponseBody
-	public String getParentResources(){
+	public void getParentResources(HttpServletResponse resp){
 		logger.info("Start to getParentResources");
-		List<Resource> list = resourceService.findParent();
+		List<String> list = resourceService.findParent();
+		String str = "";
+		if(list!=null&&list.size()>0){
+			List<Map<String,String>> listStr = new ArrayList<Map<String,String>>();
+			for(String s :list){
+				Map<String,String> map = new HashMap<String,String>();
+				map.put("parentDesc", s);
+				listStr.add(map);
+			}
+			str = JSON.toJSONString(listStr);
+			logger.info("json tranfer="+str);
+		}
+		logger.info("End getParentResources");
+		resp.setContentType("application/json; charset=utf-8");
+		try {
+			resp.getWriter().write(str);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	@RequestMapping(value="/resource/getChildrenResources.do")
+	@SystemControllerLog
+	@ResponseBody
+	public void getChildrenResources(String parentDesc ,HttpServletResponse resp){
+		logger.info("Start to getChildrenResources");
+		List<Resource> list = resourceService.findChildren(parentDesc);
 		String str = "";
 		if(list!=null&&list.size()>0){
 			str = JSON.toJSONString(list);
 			logger.info("json tranfer="+str);
 		}
-		logger.info("End getParentResources");
-		return str;
+		logger.info("End getChildrenResources");
+		resp.setContentType("application/json; charset=utf-8");
+		try {
+			resp.getWriter().write(str);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	/**
@@ -104,8 +149,7 @@ public class ResourceControler {
 	  private Map<String, List<Map<String, String>>> trimPrivileges(List<Resource> privileges){
 	    	Map<String, List<Map<String, String>>> result = new HashMap<String, List<Map<String, String>>>();
 	    	for (Resource privilege : privileges) {
-				 //String catalog = String.valueOf(privilege.getParentId());
-	    		String catalog = "";
+				 String catalog = privilege.getParentDesc();
 				 Map<String, String> node = new HashMap<String, String>();
 				 node.put("id",privilege.getId().toString());
 				 node.put("text", privilege.getName());
@@ -148,4 +192,25 @@ public class ResourceControler {
 	        }
 	        return results;
 	    }
+	  
+	    @RequestMapping(value="/resource/getResourceByUrl.do")
+		@SystemControllerLog
+		@ResponseBody
+		public Map getResourceByUrl(@Param(value="pageSize") Integer page,@Param(value="rows") Integer rows,
+				@Param(value="resourceUrl") String resourceUrl){
+			logger.info("Start to getResourceByUrl"+",resourceUrl="+resourceUrl);
+			Map<String, Object> params = new HashMap<String,Object>();
+			params.put("resource_url",resourceUrl);
+			int count = resourceService.findCount(null, params);
+			logger.info("Resource Count:"+count);
+			SimplePage simplepage = new SimplePage(page, rows, count);
+			String orderBy = null;
+			logger.info("page="+page+", rows="+rows);
+			List<Resource> res = resourceService.findByPage(simplepage, params, orderBy);
+			Map maps = new HashMap();
+			maps.put("rows", res);
+			maps.put("total", count);
+			logger.info("End getResourceByUrl");
+			return maps;
+		}
 }
