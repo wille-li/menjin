@@ -56,6 +56,7 @@ public interface ResourceMapper extends BaseCrudMapper<Resource> {
 	
 	/**
 	 * 根据角色Id获取可访问的资源（权限）
+
 	 * @param roleId
 	 * @return
 	 */
@@ -67,4 +68,9 @@ public interface ResourceMapper extends BaseCrudMapper<Resource> {
 	 */
 	public List<String>  selectParent();
 	
+	/**
+	 * 获取字目录资源
+	 * @return
+	 */
+	public List<Resource>  selectChildren(String parentDesc);
 }

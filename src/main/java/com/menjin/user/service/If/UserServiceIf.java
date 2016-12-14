@@ -32,13 +32,13 @@ public interface UserServiceIf extends BaseService<User> , UserDetailsService{
 	 * 根据角色名查询用户信息(包含分页和排序的功能)
 	 * @return
 	 */
-	public List<User> findUserByRolename(String roleName,SimplePage page,String orderBy);
+	public List<User> findUserByRolename(String description,SimplePage page,String orderBy);
 	
 	/**
 	 * 根据角色名查询用户数量
 	 * @return
 	 */
-	public int findCountByRolename(String roleName);
+	public int findCountByRolename(String description);
 	
 	/**
 	 * 修改密码

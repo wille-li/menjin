@@ -51,13 +51,13 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements UserServic
 	}
 	
 	@Override
-	public List<User> findUserByRolename(String roleName,SimplePage page,String orderBy){
-		return userMapper.searchUserByRolename(roleName,page,orderBy);
+	public List<User> findUserByRolename(String description,SimplePage page,String orderBy){
+		return userMapper.searchUserByRolename(description,page,orderBy);
 	}
 
 	@Override
-	public int findCountByRolename(String roleName){
-		return userMapper.searchCountByRolename(roleName);
+	public int findCountByRolename(String description){
+		return userMapper.searchCountByRolename(description);
 	}
 	
 	@Override

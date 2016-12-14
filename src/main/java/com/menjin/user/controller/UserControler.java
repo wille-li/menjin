@@ -111,14 +111,14 @@ public class UserControler {
 	@SystemControllerLog
 	@ResponseBody
 	public Map getUserByRolename(@Param(value="pageSize") Integer page,@Param(value="rows") Integer rows,
-			@Param(value="roleName") String roleName){
-		logger.info("Start to getUserByRolename"+",roleName="+roleName);
-		int count = userService.findCountByRolename(roleName);
+			@Param(value="description") String description){
+		logger.info("Start to getUserByRolename"+",description="+description);
+		int count = userService.findCountByRolename(description);
 		logger.info("Users Count:"+count);
 		SimplePage simplepage = new SimplePage(page, rows, count);
 		String orderBy = null;
 		logger.info("page="+page+", rows="+rows);
-		List<User> users = userService.findUserByRolename(roleName, simplepage, orderBy);
+		List<User> users = userService.findUserByRolename(description, simplepage, orderBy);
 		for(User u:users){
 			Set<Role> roles = roleService.findRoleByUserId(u.getId());
 			u.setRoles(roles);
