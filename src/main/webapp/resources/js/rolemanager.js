@@ -1,6 +1,6 @@
   $(function(){
 	  $('#Roletb').datagrid({  
-	      title:'公司管理',  
+	      title:'角色管理',  
 	      iconCls:'icon-man',  
 	      width:'100%',  
 	      height:'500',
@@ -28,7 +28,7 @@
 	 });
 	 
 	 $('#RoleDialog').dialog({
-		    title: '添加公司信息',
+		    title: '新增角色',
 		    buttons : '#RoleButton',
 		    iconCls:'icon-save'
 	 });
@@ -54,10 +54,14 @@ function disresource(){
      }
 	var resources = selections[0].resources;
 	if(resources != null){
-		resources.forEach(function (element, index, array) {  
+		for(var i in resources){
+			var nodeDep = $('#resources').tree('find',resources[i].id); 
+			 $('#resources').tree('check',nodeDep.target);  
+		}
+		/*resources.forEach(function (element, index, array) {  
 			 var nodeDep = $('#resources').tree('find',element.id); 
 			 $('#resources').tree('check',nodeDep.target);  
-		});  
+		});  */
 	}
 	$('#ResourceDialog').dialog({title:'分配权限'});
 	$('#ResourceDialog').dialog("open");

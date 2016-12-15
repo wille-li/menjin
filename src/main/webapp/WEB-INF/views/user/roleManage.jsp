@@ -12,6 +12,7 @@
     <link rel="stylesheet" type="text/css" href="<c:url value='/resources/css/mattermanage.css'></c:url>" />
     <script type="text/javascript" src="<c:url value='/resources/easyui/jquery.min.js'></c:url>"></script>
     <script type="text/javascript" src="<c:url value='/resources/easyui/jquery.easyui.min.js'></c:url>"></script>
+    <script type="text/javascript" src="<c:url value='/resources/easyui/locale/easyui-lang-zh_CN.js'></c:url>"></script>
     <script type="text/javascript" src="<c:url value='/resources/js/service.js'></c:url>"></script>
     <script type="text/javascript" src="<c:url value='/resources/js/rolemanager.js'></c:url>"></script>
   </head>
@@ -27,10 +28,10 @@
 
 	<div id="tb">
 		<div region="north" border="false" class="north">
-			<span><a id="add" href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-add'" onclick="addRole()">新增用户</a></span>
-            <span><a id="info" href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-person'" onclick="updateRole()">个人资料</a></span>
-            <span><a id="delete" href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-remove'" onclick="deleteRole()">删除用户</a></span>
-            <span><a id="role" href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-man'" onclick="disresource()">分配角色</a></span>
+			<span><a id="add" href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-add'" onclick="addRole()">新增角色</a></span>
+            <span><a id="info" href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-person'" onclick="updateRole()">角色详情</a></span>
+            <span><a id="delete" href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-remove'" onclick="deleteRole()">删除角色</a></span>
+            <span><a id="role" href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-man'" onclick="disresource()">分配权限</a></span>
             <span style="float:right;">
             <input id="searchInput" class="easyui-searchbox" style="width:200px" data-options="prompt:'条件查询'"></input>
             <a id="search" href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-search'" onclick="searchRole()">查询</a>
