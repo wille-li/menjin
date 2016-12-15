@@ -74,7 +74,6 @@
 	
 	<select id="selectByPage" resultMap="userResultMap">
 	    SELECT u.* FROM t_user u where 1 = 1
-	    
 	    	<if test="null!=params">
 				 <foreach collection="params.keys" item="key" separator=" " >
 				    <if test="key != 'username'">
@@ -82,12 +81,12 @@
 				    </if>
 				 </foreach>
 	    	</if>
-		    <if test="null!=page and null!=page.pageSize">
-		      LIMIT #{page.startRowNum}, #{page.pageSize}
-		    </if>
 			<if test="null != orderByField">
 		    	ORDER BY #{orderByField}
 			</if>
+			 <if test="null!=page and null!=page.pageSize">
+		      LIMIT #{page.startRowNum}, #{page.pageSize}
+		    </if>
 	</select>
 	
 	<select id="selectCount" resultType="java.lang.Integer" >
@@ -102,19 +101,19 @@
 	<select id="searchUserByRolename"   resultMap="userResultMap">
 		select u.* from t_user u where u.id in (
 		select t.user_id from t_user_role t where t.role_id in (
-		select r.id from t_role r where r.name = #{roleName}))
-		<if test="null!=page and null!=page.pageSize">
-		      LIMIT #{page.startRowNum}, #{page.pageSize}
-		    </if>
+		select r.id from t_role r where r.description like "%"#{description}"%"))
 			<if test="null != orderByField">
 		    	ORDER BY #{orderByField}
 			</if>
+			<if test="null!=page and null!=page.pageSize">
+		      LIMIT #{page.startRowNum}, #{page.pageSize}
+		    </if>
 	</select>
 	
 	<select id="searchCountByRolename" parameterType="String" resultType="java.lang.Integer">
 		select count(1) from t_user u where u.id in (
 		select t.user_id from t_user_role t where t.role_id in (
-		select r.id from t_role r where r.name = #{roleName}))
+		select r.id from t_role r where r.description like "%"#{description}"%"))
 	</select>
 	
 	<update id="resetPassword" parameterType="com.menjin.user.model.User">

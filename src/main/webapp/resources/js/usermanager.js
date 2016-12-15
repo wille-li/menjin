@@ -11,7 +11,7 @@ function formatStatus(value,rows,index){
 function formatRoles(value,rows,index){
 	var roles='';
 	value.forEach(function(element,index,array){
-			roles+=element.name+'  ';
+			roles+=element.description+'  ';
 		});
 		return roles;
 }
@@ -121,7 +121,7 @@ function searchUser(){
 		queryParams = {username: searchValue};
 	}else if(searchBy=='roleName'){
 		access = './user/getUserByRolename.do';
-		queryParams = {roleName: searchValue}
+		queryParams = {description: searchValue}
 	}
 	 $('#userListDatagrid').datagrid({  
 	      url:access, 

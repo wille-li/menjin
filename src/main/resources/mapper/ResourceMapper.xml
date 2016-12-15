@@ -59,11 +59,15 @@
 	</select>
 	
 	<select id="selectByResourceUrl" parameterType="String" resultMap="resourceResultMap">
-		select * from t_resource where resource_url = #{resourceUrl}
+		select * from t_resource where resource_url like  #{resourceUrl}"%"
 	</select>
 	
 	<select id="selectParent" resultType="String">
 		SELECT distinct parent_desc FROM t_resource
+	</select>
+	
+	<select id="selectChildren" parameterType="String"  resultMap="resourceResultMap">
+		SELECT * FROM t_resource where parent_desc=#{parentDesc}
 	</select>
 	
 	<delete id="deleteByPrimaryKey" parameterType="com.menjin.user.model.Resource">
@@ -96,7 +100,7 @@
 	<insert id="insertRolesResource" parameterType="com.menjin.user.model.RolesResource">
 		insert into t_role_resource(role_id,resource_id) values (#{roleId},#{resourceId})
 	</insert>
-	
+
 	<insert id="deleteRolesResource" parameterType="com.menjin.user.model.RolesResource">
 		DELETE FROM t_role_resource WHERE role_id = #{roleId} AND resource_id = #{resourceId}
 	</insert>
