@@ -112,5 +112,5 @@ function formatYMDatebox(value){
         dt = new Date(value);  
     }  
   
-    return dt.format("MM/dd/yyyy");
+    return dt.format("yyyy-MM-dd");
 }

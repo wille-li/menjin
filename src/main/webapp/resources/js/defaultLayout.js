@@ -12,7 +12,8 @@ var _menus = {"menus":[
 							"menus":[{"menuid":"21","menuname":"公司管理","icon":"icon-large-chart","url":"./company.do"}
 								]
 						},{"menuid":"56","icon":"icon-magic","menuname":"访客管理",
-							"menus":[{"menuid":"31","menuname":"访客管理","icon":"icon-large-clipart","url":"./vistor.do"},
+							"menus":[{"menuid":"30","menuname":"拜访缘由管理","icon":"icon-large-picture","url":"./matter.do"},
+							         {"menuid":"31","menuname":"访客管理","icon":"icon-large-clipart","url":"./vistor.do"},
 									{"menuid":"32","menuname":"拜访记录管理","icon":"icon-large-shapes","url":"./vist.do"}
 								]
 						}

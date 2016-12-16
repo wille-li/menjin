@@ -107,10 +107,10 @@
 				AND matter_txn_num LIKE '%${params.matterTxnNum}%'
 			</if>
 			<if test="null!=params.startDate and ''!=params.startDate">
-				AND actual_time >= str_to_date('${params.startDate}','%m/%d/%Y')
+				AND actual_time >= str_to_date('${params.startDate}','%Y-%m-%d')
 			</if>
 			 <if test="null!=params.endDate and ''!=params.endDate">
-				AND actual_time &lt;= date_sub(str_to_date('${params.endDate}','%m/%d/%Y'),interval -1 day)
+				AND actual_time &lt;= date_sub(str_to_date('${params.endDate}','%Y-%m-%d'),interval -1 day)
 			</if>
 		</if>
 	</sql>

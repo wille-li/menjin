@@ -28,7 +28,7 @@
 			<th field="employeeName"  width="100">被访人姓名</th>  
 			<th field="employeePhone"  width="100">被访人电话</th>  
 			<th field="peopleSum"  width="100">随行人数</th>  
-			<th field="licensePlate"  width="100">随行车牌</th>  
+			<!-- <th field="licensePlate"  width="100">随行车牌</th>   -->
 			<th field="matterDecs"  width="100" formatter="formatMatter">拜访缘由</th> 
 			<!-- <th field="appointmentTime"  width="100" formatter="formatDatebox">预约时间</th>  
 			<th field="expireTime"  width="100" formatter="formatDatebox">预约到期时间</th> -->

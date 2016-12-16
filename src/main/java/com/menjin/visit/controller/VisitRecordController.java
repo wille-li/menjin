@@ -117,7 +117,7 @@ public class VisitRecordController {
 		company.setId(companyId);
 		Matter matter = new Matter();
 		matter.setId(matterId);
-		SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		try {
 			visit.setActualTime(sdf.parse(visitTime));
 			visit.setLeaveTime(sdf.parse(leaveTime));
@@ -180,7 +180,7 @@ public class VisitRecordController {
 		visitRecord.setPeopleSum(peopleSum);
 		visitRecord.setValidateMode(validateMode);
 		visitRecord.setStatus(status);
-		SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		try {
 			visitRecord.setActualTime(sdf.parse(visitTime));
 			visitRecord.setLeaveTime(sdf.parse(leaveTime));

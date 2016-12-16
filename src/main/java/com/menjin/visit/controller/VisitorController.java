@@ -52,9 +52,6 @@ public class VisitorController {
 	public Map getVistorByPage(@Param(value="pageSize") Integer page,
 			@Param(value="rows") Integer rows,@Param(value="status") String status,@Param(value="visitorName") String visitorName  ){
 		logger.info("Start to getVisitorByPage:vistorlist.do");
-		int count = vistorService.findCount(null, null);
-		logger.info("Matters Count:"+count);
-		SimplePage simplepage = new SimplePage(page, rows, count);
 		Map<String, Object> params = new HashMap<String, Object>();;
 		if(status != null && !status.equals("")){
 			params.put("status", status);
@@ -62,6 +59,10 @@ public class VisitorController {
 		if(visitorName != null && !visitorName.equals("")){
 			params.put("visitorName", visitorName);
 		}
+		int count = vistorService.findCount(null, params);
+		logger.info("Matters Count:"+count);
+		SimplePage simplepage = new SimplePage(page, rows, count);
+		
 		String orderBy = "modified_date";
 		List<Visitor> visitors = vistorService.findByPage(simplepage, params, orderBy);
 		Map maps = new HashMap();
@@ -110,7 +111,7 @@ public class VisitorController {
 		visitor.setIdCardNum(idCardNum);
 		visitor.setSex(sex);
 		visitor.setNation(nation);
-		SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-mm-dd");
 		try {
 			visitor.setBirth(sdf.parse(birth));
 			
@@ -162,7 +163,7 @@ public class VisitorController {
 		visitor.setIdCardNum(idCardNum);
 		visitor.setSex(sex);
 		visitor.setNation(nation);
-		SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 		try {
 			visitor.setBirth(sdf.parse(birth));
 			

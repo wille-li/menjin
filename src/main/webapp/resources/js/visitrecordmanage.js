@@ -1,6 +1,6 @@
 ﻿  $(function(){
 	  $('#visitortb').datagrid({  
-	      title:'访客管理',  
+	      title:'拜访记录管理',  
 	      iconCls:'icon-man',  
 	      width:'100%',  
 	      height:'500',
@@ -244,8 +244,8 @@ function addBrand(){
 	  $('#idCardType').textbox('setValue',"");
 	  $('#idCardNum').textbox('setValue',"");
 	  $('#sex').textbox('setValue',"");
-	  $('#mobile').textbox('setValue');
-	  $('#birth').textbox('setValue');
+	  $('#mobile').textbox('setValue',"");
+	  $('#birth').textbox('setValue',"");
       $('#companyBox').combobox('setValue',"");
 	  $('#employeeName').textbox('setValue',"");
 	  $('#employeePhone').textbox('setValue',"");
@@ -254,7 +254,7 @@ function addBrand(){
 	  $('#visitTime').datetimebox('setValue',"");
 	  $('#validateMode').textbox('setValue',"");
 	  $('#status').textbox('setValue',"");
-	  $('#leaveTime').textbox('setValue',"");
+	  $('#leaveTime').datetimebox('setValue',"");
 	  $('#checkRecord').hide();
 	  $('#VisitDialog').dialog({title:'填写拜访信息'});
 	  $('#VisitDialog').dialog("open");
@@ -311,7 +311,7 @@ function updateBrand(){
 	$('#visitTime').datetimebox('setValue',formatDatebox(selections[0].actualTime));
 	$('#validateMode').combobox('setValue',selections[0].validateMode).combobox('setText',formatValidateForUpdate(selections[0].validateMode));
 	$('#status').combobox('setValue',selections[0].status).combobox('setText',formatStatusForUpdate(selections[0].status));;
-	$('#leaveTime').textbox('setValue',formatDatebox(selections[0].leaveTime));
+	$('#leaveTime').datetimebox('setValue',formatDatebox(selections[0].leaveTime));
 	$('#birth').textbox('setValue',formatYMDatebox(selections[0].visitor.birth));
 	$('#checkRecord').show();
 	$('#VisitDialog').dialog({title:'修改拜访信息'});
@@ -331,7 +331,6 @@ function submitDialog(){
 	var visitorId = $('#visitorName').combobox('getValue');
 	var idCardType = $('#idCardType').textbox('getValue');
 	var idCardNum = $('#idCardNum').textbox('getValue');
-	var birth1 = $('#birth1').textbox('getValue');
 	var sex = $('#sex').textbox('getValue');
 	var mobile = $('#mobile').textbox('getValue');
 	var companyId = $('#companyBox').combobox('getValue');
@@ -344,11 +343,11 @@ function submitDialog(){
 	var visitTime = $('#visitTime').datetimebox('getValue');
 	var validateMode = $('#validateMode').combobox('getValue');
 	var status = $('#status').combobox('getValue');
-	var leaveTime = $('#leaveTime').textbox('getValue');
+	var leaveTime = $('#leaveTime').datetimebox('getValue');
 	
 	var submitData = {id:id,visitorId:visitorId,idCardType:idCardType,idCardNum:idCardNum,
 			sex:sex,mobile:mobile,companyId:companyId,employeeName:employeeName,employeePhone:employeePhone,/*departmentId:departmentId,employeeId:employeeId,*/
-			matterId:matterId,peopleSum:peopleSum,visitTime:visitTime,validateMode:validateMode,status:status,birth:birth1,leaveTime:leaveTime};
+			matterId:matterId,peopleSum:peopleSum,visitTime:visitTime,validateMode:validateMode,status:status,leaveTime:leaveTime};
     var url = './addVisit.do';
     if(!isAdd){
    	 url = './updateVisit.do';
