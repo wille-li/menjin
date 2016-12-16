@@ -1,5 +1,6 @@
 package com.menjin.user.controller;
 
+import java.io.IOException;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -8,6 +9,7 @@ import java.util.Map;
 import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.apache.ibatis.annotations.Param;
 import org.slf4j.Logger;
@@ -22,10 +24,13 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.alibaba.fastjson.JSON;
 import com.base.annotation.log.SystemControllerLog;
 import com.base.entity.SimplePage;
+import com.menjin.user.model.Resource;
 import com.menjin.user.model.Role;
 import com.menjin.user.model.User;
+import com.menjin.user.model.UserRoles;
 import com.menjin.user.service.If.RoleServiceIf;
 import com.menjin.user.service.If.UserServiceIf;
 
@@ -188,5 +193,65 @@ public class UserControler {
 		return returnCode;
 	}
 	
+	@RequestMapping(value="/user/searchRole.do", method = RequestMethod.POST)
+	@SystemControllerLog
+	@ResponseBody
+	public void searchRole(String username ,HttpServletResponse resp){
+		logger.info("Start to searchRole");
+		Map<String,Object> map = new HashMap<String,Object>();
+		Set<Role> existSet = roleService.findRoleByUsername(username);
+		Set<Role> notExistSet = roleService.findNoRoleByUsername(username);
+		map.put("existRoles", existSet);
+		map.put("notExistRoles", notExistSet);
+		String jsonStr = JSON.toJSONString(map);
+		logger.info("searchRole return="+jsonStr);
+		resp.setContentType("application/json; charset=utf-8");
+		try {
+			resp.getWriter().write(jsonStr);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		logger.info("End searchRole");
+	}
 	
+	@RequestMapping(value="/user/addUserRoles.do", method = RequestMethod.POST)
+	@SystemControllerLog
+	@ResponseBody
+	public void addUserRoles(String userId,String roleIds,HttpServletResponse resp){
+		logger.info("Start to addUserRoles,userId="+userId+" ,roleIds="+roleIds);
+		int uid = Integer.parseInt(userId);
+		int deleteNum = 0;
+		deleteNum = roleService.deleteByUserId(uid);
+		logger.info("deleteNum="+deleteNum);
+		String[] strArr = roleIds.trim().split(",");
+		int rid = 0;
+		int addNum = -1;
+		int count = 0;
+		UserRoles userRoles = new UserRoles();
+		for(String roleId : strArr){
+			rid = Integer.parseInt(roleId);
+			userRoles.setUserId(uid);
+			userRoles.setRoleId(rid);
+			addNum = roleService.addUserRoles(userRoles);
+			if(addNum==1){
+				count++;
+			}
+		}
+		String status = "failed";
+		logger.info("insert to t_user_role count="+count);
+		if(deleteNum==0 && count==0){
+			
+		}else{
+			status = "success";
+		}
+		String jsonStr = "{\"result\":\""+status+"\"}";
+		logger.info("return jsonStr="+jsonStr);
+		resp.setContentType("application/json; charset=utf-8");
+		try {
+			resp.getWriter().write(jsonStr);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		logger.info("end addUserRoles");
+	}
 }

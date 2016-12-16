@@ -65,6 +65,12 @@
 		select u.id from t_user u where u.username = #{username}))
 	</select>
 	
+	<select id="searchNoRoleByUsername" parameterType="String" resultMap="roleResultMap">
+		select r.* from t_role r where r.id not in (
+		select t.role_id from t_user_role t where t.user_id in (
+		select u.id from t_user u where u.username = #{username}))
+	</select>
+	
 	<select id="searchRoleByResourceId" parameterType="Integer" resultMap="roleResultMap">
 		select r.* from t_role r ,t_role_resource rr 
 		where rr.role_id = r.id and rr.resource_id = #{resourceId}

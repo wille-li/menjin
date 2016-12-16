@@ -60,6 +60,12 @@ public class RoleServiceImpl extends BaseServiceImpl<Role> implements RoleServic
 		// TODO Auto-generated method stub
 		return roleMapper.searchRoleByUsername(username);
 	}
+	
+	@Override
+	public Set<Role> findNoRoleByUsername(String username) {
+		// TODO Auto-generated method stub
+		return roleMapper.searchNoRoleByUsername(username);
+	}
 
 	@Override
 	public Set<Role> findRoleByResourceId(Integer resourceId) {

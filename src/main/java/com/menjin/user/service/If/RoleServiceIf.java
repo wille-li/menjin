@@ -40,11 +40,18 @@ public interface RoleServiceIf extends BaseService<Role> {
 	public Set<Role> findRoleByUserId(Integer userId);
 	
 	/**
-	 * 根据登录名查找用户的角色信息
+	 * 根据登录名查找用户拥有的角色信息
 	 * @param username
 	 * @return
 	 */
 	public Set<Role> findRoleByUsername(String username);
+	
+	/**
+	 * 根据登录名查找用户没有的角色信息
+	 * @param username
+	 * @return
+	 */
+	public Set<Role> findNoRoleByUsername(String username);
 	
 	/**
 	 * 根据资源resourceId查找对应可访问的用户角色Role

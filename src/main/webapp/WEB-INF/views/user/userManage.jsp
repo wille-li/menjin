@@ -16,11 +16,91 @@
 	  <script type="text/javascript" src="<%=request.getContextPath()%>/resources/js/usermanager.js"></script>
 </head>
 <body>
+<script>
+function assignRole(){
+	$("#to").empty();
+	$("#from").empty();
+	var selections = $('#userListDatagrid').datagrid('getSelections');
+	if (selections.length == 0) {
+		showmessage('提醒','请选择你要分配角色的用户！');
+         return false;
+     }
+	$("#userId").val(selections[0].id);
+	$("#selectName").textbox("setValue",selections[0].username).textbox("setText",selections[0].username);
+	$("#selectName").textbox({readonly:true}); 
+	var username = $("#selectName").textbox("getValue");
+	var sendData = {"username" : username};
+	var url = "${pageContext.request.contextPath}/user/searchRole.do?timeId="+new Date().getTime();
+	$.post(url,sendData,function(data){
+		var arr = data;
+		$.each(arr.existRoles,function(i,v){
+			var opt = $('<option></option>');
+			opt.val(v.id);
+			opt.html(v.description);
+			$("#to").append(opt);
+		}); 
+		$.each(arr.notExistRoles,function(i,v){
+			var opt = $('<option></option>');
+			opt.val(v.id);
+			opt.html(v.description);
+			$("#from").append(opt);
+		}); 
+	},"json");
+	$('#win').window("open");
+	
+}
+
+$(function(){
+	//选择一项  
+	$("#addOne").click(function(){  
+	    $("#from option:selected").clone().appendTo("#to");  
+	    $("#from option:selected").remove();  
+	});  
+
+	//选择全部  
+	$("#addAll").click(function(){  
+	    $("#from option").clone().appendTo("#to");  
+	    $("#from option").remove();  
+	});  
+	  
+	//移除一项  
+	$("#removeOne").click(function(){  
+	    $("#to option:selected").clone().appendTo("#from");  
+	    $("#to option:selected").remove();  
+	});  
+
+	//移除全部  
+	$("#removeAll").click(function(){  
+	    $("#to option").clone().appendTo("#from");  
+	    $("#to option").remove();  
+	});  
+	
+	$("#save").bind('click', function(){    
+        var userId = $("#userId").val();
+        var existRoleIds = "1,4";
+        var params = {
+        		"userId" : userId,
+        		"roleIds" : existRoleIds
+        };
+        var url = "${pageContext.request.contextPath}/user/addUserRoles.do?timeId="+new Date().getTime();
+        $.post(url,params,function(data){
+        	var arr = data;
+        	if(arr.result=="success"){
+        		$("#userListDatagrid").datagrid("reload");
+        		$.messager.alert('消息','修改成功！','info');
+        	}else{
+        		$.messager.alert('消息','操作失败！','info');
+        	} 
+        },"json");
+        $('#win').window("close");
+    });    
+});
+</script>
 <div>
 <span><a id="add" href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-add'" onclick="addUser()">新增用户</a></span>
 <span><a id="info" href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-person'" onclick="updateUser()">个人资料</a></span>
 <span><a id="delete" href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-remove'" onclick="deleteUser()">删除用户</a></span>
-<span><a id="role" href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-man'">分配角色</a></span>
+<span><a id="role" href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-man'" onclick="assignRole()">分配角色</a></span>
 <span style="float:right;">
 <span id="selectWay"><input id="searchInput" class="easyui-searchbox" style="width:200px" data-options="prompt:'条件查询'"></input></span>
 <select class="easyui-combobox" id="state" name="state"  labelPosition="top" style="width:100px;">
@@ -104,6 +184,60 @@
    			 </div>
 	</div>
 	
+	<div id="win" class="easyui-window" title="分配角色" style="width:600px;height:360px"    
+        data-options="iconCls:'icon-man',modal:true,closed:true"> 
+        <div style="padding:5px 5px;">  
+    	<form id="assignRoleForm"  method="post">
+    		<div style="width:560px;height:36px;position: relative;">
+    			<div style="margin:auto;width:280px;height:25px;position: absolute;top: 0; left: 0; bottom: 0; right: 0;">
+    			<input id="userId" name="userId" type="hidden" />
+				<input class="easyui-textbox" id="selectName" name="selectName" style="width:100%;" label='账号名'/>
+				</div>
+    		</div>
+   			<div style="width:560px;height:234px;position: relative;">
+   			 	<div style="margin:auto;width:500px;height:229px;position: absolute;top: 0; left: 0; bottom: 0; right: 0;">
+						<table  width="100%" border="0" cellpadding="0" cellspacing="0">  
+   							 <tr>  
+        						<td width="180px" height="220px">
+        							<table width="100%" border="0" cellpadding="0" cellspacing="0">
+        							<tr><td height="20px" align="center" style="font-weight:bold;">可选角色</td></tr>  
+        							<tr>
+        								<td height="190px">
+	        								<select name="from" id="from" multiple="multiple" style="width:100%;height:100%">  
+	            							</select>  
+        								</td>
+        							</tr>
+        							</table>
+        						</td>  
+        						<td align="center">
+        								<div style="padding-top:40px">  
+							            <input type="button" id="addAll" value=" >> " style="width:50px;" /><br /><br />
+							            <input type="button" id="addOne" value=" > " style="width:50px;" /><br /><br />  
+							            <input type="button" id="removeOne" value="&lt;" style="width:50px;" /><br /><br />  
+							            <input type="button" id="removeAll" value="&lt;&lt;" style="width:50px;" /><br /><br />  
+							            </div>
+        						</td>  
+						        <td width="180px" height="220px">
+						        	<table width="100%" border="0" cellpadding="0" cellspacing="0">
+        								<tr><td height="20px" align="center" style="font-weight:bold;">已有角色</td></tr>  
+        								<tr>
+        									<td height="190px">  
+						            			<select name="to" id="to" multiple="multiple"  style="width:100%;height:100%">  
+						            			</select>  
+						            		</td>
+						          		</tr>
+						          	</table>
+						        </td>  
+    						</tr>  
+						</table>  
+				</div>
+   			</div>
+    		<div style="width:560px;height:30px;position: relative;display:table-cell;vertical-align:middle" align="center" >
+    				<a id="save" href="#" class="easyui-linkbutton" data-options="iconCls:'icon-save',width:80,height:28">保存</a>  
+    		</div>
+    	</form>  
+    	</div>
+	</div>  
 	 
 </body>
 </html>

@@ -21,6 +21,11 @@ public class UserRoles implements Serializable{
 	public UserRoles() {
 	
 	}
+	
+	public UserRoles(Integer userId, Integer roleId) {
+		this.userId = userId;
+		this.roleId = roleId;
+	}
 
 	public Integer getUserId() {
 		return userId;
