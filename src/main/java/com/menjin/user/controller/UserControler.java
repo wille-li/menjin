@@ -223,18 +223,20 @@ public class UserControler {
 		int deleteNum = 0;
 		deleteNum = roleService.deleteByUserId(uid);
 		logger.info("deleteNum="+deleteNum);
-		String[] strArr = roleIds.trim().split(",");
-		int rid = 0;
-		int addNum = -1;
 		int count = 0;
-		UserRoles userRoles = new UserRoles();
-		for(String roleId : strArr){
-			rid = Integer.parseInt(roleId);
-			userRoles.setUserId(uid);
-			userRoles.setRoleId(rid);
-			addNum = roleService.addUserRoles(userRoles);
-			if(addNum==1){
-				count++;
+		if(!"".equals(roleIds) && roleIds!=null){
+			String[] strArr = roleIds.trim().split(",");
+			int rid = 0;
+			int addNum = -1;
+			UserRoles userRoles = new UserRoles();
+			for(String roleId : strArr){
+				rid = Integer.parseInt(roleId);
+				userRoles.setUserId(uid);
+				userRoles.setRoleId(rid);
+				addNum = roleService.addUserRoles(userRoles);
+				if(addNum==1){
+					count++;
+				}
 			}
 		}
 		String status = "failed";

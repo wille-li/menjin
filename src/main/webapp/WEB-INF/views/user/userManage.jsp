@@ -50,6 +50,24 @@ function assignRole(){
 	
 }
 
+function getRolesAsString(){
+	var rolesStr ="";
+	var objectSelect = document.getElementById("to");
+	if(null!=objectSelect && typeof(objectSelect)!="undefined"){
+		var length = objectSelect.options.length;
+		console.log("length="+length);
+		for(var i=0;i<length;i++){
+			if(0 == i){
+				rolesStr = objectSelect.options[i].value;
+			}else{
+				rolesStr = rolesStr + ","+objectSelect.options[i].value;
+			}
+		}
+	}
+	console.log("one ="+rolesStr);
+	return rolesStr;
+}
+
 $(function(){
 	//选择一项  
 	$("#addOne").click(function(){  
@@ -77,7 +95,7 @@ $(function(){
 	
 	$("#save").bind('click', function(){    
         var userId = $("#userId").val();
-        var existRoleIds = "1,4";
+        var existRoleIds = getRolesAsString();
         var params = {
         		"userId" : userId,
         		"roleIds" : existRoleIds
