@@ -80,6 +80,7 @@ function submitResource(){
 	$.post('./role/controlResourceRole.do', submitData, function(data){
 		 if(data){
 			 if(data.rInfo.ret == 0){
+				 $('#Roletb').datagrid('reload');
 	   			 showmessage('提醒',data.rInfo.msg);
 			 }else{
 				 showmessage('操作失败',data.rInfo.msg); 

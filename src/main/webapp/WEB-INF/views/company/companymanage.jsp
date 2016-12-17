@@ -12,6 +12,7 @@
     <link rel="stylesheet" type="text/css" href="<c:url value='/resources/css/companymanage.css'></c:url>" />
     <script type="text/javascript" src="<c:url value='/resources/easyui/jquery.min.js'></c:url>"></script>
     <script type="text/javascript" src="<c:url value='/resources/easyui/jquery.easyui.min.js'></c:url>"></script>
+    <script type="text/javascript" src="<c:url value='/resources/easyui/locale/easyui-lang-zh_CN.js'></c:url>"></script>
     <script type="text/javascript" src="<c:url value='/resources/js/service.js'></c:url>"></script>
     <script type="text/javascript" src="<c:url value='/resources/js/companymanage.js'></c:url>"></script>
   </head>
