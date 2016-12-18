@@ -159,7 +159,7 @@ public class RoleControler {
 			}
 		}
 		// 向该角色赋权限
-		if (resourceIds != null) {
+		if (resourceIds != null && !resourceIds.equals("")) {
 			RolesResource rolesResource = new RolesResource();
 			rolesResource.setRoleId(roleId);
 			String[] resIds = resourceIds.split(",");
