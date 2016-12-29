@@ -1,5 +1,6 @@
 package com.menjin.company.model;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
@@ -8,7 +9,12 @@ import java.util.List;
  * @author Lin
  *
  */
-public class Company {
+public class Company implements Serializable {
+
+	/** 
+	 * @Fields serialVersionUID : 序列化 
+	 */ 
+	private static final long serialVersionUID = 5729248190241639460L;
 
 	private Integer id;
 

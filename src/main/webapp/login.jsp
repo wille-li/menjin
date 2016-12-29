@@ -34,9 +34,9 @@ $(window).resize(function(){
 					<h1>易会智慧访客系统</h1>
 					<label> <input type="text" class="txt_input txt_input2"
 						required oninvalid="setCustomValidity('用户名格式不正确。');"
-						placeholder="Username" id="username" name="username"
+						placeholder="用户名" id="username" name="username"
 						AUTOCOMPLETE="off" /></label> <label> <input type="password"
-						class="txt_input txt_input3" placeholder="Password"  id="password" name="password" /></label>
+						class="txt_input txt_input3" placeholder="用户密码"  id="password" name="password" /></label>
 					<div class="rem_sub" style="height: 35px; margin-top: 10px">
 						<input type="submit" class="sub_button" name="button" id="submit"
 							value="登录" style=" margin-left: 110px;" />

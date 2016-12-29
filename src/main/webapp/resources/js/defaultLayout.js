@@ -5,8 +5,8 @@ var _menus = {"menus":[
 						{"menuid":"1","icon":"icon-role","menuname":"系统管理",
 							"menus":[
 									{"menuid":"13","menuname":"用户管理","icon":"icon-users","url":"./user.do"},
-									{"menuid":"14","menuname":"角色管理","icon":"icon-role","url":"./role.do"},
-									{"menuid":"15","menuname":"权限管理","icon":"icon-set","url":"./resource.do"}
+									{"menuid":"14","menuname":"角色管理","icon":"icon-role","url":"./role.do"}
+									//{"menuid":"15","menuname":"权限管理","icon":"icon-set","url":"./resource.do"}  // 暂时隐藏
 								]
 						},{"menuid":"8","icon":"icon-users","menuname":"公司管理",
 							"menus":[{"menuid":"21","menuname":"公司管理","icon":"icon-large-chart","url":"./company.do"}
@@ -100,7 +100,7 @@ $(function(){
         $.messager.confirm('系统提示', '您确定要退出本次登录吗?', function(r) {
 
         if (r) {
-            location.href = 'http://localhost:8080/MenJin/login.jsp';
+            location.href = './logout';
                 }
         });
     })

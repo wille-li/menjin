@@ -1,5 +1,4 @@
 package com.menjin.user.controller;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -16,7 +15,6 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.alibaba.fastjson.JSON;
 import com.base.annotation.log.SystemControllerLog;
 import com.base.entity.SimplePage;
 import com.menjin.user.model.Resource;
@@ -95,47 +93,31 @@ public class ResourceControler {
 	@RequestMapping(value="/resource/getParentResources.do")
 	@SystemControllerLog
 	@ResponseBody
-	public void getParentResources(HttpServletResponse resp){
+	public List<Map<String,String>> getParentResources(HttpServletResponse resp){
 		logger.info("Start to getParentResources");
 		List<String> list = resourceService.findParent();
 		String str = "";
+		List<Map<String,String>> listStr = new ArrayList<Map<String,String>>();
 		if(list!=null&&list.size()>0){
-			List<Map<String,String>> listStr = new ArrayList<Map<String,String>>();
 			for(String s :list){
 				Map<String,String> map = new HashMap<String,String>();
 				map.put("parentDesc", s);
 				listStr.add(map);
 			}
-			str = JSON.toJSONString(listStr);
 			logger.info("json tranfer="+str);
 		}
 		logger.info("End getParentResources");
-		resp.setContentType("application/json; charset=utf-8");
-		try {
-			resp.getWriter().write(str);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+
+		return listStr;
 	}
 	
 	@RequestMapping(value="/resource/getChildrenResources.do")
 	@SystemControllerLog
 	@ResponseBody
-	public void getChildrenResources(String parentDesc ,HttpServletResponse resp){
+	public List<Resource> getChildrenResources(String parentDesc ,HttpServletResponse resp){
 		logger.info("Start to getChildrenResources");
 		List<Resource> list = resourceService.findChildren(parentDesc);
-		String str = "";
-		if(list!=null&&list.size()>0){
-			str = JSON.toJSONString(list);
-			logger.info("json tranfer="+str);
-		}
-		logger.info("End getChildrenResources");
-		resp.setContentType("application/json; charset=utf-8");
-		try {
-			resp.getWriter().write(str);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		return list;
 	}
 	
 	/**

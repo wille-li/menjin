@@ -6,6 +6,11 @@
       http://www.springframework.org/schema/security
       http://www.springframework.org/schema/security/spring-security-4.1.xsd ">
  
+ 
+ 	<beans:bean id="messageSource" class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
+		<beans:property name="basename" value="classpath:devConfig/message_zh_CN"></beans:property>
+	</beans:bean>
+	
 	<!-- 不需要进行安全认证的资源 -->
 	<http pattern="/login.jsp" security="none" />
 	<http pattern="/sessionTimeout.jsp" security="none" />
@@ -27,6 +32,7 @@
 		</beans:property>
 		<beans:property name="securityMetadataSource" ref="resourceServiceImpl" />
 	</beans:bean>
+	
 
 	<http auto-config="true">
 		<headers>
@@ -34,7 +40,7 @@
 		</headers>
 		<access-denied-handler error-page="/accessDenied.jsp" />
 
-		<form-login login-page="/login.jsp" default-target-url="/test.do"
+		<form-login login-page="/login.jsp" default-target-url="/index.do"
 			always-use-default-target="true" authentication-failure-url="/login.jsp" />
 		<!-- 资源所需要的权限 -->
 		<!-- <intercept-url pattern="/user/login.do" access="hasAnyRole('ROLE_USER','ROLE_ADMIN')"/> 
@@ -57,11 +63,6 @@
 	</http>
 
 	<authentication-manager alias="authenticationManager">
-		<!-- <authentication-provider> <user-service> <user name="user" password="123" 
-			authorities="ROLE_USER"/> <user name="user2" password="1234" authorities="ROLE_USER,ROLE_ADMIN"/> 
-			</user-service> </authentication-provider> -->
-
-		<!-- 使用自定义的UserDetailsService -->
 		<authentication-provider user-service-ref="userServiceImpl"></authentication-provider>
 	</authentication-manager>
 

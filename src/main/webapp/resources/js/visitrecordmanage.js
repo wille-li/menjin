@@ -1,4 +1,9 @@
 ﻿  $(function(){
+	  var myDate = new Date();
+	  var year = myDate.getFullYear();    //获取完整的年份(4位,1970-????)
+	  var month =  myDate.getMonth()+1;       //获取当前月份(0-11,0代表1月)
+	  var date = myDate.getDate();        //获取当前日(1-31)
+	  var startDate = year +'-'+ month + '-' + date;
 	  $('#visitortb').datagrid({  
 	      title:'拜访记录管理',  
 	      iconCls:'icon-man',  
@@ -21,6 +26,10 @@
 	      singleSelect : true,
 	      fit:true,
 	  });
+	  var queryParams = {startDate:startDate,endDate:startDate};
+	  $('#visitortb').datagrid({
+    	  queryParams:queryParams
+		});
 	  
 	  $('#VisitDialog').dialog({
 		    title: '填写拜访信息',

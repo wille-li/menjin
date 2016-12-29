@@ -114,13 +114,6 @@
 			<version>${spring.security.version}</version>
 		</dependency>
 
-		<!-- fastjson所需要用到的jar包  -->
-		<dependency>
-    		<groupId>com.alibaba</groupId>
-    		<artifactId>fastjson</artifactId>
-    		<version>1.2.12</version>
-		</dependency>
-		
 		<!-- https://mvnrepository.com/artifact/com.mchange/c3p0 -->
 		<dependency>
 			<groupId>com.mchange</groupId>
@@ -208,6 +201,13 @@
 			<artifactId>jackson-databind</artifactId>
 			<version>2.5.4</version>
 		</dependency>
+		<!-- https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-annotations -->
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-annotations</artifactId>
+			<version>2.5.4</version>
+		</dependency>
+
 
 		<!-- https://mvnrepository.com/artifact/com.squareup.retrofit2/retrofit -->
 		<dependency>

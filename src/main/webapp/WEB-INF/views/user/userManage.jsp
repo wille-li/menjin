@@ -49,7 +49,6 @@ function assignRole(){
 	$('#win').window("open");
 	
 }
-
 function getRolesAsString(){
 	var rolesStr ="";
 	var objectSelect = document.getElementById("to");
@@ -67,14 +66,12 @@ function getRolesAsString(){
 	console.log("one ="+rolesStr);
 	return rolesStr;
 }
-
 $(function(){
 	//选择一项  
 	$("#addOne").click(function(){  
 	    $("#from option:selected").clone().appendTo("#to");  
 	    $("#from option:selected").remove();  
 	});  
-
 	//选择全部  
 	$("#addAll").click(function(){  
 	    $("#from option").clone().appendTo("#to");  
@@ -86,7 +83,6 @@ $(function(){
 	    $("#to option:selected").clone().appendTo("#from");  
 	    $("#to option:selected").remove();  
 	});  
-
 	//移除全部  
 	$("#removeAll").click(function(){  
 	    $("#to option").clone().appendTo("#from");  
