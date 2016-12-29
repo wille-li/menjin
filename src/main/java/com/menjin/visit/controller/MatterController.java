@@ -86,7 +86,7 @@ public class MatterController {
 	public Map<String, Object> addMatter(@ModelAttribute Matter matter,
 			HttpServletRequest request,HttpServletResponse response){
 		logger.info("Start to insert new Matter!Matter Name:"+matter.getMatterDecs());
-		Map<String, Object> returnMap = new HashMap<>();
+		Map<String, Object> returnMap = new HashMap<String, Object>();
 		ReturnInfo rInfo = new ReturnInfo();
 		matter.setCreateBy("Admin");//根据现在操作用户修改
 		matter.setCreateTime(new Date());
@@ -109,7 +109,7 @@ public class MatterController {
 	@ResponseBody
 	public Map<String, Object> updateMatter(@ModelAttribute Matter matter,HttpServletRequest request,HttpServletResponse response){
 		logger.info("Start to update Matter!");
-		Map<String, Object> returnMap = new HashMap<>();
+		Map<String, Object> returnMap = new HashMap<String, Object>();
 		ReturnInfo rInfo = new ReturnInfo();
 		matter.setModifiedDate(new Date());
 		int returnCode = matterService.modifyById(matter);
@@ -130,7 +130,7 @@ public class MatterController {
 	@ResponseBody
 	public Map<String, Object> delectMatter(@ModelAttribute Matter matter,HttpServletRequest request,HttpServletResponse response){
 		logger.info("Start to delete Matter!");
-		Map<String, Object> returnMap = new HashMap<>();
+		Map<String, Object> returnMap = new HashMap<String, Object>();
 		ReturnInfo rInfo = new ReturnInfo();
 		int returnCode = matterService.deleteById(matter);
 		if(returnCode > SUCCESS){

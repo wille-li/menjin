@@ -95,7 +95,8 @@ function deleteUser(){
 	$.messager.confirm('确认删除', '你确定要删除这个用户吗?', function(r){
 		if (r){
 			$("#id").textbox("setValue",selections[0].id);
-			var submitData = $('#userForm').serialize();
+			var id = $("#id").textbox("getValue");
+			var submitData = {id:id};
 			$.post('./user/deleteUser.do', submitData, function(data){
 				 if(data){
 		   			$('#userListDatagrid').datagrid('load');
@@ -122,6 +123,9 @@ function searchUser(){
 	}else if(searchBy=='roleName'){
 		access = './user/getUserByRolename.do';
 		queryParams = {description: searchValue}
+	}
+	if(searchValue == null || searchValue == ''){
+		access = './user/getAllUserList.do';
 	}
 	 $('#userListDatagrid').datagrid({  
 	      url:access, 

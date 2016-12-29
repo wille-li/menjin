@@ -1,4 +1,4 @@
-  $(function(){
+ $(function(){
 	  $('#Roletb').datagrid({  
 	      title:'角色管理',  
 	      iconCls:'icon-man',  
@@ -189,7 +189,3 @@ function submitDialog(){
 		$("#companyPhone").textbox("setValue","");
    }); 
 }  
-
-
-
-  

@@ -103,7 +103,7 @@ public class VisitorController {
 			@Param(value = "rank") String rank,@Param(value = "email") String email,
 			HttpServletRequest request,HttpServletResponse response){
 		logger.info("Start to insert new Visitor!Visitor Name:"+visitorName);
-		Map<String, Object> returnMap = new HashMap<>();
+		Map<String, Object> returnMap = new HashMap<String, Object>();
 		ReturnInfo rInfo = new ReturnInfo();
 		Visitor visitor = new Visitor();
 		visitor.setVisitorName(visitorName);
@@ -154,7 +154,7 @@ public class VisitorController {
 			@Param(value = "rank") String rank,@Param(value = "email") String email,
 			HttpServletRequest request,HttpServletResponse response){
 		logger.info("Start to update Visitor!");
-		Map<String, Object> returnMap = new HashMap<>();
+		Map<String, Object> returnMap = new HashMap<String, Object>();
 		ReturnInfo rInfo = new ReturnInfo();
 		Visitor visitor = new Visitor();
 		visitor.setId(id);
@@ -197,7 +197,7 @@ public class VisitorController {
 	@ResponseBody
 	public Map<String, Object> updateVisitorRank(@Param(value = "id") Integer id,@Param(value = "rank") String rank,HttpServletRequest request,HttpServletResponse response){
 		logger.info("Start to update Visitor Rank!");
-		Map<String, Object> returnMap = new HashMap<>();
+		Map<String, Object> returnMap = new HashMap<String, Object>();
 		ReturnInfo rInfo = new ReturnInfo();
 		if(id == null || rank == null || rank.equals("")){
 			logger.info("update visitor rank and id is null");
@@ -229,7 +229,7 @@ public class VisitorController {
 	@ResponseBody
 	public Map<String, Object> delectMatter(@Param(value = "id") Integer id,HttpServletRequest request,HttpServletResponse response){
 		logger.info("Start to delete Visitor!");
-		Map<String, Object> returnMap = new HashMap<>();
+		Map<String, Object> returnMap = new HashMap<String, Object>();
 		ReturnInfo rInfo = new ReturnInfo();
 		Visitor visitor = new Visitor();
 		visitor.setId(id);

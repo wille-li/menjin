@@ -27,10 +27,10 @@ public class TestUpload {
 			.addConverterFactory(GsonConverterFactory.create()).build();
 
 	public static void main(String[] args) {
-		//testCompany2();
+		testCompany2();
 		//testVisit();
 		//testUpload2();
-		testVisit();
+		//testVisit();
 	}
 
 	public static void testGetCompany() {
@@ -98,12 +98,12 @@ public class TestUpload {
 	public static void testUpload2(){
 		File file1 = new File("C:\\Users\\Administrator\\Desktop\\1.jpg");
 		File file2 = new File("C:\\Users\\Administrator\\Desktop\\2.jpg");
-		List<File> list = new ArrayList<>();
+		List<File> list = new ArrayList<File>();
 		list.add(file1);
 		list.add(file2);
 		List<MultipartBody.Part> path = filesToMultipartBodyParts(list);
 		
-		Map<String, String> params = new HashMap<>();
+		Map<String, String> params = new HashMap<String, String>();
 		params.put("idCardNum", "126ssd623");
 		params.put("visitorName", "csap");
 		params.put("birth", "1990-02-09");
@@ -143,7 +143,7 @@ public class TestUpload {
     }
 	
 	public static void testVisit(){
-		Map<String,String> map = new HashMap<>();
+		Map<String,String> map = new HashMap<String,String>();
         map.put("tokenid","tokenid");
         map.put("visitorName","visitorName");
         map.put("idCardNum","126ssd623");
@@ -176,7 +176,7 @@ public class TestUpload {
 	}
 	
 	public static List<MultipartBody.Part> filesToMultipartBodyParts(List<File> files) {
-        List<MultipartBody.Part> parts = new ArrayList<>(files.size());
+        List<MultipartBody.Part> parts = new ArrayList<MultipartBody.Part> (files.size());
         for (File file : files) {
             // TODO: 16-4-2  这里为了简单起见，没有判断file的类型
             RequestBody requestBody = RequestBody.create(MediaType.parse("image/jpg"), file);

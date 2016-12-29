@@ -96,7 +96,7 @@ public class VisitRecordController {
 			@Param(value = "visitTime") String visitTime,@Param(value = "validateMode")String validateMode,
 			@Param(value = "status")String status,@Param(value = "leaveTime")String leaveTime,
 			HttpServletRequest request,HttpServletResponse response){
-		Map<String, Object> returnMap = new HashMap<>();
+		Map<String, Object> returnMap = new HashMap<String, Object>();
 		ReturnInfo rInfo = new ReturnInfo();
 		logger.info("get Matter Txn Num Start!");
 		String txnNum = getMatterTxnNum();
@@ -163,7 +163,7 @@ public class VisitRecordController {
 			@Param(value = "visitTime") String visitTime,@Param(value = "validateMode")String validateMode,
 			@Param(value = "status")String status,@Param(value = "leaveTime")String leaveTime,
 			HttpServletRequest request,HttpServletResponse response){
-		Map<String, Object> returnMap = new HashMap<>();
+		Map<String, Object> returnMap = new HashMap<String, Object>();
 		ReturnInfo rInfo = new ReturnInfo();
 		logger.info("Start to update VisitRecord!");
 		VisitRecord visitRecord = new VisitRecord();
@@ -212,7 +212,7 @@ public class VisitRecordController {
 	@ResponseBody
 	public Map<String, Object> delectMatter(@ModelAttribute VisitRecord visit,HttpServletRequest request,HttpServletResponse response){
 		logger.info("Start to delete Visitor!");
-		Map<String, Object> returnMap = new HashMap<>();
+		Map<String, Object> returnMap = new HashMap<String, Object>();
 		ReturnInfo rInfo = new ReturnInfo();
 		int returnCode = vistService.deleteById(visit);
 		if(returnCode > SUCCESS){

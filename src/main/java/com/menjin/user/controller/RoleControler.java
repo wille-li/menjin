@@ -81,7 +81,7 @@ public class RoleControler {
 	public Map<String, Object> addRole(@ModelAttribute Role role,
 			HttpServletRequest request) {
 		logger.info("Start to add new role,username=" + role.getDescription());
-		Map<String, Object> returnMap = new HashMap<>();
+		Map<String, Object> returnMap = new HashMap<String, Object>();
 		ReturnInfo rInfo = new ReturnInfo();
 		int returnCode = roleService.add(role);
 		if (returnCode > SUCCESS) {
@@ -102,7 +102,7 @@ public class RoleControler {
 	public Map<String, Object> updateUser(@ModelAttribute Role role,
 			HttpServletRequest request) {
 		logger.info("Start to update role!");
-		Map<String, Object> returnMap = new HashMap<>();
+		Map<String, Object> returnMap = new HashMap<String, Object>();
 		ReturnInfo rInfo = new ReturnInfo();
 		int returnCode = roleService.modifyById(role);
 		if (returnCode > SUCCESS) {
@@ -123,7 +123,7 @@ public class RoleControler {
 	public Map<String, Object> deleteUser(@ModelAttribute Role role,
 			HttpServletRequest request) {
 		logger.info("Start to delete Role");
-		Map<String, Object> returnMap = new HashMap<>();
+		Map<String, Object> returnMap = new HashMap<String, Object>();
 		ReturnInfo rInfo = new ReturnInfo();
 		int returnCode = roleService.deleteById(role);
 		if (returnCode > SUCCESS) {
@@ -144,7 +144,7 @@ public class RoleControler {
 	public Map<String, Object> controllerResourceToRole(
 			@Param(value = "roleId") Integer roleId,
 			@Param(value = "resourceIds") String resourceIds) {
-		Map<String, Object> returnMap = new HashMap<>();
+		Map<String, Object> returnMap = new HashMap<String, Object>();
 		ReturnInfo rInfo = new ReturnInfo();
 		List<Resource> resources = resourceService
 				.findResourcesByRoleId(roleId);

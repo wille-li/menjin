@@ -24,7 +24,7 @@ import com.menjin.user.service.If.UserServiceIf;
  * @author Jack
  *
  */
-@Service
+@Service("userServiceImpl")
 public class UserServiceImpl extends BaseServiceImpl<User> implements UserServiceIf {
 
 	@Resource

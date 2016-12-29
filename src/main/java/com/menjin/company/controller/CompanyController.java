@@ -81,7 +81,7 @@ public class CompanyController {
 	public Map<String, Object> addCompany(@ModelAttribute Company company,
 			HttpServletRequest request,HttpServletResponse response){
 		logger.info("Start to insert new Company!Company Name:"+company.getCompanyName());
-		Map<String, Object> returnMap = new HashMap<>();
+		Map<String, Object> returnMap = new HashMap<String, Object>();
 		ReturnInfo rInfo = new ReturnInfo();
 		company.setCreateBy("Admin");//根据现在操作用户修改
 		company.setCreateTime(new Date());
@@ -104,7 +104,7 @@ public class CompanyController {
 	@ResponseBody
 	public Map<String, Object> updateCompany(@ModelAttribute Company company,HttpServletRequest request,HttpServletResponse response){
 		logger.info("Start to update Company!");
-		Map<String, Object> returnMap = new HashMap<>();
+		Map<String, Object> returnMap = new HashMap<String, Object>();
 		ReturnInfo rInfo = new ReturnInfo();
 		company.setCreateTime(new Date());
 		company.setModifiedDate(new Date());
@@ -127,7 +127,7 @@ public class CompanyController {
 	@ResponseBody
 	public Map<String, Object> delectCompany(@ModelAttribute Company company,HttpServletRequest request,HttpServletResponse response){
 		logger.info("Start to delete Company!");
-		Map<String, Object> returnMap = new HashMap<>();
+		Map<String, Object> returnMap = new HashMap<String, Object>();
 		ReturnInfo rInfo = new ReturnInfo();
 		int returnCode = companyService.deleteById(company);
 		if(returnCode > SUCCESS){
