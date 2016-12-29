@@ -37,8 +37,8 @@
 			</div>
 			<div class="datagrid-btn-separator"></div>
 			<div class="right">
-			   <input class="easyui-searchbox" id="checkByMatterDecs" data-options="prompt:'Please Input Value',searcher:''" class="checktb"></input>
-			   <a href="#" onclick="checkByMatterDecs()" class="easyui-linkbutton" iconCls="icon-search">Search</a>
+			   <input class="easyui-searchbox" id="checkByMatterDecs" data-options="prompt:'''" class="checktb"></input>
+			   <a href="#" onclick="checkByMatterDecs()" class="easyui-linkbutton" iconCls="icon-search">查询</a>
 			</div>
 		</div>
 	</div>

@@ -98,7 +98,7 @@ function formatDatebox(value) {
         dt = new Date(value);  
     }  
   
-    return dt.format("MM/dd/yyyy hh:mm:ss");
+    return dt.format("yyyy-MM-dd hh:mm:ss");
 }
 
 function formatYMDatebox(value){

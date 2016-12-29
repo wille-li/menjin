@@ -10,6 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
 public class OpenerController {
@@ -36,11 +37,8 @@ public class OpenerController {
 		return sChannel;
 	}
 	
-	
-	public void checkOpenerStatus(){
-		String openerIP="14.154.156.146";
-		int openerPort = 5000;
-		String sendContent = "off1";
+	@RequestMapping(value="opener.do")
+	public void checkOpenerStatus(String sendContent){
 		ByteBuffer buf = ByteBuffer.allocate(1024);
 		try {
 			buf.clear();
@@ -49,23 +47,6 @@ public class OpenerController {
 			if (channel.isConnected()){
 				System.out.println("Connected");
 			}
-//			while (!channel.finishConnect()){
-//				System.out.println("Waiting connect..");
-//				try {
-//					Thread.sleep(10);
-//				} catch (InterruptedException e) {
-//					// TODO Auto-generated catch block
-//					e.printStackTrace();
-//				}
-//			}
-//			buf.put(sendContent.getBytes());
-//			buf.flip();
-//			int result = channel.write(buf);
-//			buf.clear();
-//			if (result > 0){
-//				System.out.println("已经写入" + result + "个字节");
-//			}
-//			channel.read(buf);
 			
 			int result = -1;
 			buf.clear();
@@ -104,6 +85,6 @@ public class OpenerController {
 	public static void main(String[] args){
 		OpenerController open = new OpenerController();
 		
-		open.checkOpenerStatus();
+		open.checkOpenerStatus("0ff1");
 	}
 }

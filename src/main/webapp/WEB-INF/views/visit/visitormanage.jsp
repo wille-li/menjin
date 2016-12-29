@@ -52,8 +52,8 @@
 			</div>
 			<div class="datagrid-btn-separator"></div>
 			<div class="right">
-			   <input id="checkByVisitorName" class="easyui-searchbox checkInput" data-options="prompt:'Please Input Value',searcher:''" ></input>
-			   <a href="#" onclick="checkByVisitorName()" class="easyui-linkbutton" iconCls="icon-search">Search</a>
+			   <input id="checkByVisitorName" class="easyui-searchbox checkInput" data-options="prompt:'',searcher:''" ></input>
+			   <a href="#" onclick="checkByVisitorName()" class="easyui-linkbutton" iconCls="icon-search">查询</a>
 			</div>
 		</div>
 	</div>

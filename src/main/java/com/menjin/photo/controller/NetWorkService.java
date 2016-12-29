@@ -19,7 +19,7 @@ import rx.schedulers.Schedulers;
 public class NetWorkService extends RetrofitUtils{
     public static  NetService service = null;
     //public static String API_URL = "http://localhost:8080/MenJin";
-    public static String API_URL = "http://112.74.84.48:8080";
+    public static String API_URL = "http://14.154.159.41:1001/MenJin/api";
 	 //创建实现接口调用
     public static <T> void setSubscribe(Observable<T> observable, Observer<T> observer) {
         observable.subscribeOn(Schedulers.immediate())
@@ -36,25 +36,25 @@ public class NetWorkService extends RetrofitUtils{
     }
 
     private interface NetService{
-        @GET("api/getCompany.do")
+        @GET("getCompany.do")
         Observable<CompanyDto> getCompany(@Query("version") int version, @Query("tokenid") String tokenId);
 
-        @GET("api/checkIDCard.do")
+        @GET("checkIDCard.do")
         Observable<HeadBean> isRegister(@Query("idCardNum") String idCardNum, @Query("tokenid") String tokenId);
 
         @Multipart
-        @POST("api/upload.do")
+        @POST("upload.do")
         Observable<HeadBean> postUserInfo(@Part("idCardNum") String idCardNum,
                                           @Part("visitorName") String visitorName,
                                           @Part("birth") String birth,
                                           @Part() List<MultipartBody.Part> files);
         
         @Multipart
-        @POST("api/upload.do")
+        @POST("upload.do")
         Observable<HeadBean> postUserInfo(@PartMap Map <String,String> map,
                                           @Part() List<MultipartBody.Part> files);
         @FormUrlEncoded
-        @POST("api/visit.do")
+        @POST("visit.do")
         Observable<HeadBean> postOrder(@FieldMap Map <String,String> map);
     }
 

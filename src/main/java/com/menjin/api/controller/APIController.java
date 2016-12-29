@@ -7,7 +7,6 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
@@ -19,7 +18,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.FileCopyUtils;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -27,11 +25,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.base.annotation.log.SystemControllerLog;
+import com.base.entity.JsonReturn;
 import com.base.entity.ReturnInfo;
-import com.base.entity.SimplePage;
-import com.base.service.BaseService;
-import com.menjin.api.model.APICompany;
-import com.menjin.api.model.APIVisit;
+import com.menjin.afr.service.AfrService;
 import com.menjin.api.service.APICompanyService;
 import com.menjin.api.service.APIDepartmentService;
 import com.menjin.api.service.APIEmployeeService;
@@ -70,6 +66,9 @@ public class APIController {
 	
 	private static final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh24:mm");
 	
+	@Resource
+	private AfrService afrService;
+	
 	@Value("${photo.path}")
 	private String imagePath;
 	
@@ -91,29 +90,6 @@ public class APIController {
 	@Autowired
 	VisitRecordService visitRecordService;
 	
-	@RequestMapping(value="/api/getCompany.do", method = RequestMethod.GET)
-	@SystemControllerLog
-	@ResponseBody
-	public Map<String, Object> getCompanyInfo(Integer version){
-		Map<String, Object> returnMap = new HashMap<>();
-		Map<String, Object> dataMap = new HashMap<>();
-		ReturnInfo rInfo = new ReturnInfo();
-		List<APICompany> company  = (List<APICompany>) findAllInfo(aPICompanyService);
-		dataMap.put("company", company);
-		dataMap.put(VERSION_KEY, versionNum);
-		rInfo.setMsg("获取成功");
-		rInfo.setRet(SUCCESS);
-		returnMap.put(HEAD_KEY, rInfo);
-		returnMap.put(DATA_KEY, dataMap);
-		return returnMap;
-	}
-	
-	private List<?> findAllInfo(BaseService<?> baseService){
-		int count = baseService.findCount(null, null);
-		logger.info("Count:"+count);
-		SimplePage simplepage = new SimplePage(1, count, count);
-		return baseService.findByPage(simplepage, null, null);
-	}
 	
 	@RequestMapping(value="/api/visit.do", method=RequestMethod.POST)
 	@SystemControllerLog
@@ -121,7 +97,7 @@ public class APIController {
 	public Map<String, Object> visit(String idCardNum, String phoneNum, 
 			String appointmentTime, Integer companyId, Integer matterId,
 			String employeeName, String employeePhone){
-		Map<String, Object> returnMap = new HashMap<>();
+		Map<String, Object> returnMap = new HashMap<String, Object>();
 		ReturnInfo rInfo = new ReturnInfo();
 		Visitor visitor = visitorService.selectByIDCar(idCardNum);
 		if (null == visitor){
@@ -165,17 +141,14 @@ public class APIController {
 		Company company = new Company();
 		company.setId(companyId);
 		Matter matter = new Matter();
-		matter.setId(matterId);
+		matter.setId(1);
 		
 		visit.setActualTime(tmpDate);
 		visit.setLeaveTime(tmpDate);
-			
 		visit.setCompany(company);
-		/*visit.setDepartment(department);
-		visit.setEmployee(employee);*/
 		visit.setVisitor(visitor);
 		visit.setMatter(matter);
-		visit.setStatus("未验证");
+		visit.setStatus("3");
 		visit.setEmployeeName(employeeName);
 		visit.setEmployeePhone(employeePhone);
 		visit.setValidateMode("1");
@@ -191,11 +164,12 @@ public class APIController {
 		return returnMap;
 	}
 	
+	
 	@RequestMapping(value="/api/checkIDCard.do", method=RequestMethod.GET)
 	@SystemControllerLog
 	@ResponseBody
 	public Map<String, Object> checkIDCard(@RequestParam("idCardNum") String idCardNum){
-		Map<String, Object> returnMap = new HashMap<>();
+		Map<String, Object> returnMap = new HashMap<String, Object>();
 		Visitor visitor = visitorService.selectByIDCar(idCardNum);
 		ReturnInfo rInfo = new ReturnInfo();
 		if (null == visitor){
@@ -231,30 +205,32 @@ public class APIController {
 	@ResponseBody
 	public Map<String, Object> uploadFileForRegister(@RequestParam("file") MultipartFile[] files, String idCardNum,
 			String visitorName, String birth){
-		Map <String, Object> result = new HashMap<>();
+		Map <String, Object> result = new HashMap<String, Object>();
 		ReturnInfo returnInfo = new ReturnInfo();
 		
+		if (idCardNum.indexOf("\"") > -1){
+			idCardNum = idCardNum.replace("\"", "");
+		}
+		
+		if (visitorName.indexOf("\"") > -1){
+			visitorName = visitorName.replace("\"", "");
+		}
+		if (birth.indexOf("\"") > -1){
+			birth = birth.replace("\"", "");
+		}
 		if (idCardNum == null){
+			
 			returnInfo.setRet(APIController.FAIL);
 			returnInfo.setMsg("身份证有误");
 			result.put(APIController.HEAD_KEY, returnInfo);
 	        return result;
 		}
-		if (idCardNum.indexOf("\"") > -1){
-			idCardNum = idCardNum.replace("\"", "");
-		}
-		Visitor tempVisitor = visitorService.selectByIDCar(idCardNum);
-		if (tempVisitor != null){
-			returnInfo.setRet(APIController.FAIL);
-			returnInfo.setMsg("身份证已经注册了。");
-			result.put(APIController.HEAD_KEY, returnInfo);
-	        return result;
-		}
 		
+		Visitor tempVisitor = visitorService.selectByIDCar(idCardNum);
 		Visitor visitor = new Visitor();
 		
 		try {
-			Date date = new SimpleDateFormat("yyyy-MM-dd").parse(birth);
+			Date date = new SimpleDateFormat("yyyy年MM月dd日").parse(birth);
 			visitor.setBirth(date);
 		} catch (ParseException e1) {
 			// TODO Auto-generated catch block
@@ -271,9 +247,12 @@ public class APIController {
 		}
 		
 		// 文件大小判断
+		String file1 = "";
+		String file2 = "";
 		for (int i = 0; i < files.length; i++){
 			MultipartFile file = files[i];
 			String filename = idCardNum + Calendar.getInstance().getTimeInMillis() + ".jpg";
+			
 			File tmpFile=new File(imagePath + filename); 
 			if (filename !=null && !file.isEmpty()){  
 				try {  
@@ -281,6 +260,11 @@ public class APIController {
 					savePhotoInfo(filename, imagePath, idCardNum, file.getBytes().length + 0L, i);
 					returnInfo.setRet(APIController.SUCCESS);
 					returnInfo.setMsg("上传图片成功。");
+					if (i == 0){
+						file1 = filename;
+					} else {
+						file2 = filename;
+					}
 				} catch (IOException e) {  
 					returnInfo.setRet(APIController.FAIL);
 					returnInfo.setMsg("上传图片失败。");
@@ -290,17 +274,39 @@ public class APIController {
 				returnInfo.setRet(APIController.FAIL);
 				returnInfo.setMsg("没有收到上传图片，请上传图片。");
 			}
+			
 		}
-		/**
-		 * 识别图片过程。
-		 */
-		
-		int resultNum = visitorService.add(visitor);
+		boolean vertifyResult = afrService.vertifyUser(idCardNum.substring(idCardNum.length() - 6), file1, file2);
+		if (!vertifyResult){
+			returnInfo.setRet(APIController.FAIL);
+			returnInfo.setMsg("身份认证失败。");
+		} else {
+			returnInfo.setMsg("身份认证成功。");
+		}
+		visitor.setIdCardType("身份证");
+		visitor.setSex("男");
+		visitor.setCreateBy("Admin");
+		visitor.setCreatedTime(new Date());
+		visitor.setRank("1");
+		if (tempVisitor == null){
+			int resultNum = visitorService.add(visitor);
+		}
 		
         result.put(APIController.HEAD_KEY, returnInfo);
         
         return result;
 	}
+	
+	@RequestMapping(value="/api/return.do", method=RequestMethod.GET)
+	@SystemControllerLog
+	@ResponseBody
+	public JsonReturn<Company> returnObj(){
+		Company company = new Company();
+		company.setCompanyName("我艹");
+		JsonReturn<Company> returnObj = new JsonReturn<Company>(0, "测试", company);
+		return returnObj;
+	}
+	
 	
 	public String getMatterTxnNum(){
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -310,5 +316,10 @@ public class APIController {
 		visitRecordService.getNewTxnNo(map);
 		System.out.println("MatterTxnNum is : " + map.get("newOrderNo"));
 		return (String) map.get("newOrderNo");
+	}
+	
+	
+	public String removeStr(String value){
+		return value.replace("\"", "");
 	}
 }

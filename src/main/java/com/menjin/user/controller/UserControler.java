@@ -21,13 +21,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.alibaba.fastjson.JSON;
 import com.base.annotation.log.SystemControllerLog;
 import com.base.entity.SimplePage;
-import com.menjin.user.model.Resource;
 import com.menjin.user.model.Role;
 import com.menjin.user.model.User;
 import com.menjin.user.model.UserRoles;
@@ -196,22 +193,14 @@ public class UserControler {
 	@RequestMapping(value="/user/searchRole.do", method = RequestMethod.POST)
 	@SystemControllerLog
 	@ResponseBody
-	public void searchRole(String username ,HttpServletResponse resp){
+	public Map<String,Object> searchRole(String username ,HttpServletResponse resp){
 		logger.info("Start to searchRole");
 		Map<String,Object> map = new HashMap<String,Object>();
 		Set<Role> existSet = roleService.findRoleByUsername(username);
 		Set<Role> notExistSet = roleService.findNoRoleByUsername(username);
 		map.put("existRoles", existSet);
 		map.put("notExistRoles", notExistSet);
-		String jsonStr = JSON.toJSONString(map);
-		logger.info("searchRole return="+jsonStr);
-		resp.setContentType("application/json; charset=utf-8");
-		try {
-			resp.getWriter().write(jsonStr);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		logger.info("End searchRole");
+		return map;
 	}
 	
 	@RequestMapping(value="/user/addUserRoles.do", method = RequestMethod.POST)
