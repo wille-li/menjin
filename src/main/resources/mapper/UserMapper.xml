@@ -98,10 +98,18 @@
 	<select id="selectCount" resultType="java.lang.Integer" >
 	    SELECT COUNT(1) FROM t_user where 1 = 1
 	    <if test="null!=params">
-				 <foreach collection="params.keys" item="key" separator=" " >
-				 	and ${key} = #{params[${key}]}  
-				 </foreach>
-	    	</if>
+			 <foreach collection="params.keys" item="key" separator=" " >
+			 	<choose>
+			    	<when test="key == 'username'">
+				    	<bind name="pattern" value="'%' + params.username + '%'" />
+				    	and ${key} like #{pattern} 
+			    	</when>
+			    	<otherwise>
+			    		and ${key} = #{params[${key}]} 
+			    	</otherwise>
+			    </choose>
+			 </foreach>
+    	</if>
 	</select>
 	
 	<select id="searchUserByRolename"   resultMap="userResultMap">
