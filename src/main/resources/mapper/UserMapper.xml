@@ -76,9 +76,15 @@
 	    SELECT u.* FROM t_user u where 1 = 1
 	    	<if test="null!=params">
 				 <foreach collection="params.keys" item="key" separator=" " >
-				    <!-- <if test="key == 'username'"> -->
-				    and ${key} = #{params[${key}]} 
-				    <!-- </if> -->
+				    <choose>
+				    	<when test="key == 'username'">
+				    	<bind name="pattern" value="'%' + params.username + '%'" />
+				    	and ${key} like #{pattern} 
+				    	</when>
+				    	<otherwise>
+				    	and ${key} = #{params[${key}]} 
+				    	</otherwise>
+				    </choose>
 				 </foreach>
 	    	</if>
 			<if test="null != orderByField">
