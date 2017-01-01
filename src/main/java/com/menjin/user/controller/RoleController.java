@@ -27,7 +27,7 @@ import com.menjin.user.service.If.ResourceServiceIf;
 import com.menjin.user.service.If.RoleServiceIf;
 
 @Controller
-public class RoleControler {
+public class RoleController {
 
 	private Logger logger = LoggerFactory.getLogger(getClass());
 

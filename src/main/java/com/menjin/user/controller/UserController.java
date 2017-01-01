@@ -32,7 +32,7 @@ import com.menjin.user.service.If.RoleServiceIf;
 import com.menjin.user.service.If.UserServiceIf;
 
 @Controller
-public class UserControler {
+public class UserController {
 
 	private Logger logger = LoggerFactory.getLogger(getClass());
 	
