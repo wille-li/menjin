@@ -1,4 +1,4 @@
-package com.menjin.afr.model;
+/*package com.menjin.afr.model;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -37,11 +37,11 @@ public class AccountInfo {
         return mAccountMap.get("cloudUrl");
     }
     
-    /**
+    *//**
      * 加载用户的注册信息
      * 
      * @param fileName
-     */
+     *//*
     public boolean loadAccountInfo() {
         boolean isSuccess = true;
         String accountInfoPath = sPath + "\\testdata\\AccountInfo.txt";
@@ -74,3 +74,4 @@ public class AccountInfo {
     }
 
 }
+*/

@@ -1,33 +1,33 @@
-package com.menjin.afr.model;
+/*package com.menjin.afr.model;
 
 import com.sinovoice.hcicloudsdk.common.HciErrorCode;
 
-/**OOO
+*//**OOO
  * Afr能力native方法的调用演示 流程: 系统初始化 , 获取授权/更新授权文件, Afr引擎初始化, Afr探测, Afr注册, Afr验证,
  * Afr辨识, 系统反初始化
- */
+ *//*
 public class HciCloudAfrMain {
 
 	private static String capkey = null;
 
-	/**
+	*//**
 	 * @param args
-	 */
+	 *//*
 	public static void main(String[] args) {
 
-		/**
+		*//**
 		 * 加载用户信息工具类
-		 */
+		 *//*
 		AccountInfo mAccountInfo;
 
-		/**
+		*//**
 		 * HciCloud帮助类，可完成灵云系统初始化，释放操作。
-		 */
+		 *//*
 		HciCloudSysHelper mHciCloudSysHelper;
 
-		/**
+		*//**
 		 * AFR帮助类， 可完成AFR能力的初始化，开始合成，释放操作。
-		 */
+		 *//*
 		HciCloudAfrHelper mHciCloudAfrHelper;
 
 		mAccountInfo = AccountInfo.getInstance();
@@ -68,3 +68,4 @@ public class HciCloudAfrMain {
 	}
 	
 }
+*/

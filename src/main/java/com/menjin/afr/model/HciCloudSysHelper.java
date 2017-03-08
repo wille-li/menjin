@@ -1,4 +1,4 @@
-package com.menjin.afr.model;
+/*package com.menjin.afr.model;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -39,11 +39,11 @@ public class HciCloudSysHelper {
         return mInstance;
     }
 
-    /**
+    *//**
      * HciCloud系统初始化
      * 
      * @return 初始化状态，成功或失败
-     */
+     *//*
     public int init() {
     	// 加载信息,返回InitParam, 获得配置参数的字符串
         InitParam initParam = getInitParam();
@@ -70,19 +70,19 @@ public class HciCloudSysHelper {
         return HciErrorCode.HCI_ERR_NONE;
     }
 
-    /**
+    *//**
      * 系统反初始化
-     */
+     *//*
     public int release() {
     	int nRet = HciCloudSys.hciRelease();
     	return nRet;
     }
     
-    /**
+    *//**
      * 加载初始化信息
      * 
      * @return 系统初始化参数
-     */
+     *//*
     private InitParam getInitParam() {
         String authDirPath = sPath + "\\UserInfo";
         String logPath = sPath + "\\Log";
@@ -120,11 +120,11 @@ public class HciCloudSysHelper {
         return initparam;
     }
 
-    /**
+    *//**
      * 获取授权
      * 
      * @return true 成功
-     */
+     *//*
     private int checkAuth() {
         // 获取系统授权到期时间
         int initResult;
@@ -172,3 +172,4 @@ public class HciCloudSysHelper {
         }
     }
 }
+*/

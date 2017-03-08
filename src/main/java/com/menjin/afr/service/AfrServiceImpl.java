@@ -1,4 +1,4 @@
-package com.menjin.afr.service;
+/*package com.menjin.afr.service;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,27 +14,27 @@ public class AfrServiceImpl implements AfrService{
 
 	private Logger logger = LoggerFactory.getLogger(getClass());
 	
-	/**
+	*//**
 	 * 加载用户信息工具类
-	 */
+	 *//*
 	AccountInfo mAccountInfo;
 
 
 	@Override
 	public boolean vertifyUser(String userID, String fileName1, String fileName2) {
-		/**
+		*//**
 		 * 加载用户信息工具类
-		 */
+		 *//*
 		AccountInfo mAccountInfo;
 
-		/**
+		*//**
 		 * HciCloud帮助类，可完成灵云系统初始化，释放操作。
-		 */
+		 *//*
 		HciCloudSysHelper mHciCloudSysHelper;
 
-		/**
+		*//**
 		 * AFR帮助类， 可完成AFR能力的初始化，开始合成，释放操作。
-		 */
+		 *//*
 		HciCloudAfrHelper mHciCloudAfrHelper;
 
 		mAccountInfo = AccountInfo.getInstance();
@@ -74,3 +74,4 @@ public class AfrServiceImpl implements AfrService{
 	}
 
 }
+*/

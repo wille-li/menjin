@@ -1,4 +1,4 @@
-package com.menjin.afr.model;
+/*package com.menjin.afr.model;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -68,11 +68,11 @@ public class HciCloudAfrHelper {
 		return mInstance;
 	}
 
-	/**
+	*//**
 	 * Afr引擎初始化 辅助工具 : AfrInitParam:该类的实例通过addParam(key, value)的方式添加Afr初始化的参数,
 	 * 再通过getStringConfig() 获取初始化时需要的字符串参数 config 初始化方法:
 	 * HciCloudAfr.hciAfrInit(config)
-	 */
+	 *//*
 	public int init() {
 		// 构造Afr初始化的帮助类的实例
 		AfrInitParam initParam = new AfrInitParam();
@@ -93,10 +93,10 @@ public class HciCloudAfrHelper {
 		return initResult;
 	}
 
-	/**
+	*//**
 	 * Afr的反初始化和系统的反初始化, 在Init方法成功后, 执行结束时需要调用反初始化, 否则会导致引擎没有停止运行, 在下一次运行时会出现返回
 	 * HCI_ERR_SYS_ALREADY_INIT 或其他错误信息
-	 */
+	 *//*
 	public int release() {
 		// Afr反初始化
 		int nRet = HciCloudAfr.hciAfrRelease();
@@ -104,9 +104,9 @@ public class HciCloudAfrHelper {
 		return nRet;
 	}
 
-	/*
+	
 	 * AFR检测(Detect)
-	 */
+	 
 	public static boolean Detect(String capkey, String filename,
 			ArrayList<String> faceIds) {
 		logger.info("afrDetect enter...");
@@ -168,9 +168,9 @@ public class HciCloudAfrHelper {
 		return true;
 	}
 
-	/*
+	
 	 * AFR注册(Enroll)
-	 */
+	 
 	public static boolean Enroll(String capkey, AfrConfig enrollConfig,
 			String filename, AfrEnrollResult result) {
 
@@ -251,9 +251,9 @@ public class HciCloudAfrHelper {
 		return true;
 	}
 
-	/*
+	
 	 * AFR 确认（Verify）
-	 */
+	 
 	public static boolean Verify(String capkey, String filename,
 			AfrConfig verifyConfig, AfrVerifyResult result) {
 		logger.info("afrVerify enter...");
@@ -338,9 +338,9 @@ public class HciCloudAfrHelper {
 		return resultFlag;
 	}
 
-	/*
+	
 	 * AFR 辨识（Identify）
-	 */
+	 
 	public static boolean Identify(String capkey, AfrConfig identifyConfig,
 			String filename, AfrIdentifyResult result) {
 
@@ -494,12 +494,12 @@ public class HciCloudAfrHelper {
 		return resultFlag;
 	}
 	
-	/**
+	*//**
 	 * 获取文件中的数据
 	 * 
 	 * @param fileName
 	 * @return
-	 */
+	 *//*
 	private static byte[] getFileData(String fileName) {
 		
 		File fileSrc = new File(fileName);
@@ -655,3 +655,4 @@ public class HciCloudAfrHelper {
 	
 
 }
+*/
