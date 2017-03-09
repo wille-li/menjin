@@ -1,0 +1,458 @@
+<div class="diy_table_panel">
+    <div class="diy_table_head">
+      <div style="float: left; margin-left: 10px">
+			<form class="form-inline">
+				<div class="form-group" style="margin:10px">
+					<label class="control-label" for="checktxnNo" style="float: left;line-height: 30px;">拜访单号</label>
+					<div class="controls" style="float: left;">
+						<input type="text" class="form-control" id="checktxnNo" name="checktxnNo">
+					</div>
+				</div>
+				<div class="form-group" style="margin:10px">
+					<label class="control-label" for="checkIdCard" style="float: left;line-height: 30px;">证件号码</label>
+					<div class="controls" style="float: left;">
+						<input type="text" class="form-control"  id="checkIdCard" name="checkIdCard">
+					</div>
+				</div>
+				<div class="form-group" style="margin:10px">
+					<label class="control-label" for="checkvisitorName" style="float: left;line-height: 30px;">访客姓名</label>
+					<div class="controls" style="float: left;">
+						<input type="text" class="form-control" id="checkvisitorName" name="checkvisitorName">
+					</div>
+				</div>
+				<div class="form-group" style="margin:10px">
+					<label class="control-label" for="vstate" style="float: left;line-height: 30px;">拜访状况</label>
+					<div class="controls" style="float: left;">
+						<select class="form-control" id="vstate" name="vstate"
+							onchange="rankChange()">
+							<option value="">全部</option>
+							<option value="1">未拜访</option>
+							<option value="2">未离开</option>
+							<option value="3">已离开</option>
+						</select>
+					</div>
+				</div>
+				<!-- <button type="button" class="btn btn-info" onclick="checkByall()"><span class="glyphicon glyphicon-search" ></span></button> -->
+			</form>
+			<form class="form-inline">
+				<div class="form-group" style="margin:10px">
+					<label class="control-label" for="checktxnNo" style="float: left;line-height: 30px;">被访员工</label>
+					<div class="controls" style="float: left;">
+						<input type="text" class="form-control" id="checktxnNo" name="checktxnNo">
+					</div>
+				</div>
+				<div class="form-group" style="margin:10px">
+					<label class="control-label" for="checkIdCard" style="float: left;line-height: 30px;">被访公司</label>
+					<div class="controls" style="float: left;">
+						<input type="text" class="form-control"  id="checkIdCard" name="checkIdCard">
+					</div>
+				</div>
+				<div class="form-group" style="margin:10px">
+					<label class="control-label" for="checkvisitorName" style="float: left;line-height: 30px;">验证方式</label>
+					<div class="controls" style="float: left;">
+						<input type="text" class="form-control" id="checkvisitorName" name="checkvisitorName">
+					</div>
+				</div>
+				<div class="form-group" style="margin:10px">
+				    <button type="button" class="btn btn-info" onclick="checkByall()"><span class="glyphicon glyphicon-search" ></span>&nbsp;不带时间查询</button>
+				</div>
+				<!-- <button type="button" class="btn btn-info" onclick="checkByall()"><span class="glyphicon glyphicon-search" ></span></button> -->
+			</form>
+		</div>
+    </div>
+	<div class="diy_table_head">
+		<div style="float: left; margin-left: 15px">
+			<div class="input-group">
+				<button class="btn btn-success" type="button" id="addMatter"
+					onclick="addVisitor()">新增拜访记录</button>
+			</div>
+		</div>
+		<div style="float: left; margin-left: 10px">
+			<div class="input-group">
+				<button class="btn btn-info" type="button" id="roledetail"
+					onclick="updateVisitor()">修改拜访记录</button>
+			</div>
+		</div>
+		<div style="float: left; margin-left: 10px">
+			<div class="input-group">
+				<button class="btn btn-danger" type="button" id="delrole"
+					onclick="deleteVisitor()">删除拜访记录</button>
+			</div>
+		</div>
+	</div>
+	<div class="diy_table_body box">
+		<div class="">
+			<div class="box-body">
+				<table id="visitorRecordTable" class="display table table-bordered table-hover">
+					<thead>
+						<tr>
+							<th width="60px">拜访序号</th>
+							<th width="60px">访客姓名</th>
+							<th>被访公司</th>
+							<th width="80px">被访人姓名</th>
+							<th>被访人电话</th>
+							<th width="60px">随行人数</th>
+							<th>拜访缘由</th>
+							<th width="80px">实际拜访时间</th>
+							<th>离开时间</th>
+							<th width="60px">检验方式</th>
+							<th width="80px">拜访单状态</th>
+						</tr>
+					</thead>
+					<tbody>
+						
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+
+	<div class="modal fade" id="visitormodal">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal"
+						aria-label="Close">
+						<span aria-hidden="true">×</span>
+					</button>
+					<h4 class="modal-title" id="visitortitle"></h4>
+				</div>
+				<div class="modal-body">
+					<form class="form-horizontal" id="visitorform">
+					    <input class="easyui-textbox" type="hidden" id="id" name="id"/>
+						<fieldset>
+							<div class="form-group">
+								<label class="col-sm-2 control-label" for="visitorName">访客姓名</label>
+								<div class="col-sm-4">
+									<input class="form-control" id="visitorName" type="text" name = "visitorName"
+										placeholder="" />
+								</div>
+								<label class="col-sm-2 control-label" for="idCardType">证件类型</label>
+								<div class="col-sm-4">
+									 <select class="form-control" id="idCardType" name="idCardType">
+										<option value="身份证">身份证</option>
+										<option value="护照">护照</option>
+									 </select>
+								</div>
+							</div>
+							
+							<div class="form-group">
+								<label class="col-sm-2 control-label" for="idCardNum">证件号码</label>
+								<div class="col-sm-4">
+									<input class="form-control" id="idCardNum" type="text" name = "idCardNum"
+										placeholder="" />
+								</div>
+								<label class="col-sm-2 control-label" for="sex">性别</label>
+								<div class="col-sm-4">
+									<select class="form-control" id="sex" name="sex">
+										<option value="男">男</option>
+										<option value="女">女</option>
+									</select>
+								</div>
+							</div>
+							
+							<div class="form-group">
+								<label class="col-sm-2 control-label" for="nation">访客单位</label>
+								<div class="col-sm-4">
+									<input class="form-control" id="nation" type="text" name = "nation"
+										placeholder="" />
+								</div>
+								<label class="col-sm-2 control-label" for="birth">出生年月</label>
+								<div class="col-sm-4">
+									<div class="input-group date">
+                                        <div class="input-group-addon">
+                                             <i class="fa fa-calendar"></i>
+                                        </div>
+                                        <input type="text" class="form-control pull-right" id=birth name="birth">
+                                    </div>
+								</div>
+							</div>
+							
+							<div class="form-group">
+								<label class="col-sm-2 control-label" for="address">地址</label>
+								<div class="col-sm-4">
+									<input class="form-control" id="address" type="text" name = "address"
+										placeholder="" />
+								</div>
+								<label class="col-sm-2 control-label" for="mobile">联系电话</label>
+								<div class="col-sm-4">
+									<input class="form-control" id="mobile" type="text" name = "mobile"
+										placeholder="" />
+								</div>
+							</div>
+							
+							<div class="form-group">
+								<label class="col-sm-2 control-label" for="email">邮箱</label>
+								<div class="col-sm-4">
+									<input class="form-control" id="email" type="text" name = "email"
+										placeholder="" />
+								</div>
+								<label class="col-sm-2 control-label" for="rank">访客等级</label>
+								<div class="col-sm-4">
+									<select class="form-control" id="rank" name="rank">
+										<option value="1">普通访客</option>
+										<option value="2">黑名单</option>
+										<option value="3">白名单</option>
+									</select>
+								</div>
+							</div>
+						</fieldset>
+					</form>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+					<button type="button" class="btn btn-primary" onclick="submitDialog()">确认</button>
+				</div>
+			</div>
+			<!-- /.modal-content -->
+		</div>
+		<!-- /.modal-dialog -->
+	</div>
+
+
+
+	<!-- ./wrapper -->
+	<!--   <div class="diy_table_foot">
+    <span>每页</span>
+    <div class="btn-group select_pagesize">
+      <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">20</button>
+      <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+        <span class="caret"></span>
+        <span class="sr-only"></span>
+      </button>
+      <ul class="dropdown-menu" role="menu">
+        <li><a href="#">20</a></li>
+        <li><a href="#">50</a></li>
+        <li><a href="#">100</a></li>
+        <li><a href="#">500</a></li>
+      </ul>
+    </div>
+    <span>条,共1999条，当前第1页</span>
+    <div class="pull-right pagination" data-toggle="pagination" data-total="1999" data-page-size="20" data-page-current="50"></div>
+  </div> -->
+</div>
+
+
+<!-- page script -->
+<script>
+var $$ = window;
+while($$.parent !== $$)
+	$$ = $$.parent;
+$$ = $$.jQuery;
+var sendToMainMessage = function(type, title, msg){
+	$$.pnotify({
+		type: type,
+	    title: title,
+		text: msg,
+	    icon: 'picon icon16 iconic-icon-check-alt white',
+	    opacity: 0.95,
+	    history: true,
+	    sticker: true,
+	    delay: 3000,
+	    stack:{"dir1": "down", "dir2": "right"}
+	});
+};
+	$(function() {
+		var table = $('#visitorRecordTable').DataTable({
+			"paging" : true,
+			"lengthChange" : false,
+			"searching" : false,
+			"select": true,
+			"ordering" : false,
+			"info" : true,
+			"autoWidth" : true,
+			"keys" : true,
+			"responsive" : true,
+			"iDisplayLength" : 15,// 每页显示行数 
+			"oLanguage" : { // 汉化  
+	            "sUrl" : "./resources/adminlte/plugins/datatables/language.json"  
+	            },
+	        "processing": true,
+	        "serverSide": true,
+	        "ajax": {
+	        	"url":"./visitlist.do",
+	        	"data": function ( d ) {
+	                   //添加额外的参数传给服务器
+	                   d.status = $('#selectstatus').val();
+	                   d.visitorName = $('#selectvisitorName').val();
+	        	},
+	        	"type":"Post"
+	        },
+	        "columns": [  
+	                     { "data": "matterTxnNum" },  
+	                     { "data": "visitor",
+	                       "render": function(data, type, row, meta) {
+		                           return data.visitorName;
+		                       }},
+	                     { "data": "company",
+			                       "render": function(data, type, row, meta) {
+			                           return data.companyName;
+			                       }},
+	                     { "data": "employeeName"},
+	                     { "data": "employeePhone"},
+	                     { "data": "peopleSum"},
+	                     { "data": "matter",
+		                       "render": function(data, type, row, meta) {
+		                           return data.matterDecs;
+		                       }},
+	                     { "data": "actualTime"},
+	                     { "data": "leaveTime"},
+	                     { "data": "validateMode",
+		                   "render": function(data, type, row, meta) {
+		                	   if (type === 'display') {
+	                               if (data == 1) {
+	                                   return "自动检验";
+	                               } else {
+	                                   return "手动检验";
+	                               }
+	                           }
+	                           return data;
+		                       }},
+	                     { "data": "status",
+			               "render": function(data, type, row, meta) {
+			            	   if (type === 'display') {
+	                               if (data == 1) {
+	                                   return "未拜访";
+	                               } else if(data == 2){
+	                                   return "未离开";
+	                               }else{
+	                            	   return "已离开";
+	                               }
+	                           }
+	                           return data;
+			               }}
+	              ] 
+		});
+		
+		 $('#visitorRecordTable tbody').on( 'click', 'tr', function () {
+		        if ( $(this).hasClass('selected') ) {
+		            $(this).removeClass('selected');
+		        }
+		        else {
+		            table.$('tr.selected').removeClass('selected');
+		            $(this).addClass('selected');
+		        }
+		    } );
+		 
+		 $('#birth').datepicker({
+			 format: 'yyyy-mm-dd',
+		      autoclose: true
+		    });
+
+	});
+	
+	var isAdd = true; 
+	
+	/* sendToMainMessage('error', '所搜索的内容暂时没有!', ''); */
+	
+	function addVisitor(){
+		  isAdd = true;
+		  $("#id").val("");
+		  $("#visitorName").val("");
+		  $("#idCardType").val("");
+		  $("#idCardNum").val("");
+		  $("#sex").val("");
+		  $("#nation").val("");
+		  $("#birth").val("");
+		  $("#address").val("");
+		  $("#mobile").val("");
+		  $("#email").val("");
+		  $("#rank").val("");
+		  $('#visitortitle').html('添加访客');
+		  $('#visitormodal').modal('show');
+	}
+	
+
+	function updateVisitor() {
+		isAdd = false;
+		var selections = $('#visitorRecordTable').DataTable().rows('.selected')
+				.data();
+
+		if (selections.length == 0) {
+			sendToMainMessage('notice', '提醒', '请选择需要更新的数据');
+			return false;
+		}
+		$("#id").val(selections[0].id);
+		$("#visitorName").val(selections[0].visitorName);
+		$("#idCardType").val(selections[0].idCardType);
+		$("#idCardNum").val(selections[0].idCardNum);
+		$("#sex").val(selections[0].sex);
+		$("#nation").val(selections[0].nation);
+		$("#birth").val(selections[0].birth);
+		$("#address").val(selections[0].address);
+		$("#mobile").val(selections[0].mobile);
+		$("#email").val(selections[0].email);
+		$("#rank").val(selections[0].rank);
+		$('#visitortitle').html('修改访客信息');
+		$('#visitormodal').modal('show');
+	}
+
+	function deleteVisitor() {
+		var selections = $('#visitorRecordTable').DataTable().rows('.selected')
+				.data();
+		if (selections.length == 0) {
+			sendToMainMessage('notice', '提醒', '请选择你要删除的访客！');
+			return false;
+		}
+
+		if (confirm("你确认删除该用户吗？")) {
+			$("#id").val(selections[0].id);
+			var id = $("#id").val();
+			var submitData = {
+				id : id
+			};
+			$.post('./deleteVisitor.do', submitData, function(data) {
+				if (data) {
+					if (data.rInfo.ret == 0) {
+						$('#visitorRecordTable').DataTable().draw(false);
+						sendToMainMessage('success', '提醒', '访客删除成功！');
+					} else {
+						sendToMainMessage('error', '提醒', data.rInfo.msg);
+					}
+				} else {
+					sendToMainMessage('error', '提醒', '网络连接失败，请与管理员联系！');
+				}
+			});
+			$("#id").val("");
+		}
+	}
+
+	function submitDialog() {
+		var url = './addVisitor.do';
+		if (!isAdd) {
+			url = './updateVisitor.do';
+		}
+		var submitData = $('#visitorform').serialize();
+		$.post(url, submitData, function(data) {
+			if (data) {
+				if (data.rInfo.ret == 0) {
+					if(isAdd){
+						$('#visitorRecordTable').DataTable().draw();//如果是添加则滚动到第一页并刷新
+					}else{
+						$('#visitorRecordTable').DataTable().draw(false);
+					}
+					sendToMainMessage('success', '提醒', data.rInfo.msg);
+				} else {
+					sendToMainMessage('error', '提醒', data.rInfo.msg);
+				}
+			} else {
+				sendToMainMessage('error', '提醒', '网络连接失败，请与管理员联系！');
+			}
+			$('#visitormodal').modal('hide');
+			//清空form表单中的数据
+		});
+	}
+	
+	function rankChange(){
+		/* $('#visitorRecordTable').DataTable().ajax.url('./visitorlist.do?status='+$('#selectstatus').val()).load(); */
+		$('#visitorRecordTable').DataTable().ajax.reload();
+    }
+	
+	
+	function checkByall(){
+		/* $('#visitorRecordTable').DataTable().ajax.url('./visitorlist.do?status='+$('#selectstatus').val()+'&visitorName='+visitorName).load(); */
+		$('#visitorRecordTable').DataTable().ajax.reload();
+		$('#selectvisitorName').val("");
+	}
+	
+</script>
