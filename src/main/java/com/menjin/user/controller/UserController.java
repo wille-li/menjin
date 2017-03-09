@@ -63,12 +63,16 @@ public class UserController {
 	@RequestMapping(value="/user/getAllUserList.do")
 	@SystemControllerLog
 	@ResponseBody
-	public Map getUserByPage(@Param(value="pageSize") Integer page,
-			@Param(value="rows") Integer rows){
+	public Map getUserByPage(HttpServletRequest request){
 		logger.info("Start to getUserByPage");
+		Integer page = Integer.parseInt(request.getParameter("start"));
+        System.out.println(page);
+        Integer rows = Integer.parseInt(request.getParameter("length"));
+        System.out.println(rows);
+        String draw = request.getParameter("draw") == null ? "0" : request.getParameter("draw") + 1;
 		int count = userService.findCount(null, null);
 		logger.info("Users Count:"+count);
-		SimplePage simplepage = new SimplePage(page, rows, count);
+		SimplePage simplepage = new SimplePage(page/rows+1, rows, count);
 		Map<String, Object> params = null;
 		String orderBy = null;
 		logger.info("page="+page+", rows="+rows);
@@ -78,8 +82,10 @@ public class UserController {
 			u.setRoles(roles);
 		}
 		Map maps = new HashMap();
-		maps.put("rows", users);
-		maps.put("total", count);
+		maps.put("data", users);
+		maps.put("draw", draw);
+		maps.put("recordsTotal", count);
+		maps.put("recordsFiltered", count);
 		logger.info("End getUserByPage");
 		return maps;
 	}

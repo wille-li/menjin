@@ -50,15 +50,19 @@ public class RoleController {
 	@RequestMapping(value = "/role/getAllRoleList.do")
 	@SystemControllerLog
 	@ResponseBody
-	public Map getUserByPage(@Param(value = "pageSize") Integer page,
-			@Param(value = "rows") Integer rows,
-			@Param(value = "checkmessage") String checkmessage) {
+	public Map getUserByPage(@Param(value="checkmessage") String checkmessage, HttpServletRequest request) {
 		logger.info("Start to getRolesByPage");
+		logger.info("Start to getUserByPage");
+		Integer page = Integer.parseInt(request.getParameter("start"));
+        System.out.println(page);
+        Integer rows = Integer.parseInt(request.getParameter("length"));
+        System.out.println(rows);
+        String draw = request.getParameter("draw") == null ? "0" : request.getParameter("draw") + 1;
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("checkmessage", checkmessage);
 		int count = roleService.findCount(null, params);
 		logger.info("Users Count:" + count);
-		SimplePage simplepage = new SimplePage(page, rows, count);
+		SimplePage simplepage = new SimplePage(page/rows+1, rows, count);
 		String orderBy = null;
 		logger.info("page=" + page + ", rows=" + rows);
 		List<Role> roles = roleService.findByPage(simplepage, params, orderBy);
@@ -69,8 +73,10 @@ public class RoleController {
 			role.setResources(resources);
 		}
 		Map maps = new HashMap();
-		maps.put("rows", roles);
-		maps.put("total", count);
+		maps.put("data", roles);
+		maps.put("draw", draw);
+		maps.put("recordsTotal", count);
+		maps.put("recordsFiltered", count);
 		logger.info("End getUserByPage");
 		return maps;
 	}

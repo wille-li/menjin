@@ -12,6 +12,8 @@ import org.apache.ibatis.annotations.Param;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextImpl;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -47,21 +49,27 @@ public class MatterController {
 	@RequestMapping(value="/matterlist.do")
 	@SystemControllerLog
 	@ResponseBody
-	public Map getMatterByPage(@Param(value="pageSize") Integer page,@Param(value="rows") Integer rows,
-			@Param(value="matterDecs") String matterDecs){
+	public Map getMatterByPage(@Param(value="matterDecs") String matterDecs,HttpServletRequest request){
 		logger.info("Start to getMatterByPage:matterlist.do");
+		Integer page = Integer.parseInt(request.getParameter("start"));
+        System.out.println(page);
+        Integer rows = Integer.parseInt(request.getParameter("length"));
+        System.out.println(rows);
+        String draw = request.getParameter("draw") == null ? "0" : request.getParameter("draw") + 1;
 		Map<String, Object> params = new HashMap<String, Object>();
 		if(matterDecs != null && !matterDecs.equals("")){
 			params.put("matterDecs", matterDecs);
 		}
 		int count = matterService.findCount(null, params);
 		logger.info("Matters Count:"+count);
-		SimplePage simplepage = new SimplePage(page, rows, count);
+		SimplePage simplepage = new SimplePage(page/rows+1, rows, count);
 		String orderBy = "modified_date";
 		List<Matter> matters = matterService.findByPage(simplepage, params, orderBy);
 		Map maps = new HashMap();
-		maps.put("rows", matters);
-		maps.put("total", count);
+		maps.put("data", matters);
+		maps.put("draw", draw);
+		maps.put("recordsTotal", count);
+		maps.put("recordsFiltered", count);
 		logger.info("End getMatterByPage:matterlist.do!");
 		return maps;
 	}
@@ -88,7 +96,8 @@ public class MatterController {
 		logger.info("Start to insert new Matter!Matter Name:"+matter.getMatterDecs());
 		Map<String, Object> returnMap = new HashMap<String, Object>();
 		ReturnInfo rInfo = new ReturnInfo();
-		matter.setCreateBy("Admin");//根据现在操作用户修改
+		String currentLoginUser = getCurrentUsername(request);
+		matter.setCreateBy(currentLoginUser);//根据现在操作用户修改
 		matter.setCreateTime(new Date());
 		matter.setModifiedDate(new Date());
 		int returnCode = matterService.add(matter);
@@ -143,6 +152,18 @@ public class MatterController {
 		returnMap.put("rInfo", rInfo);
 		logger.info("End to delete Matter。RetrunCode:"+returnCode);
 		return returnMap;
+	}
+	
+	private String getCurrentUsername(HttpServletRequest request){
+		SecurityContext securityContextImpl = ((SecurityContextImpl) request.getSession().getAttribute("SPRING_SECURITY_CONTEXT"));
+		if(securityContextImpl!=null){
+			String name = securityContextImpl.getAuthentication().getName();
+			logger.info("current username="+name);
+			return name;
+		}else{
+			logger.info("securityContextImpl is null");
+			return null;
+		}
 	}
 
 }

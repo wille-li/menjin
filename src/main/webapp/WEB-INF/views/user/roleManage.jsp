@@ -1,70 +1,251 @@
-<%@ page language="java" contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
+<%@ page language="java" contentType="text/html; charset=utf-8"
+	pageEncoding="utf-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
-<%@ taglib uri="http://tiles.apache.org/tags-tiles" prefix="tiles"%>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
-<head>
-	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-	<title>来访事由管理</title>
-    <link rel="stylesheet" type="text/css" href="<c:url value='/resources/easyui/themes/gray/easyui.css'></c:url>" />
-    <link rel="stylesheet" type="text/css" href="<c:url value='/resources/easyui/themes/icon.css'></c:url>" />
-    <link rel="stylesheet" type="text/css" href="<c:url value='/resources/css/mattermanage.css'></c:url>" />
-    <script type="text/javascript" src="<c:url value='/resources/easyui/jquery.min.js'></c:url>"></script>
-    <script type="text/javascript" src="<c:url value='/resources/easyui/jquery.easyui.min.js'></c:url>"></script>
-    <script type="text/javascript" src="<c:url value='/resources/easyui/locale/easyui-lang-zh_CN.js'></c:url>"></script>
-    <script type="text/javascript" src="<c:url value='/resources/js/service.js'></c:url>"></script>
-    <script type="text/javascript" src="<c:url value='/resources/js/rolemanager.js'></c:url>"></script>
-  </head>
-<body>
-    <table id='Roletb' class="easyui-datagrid" >  
-	<thead>  
-		<tr>  
-			<th field="name" width="200">角色名称</th>  
-			<th field="description" width="200">角色描叙</th>  
-		</tr>  
-	</thead>  
-</table>
-
-	<div id="tb">
-		<div region="north" border="false" class="north">
-			<span><a id="add" href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-add'" onclick="addRole()">新增角色</a></span>
-            <span><a id="info" href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-person'" onclick="updateRole()">角色详情</a></span>
-            <span><a id="delete" href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-remove'" onclick="deleteRole()">删除角色</a></span>
-            <span><a id="role" href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-man'" onclick="disresource()">分配权限</a></span>
-            <span style="float:right;">
-            <input id="searchInput" class="easyui-searchbox" style="width:200px" data-options="prompt:'条件查询'"></input>
-            <a id="search" href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-search'" onclick="searchRole()">查询</a>
-            </span>
+<div class="diy_table_panel">
+	<div class="diy_table_head">
+		<form action="/include/tables/diytable.html" data-toggle="ajaxsearch"
+			class="row">
+			<div style="float:left;margin-left: 15px">
+				<div class="input-group">
+					<button class="btn btn-success" type="button" id="addrole" onclick="addRole()">新增角色</button>
+				</div>
+			</div>
+			<div style="float:left;margin-left: 10px">
+				<div class="input-group">
+					<button class="btn btn-info" type="button" id="roledetail" onclick="updateRole()">角色详情</button>
+				</div>
+			</div>
+			<div style="float:left;margin-left: 10px">
+				<div class="input-group">
+					<button class="btn btn-danger" type="button" id="delrole" onclick="deleteRole()">删除角色</button>
+				</div>
+			</div>
+			<!-- <div style="float:left;margin-left: 10px">
+				<div class="input-group">
+					<button class="btn btn-warning" type="button" id="rolesource" onclick="assignSource()">分配权限</button>
+				</div>
+			</div> -->
+		</form>
+	</div>
+	<div class="diy_table_body box">
+		<div class="">
+			<div class="box-body">
+				<table id="RoleTable" class="display table table-bordered table-hover">
+					<thead>
+						<tr>
+							<th>角色名称</th>
+							<th>角色描叙</th>
+						</tr>
+					</thead>
+					<tbody>
+						
+					</tbody>
+				</table>
+			</div>
 		</div>
 	</div>
-    
-    <div id="RoleDialog" class="easyui-dialog comdialog" data-options="modal:true" closed="true">
-		<div class="easyui-panel matpanel">
-			<form id="addComForm"  method="post">
-			    <input class="easyui-textbox" type="hidden" id="id" name="id"/>
-			<div class="mbottom">
-				<input class="easyui-textbox" id="name" name="name" style="width:100%" label='角色名称'/>
+
+	<div class="modal fade" id="rolemodal">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal"
+						aria-label="Close">
+						<span aria-hidden="true">×</span>
+					</button>
+					<h4 class="modal-title" id="roletitle">新增角色</h4>
+				</div>
+				<div class="modal-body">
+					<form class="form-horizontal" id="roleform">
+					    <input class="easyui-textbox" type="hidden" id="id" name="id"/>
+						<fieldset>
+							<div class="form-group">
+								<label class="col-sm-2 control-label" for="rolename">角色名称</label>
+								<div class="col-sm-4">
+									<input class="form-control" id="name" type="text" name = "name"
+										placeholder="" />
+								</div>
+								<label class="col-sm-2 control-label" for="description">角色描叙</label>
+								<div class="col-sm-4">
+									<input class="form-control" id="description" type="text" name="description"
+										placeholder="" />
+								</div>
+							</div>
+						</fieldset>
+					</form>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+					<button type="button" class="btn btn-primary" onclick="submitDialog()">确认</button>
+				</div>
 			</div>
-			<div class="mbottom">
-				<input class="easyui-textbox" id="description" name="description" style="width:100%" label='角色描述'/>
-			</div>
-			</form>
-	    </div>
+			<!-- /.modal-content -->
+		</div>
+		<!-- /.modal-dialog -->
 	</div>
-	
-	<div id="ResourceDialog" class="easyui-dialog comdialog" data-options="modal:true" closed="true">
-	      <ul id="resources" class="easyui-tree"></ul>
-	</div>
-	
-	<div id="resourceButton">
-	    <a href="javascript:void(0)" class="easyui-linkbutton" id="saveresource" onclick="submitResource()">保存</a>
-	    <a href="javascript:void(0)" class="easyui-linkbutton" id="quitresource" onclick="quitResource()">取消</a>
+
+
+
+	<!-- ./wrapper -->
+	<!--   <div class="diy_table_foot">
+    <span>每页</span>
+    <div class="btn-group select_pagesize">
+      <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">20</button>
+      <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+        <span class="caret"></span>
+        <span class="sr-only"></span>
+      </button>
+      <ul class="dropdown-menu" role="menu">
+        <li><a href="#">20</a></li>
+        <li><a href="#">50</a></li>
+        <li><a href="#">100</a></li>
+        <li><a href="#">500</a></li>
+      </ul>
     </div>
-    
-    <div id="RoleButton">
-	    <a href="javascript:void(0)" class="easyui-linkbutton" id="saveCompany" onclick="submitDialog()">保存</a>
-	    <a href="javascript:void(0)" class="easyui-linkbutton" id="quitAdd" onclick="quitDialog()">取消</a>
-    </div>
-</body>
-</html>
+    <span>条,共1999条，当前第1页</span>
+    <div class="pull-right pagination" data-toggle="pagination" data-total="1999" data-page-size="20" data-page-current="50"></div>
+  </div> -->
+</div>
+
+
+<!-- page script -->
+<script>
+var $$ = window;
+while($$.parent !== $$)
+	$$ = $$.parent;
+$$ = $$.jQuery;
+var sendToMainMessage = function(type, title, msg){
+	$$.pnotify({
+		type: type,
+	    title: title,
+		text: msg,
+	    icon: 'picon icon16 iconic-icon-check-alt white',
+	    opacity: 0.95,
+	    history: true,
+	    sticker: true,
+	    delay: 3000,
+	    stack:{"dir1": "down", "dir2": "right"}
+	});
+};
+	$(function() {
+		var table = $('#RoleTable').DataTable({
+			"paging" : true,
+			"lengthChange" : false,
+			"searching" : false,
+			"select": true,
+			"ordering" : false,
+			"info" : true,
+			"autoWidth" : true,
+			"keys" : true,
+			"responsive" : true,
+			"iDisplayLength" : 15,// 每页显示行数 
+			"oLanguage" : { // 汉化  
+	            "sUrl" : "./resources/adminlte/plugins/datatables/language.json"  
+	            },
+	        "processing": true,
+	        "serverSide": true,
+	        "ajax": {
+	        	"url":"./role/getAllRoleList.do",
+	        },
+	        "columns": [  
+	                     { "data": "name" },  
+	                     { "data": "description"}
+	              ] ,
+		});
+		
+		 $('#RoleTable tbody').on( 'click', 'tr', function () {
+		        if ( $(this).hasClass('selected') ) {
+		            $(this).removeClass('selected');
+		        }
+		        else {
+		            table.$('tr.selected').removeClass('selected');
+		            $(this).addClass('selected');
+		        }
+		    } );
+		 
+		 $('#birthday11').datepicker({
+		      autoclose: true
+		    });
+
+	});
+	
+	var isAdd = true; 
+	
+	/* sendToMainMessage('error', '所搜索的内容暂时没有!', ''); */
+	
+	function addRole(){
+		  isAdd = true;
+		  $("#id").val("");
+		  $("#name").val("");
+		  $("#description").val("");
+		  $('#roletitle').html('添加新角色');
+		  $('#rolemodal').modal('show');
+	}
+	
+	
+	function updateRole(){
+		isAdd = false;
+		var selections = $('#RoleTable').DataTable().rows('.selected').data();
+		
+		if (selections.length == 0) {
+			sendToMainMessage('notice', '请选择需要更新的数据', '提醒');
+	         return false;
+	       }
+		$("#id").val(selections[0].id);
+		$("#name").val(selections[0].name);
+		$("#description").val(selections[0].description);
+		$('#roletitle').html('更新角色信息');
+		$('#rolemodal').modal('show');
+	}
+	
+	
+	function deleteRole() {
+		var selections = $('#RoleTable').DataTable().rows('.selected').data();
+		if (selections.length == 0) {
+			sendToMainMessage('notice', '请选择你要删除的用户！', '提醒');
+			return false;
+		}
+
+		if (confirm("你确认删除该用户吗？")) {
+			$("#id").val(selections[0].id);
+			var id = $("#id").val();
+			var submitData = {
+				id : id
+			};
+			$.post('./role/deleteRole.do', submitData, function(data) {
+				if (data) {
+					$('#RoleTable').DataTable().draw(false);
+					sendToMainMessage('success', '提醒', '用户删除成功！');
+				} else {
+					sendToMainMessage('error', '提醒', '删除用户失败！');
+				}
+			});
+			$("#id").val("");
+		}
+	}
+
+	function submitDialog() {
+		var url = './role/addRole.do';
+	    if(!isAdd){
+	   	 url = './role/updateRole.do';
+	    }
+		var submitData = $('#roleform').serialize();
+		$.post(url, submitData, function(data) {
+			if (data) {
+				if (isAdd) {
+					$('#RoleTable').DataTable().draw();//如果是添加则滚动到第一页并刷新
+					sendToMainMessage('success', '提醒', '数据添加成功');
+				} else {
+					$('#RoleTable').DataTable().draw(false);
+					sendToMainMessage('success', '提醒', '数据修改成功');
+				}
+			} else {
+				sendToMainMessage('error', '数据操作失败！', '操作失败');
+			}
+
+			$('#rolemodal').modal('hide');
+			//清空form表单中的数据
+		});
+	}
+	
+</script>

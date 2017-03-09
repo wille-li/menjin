@@ -44,11 +44,11 @@ public class VisitRecordController {
 	@Autowired
 	VisitorService visitorService;
 	
-	private static String  BLACK_LIST = "3";
+	/*private static String  BLACK_LIST = "3";
 	private static String  WHITE_LIST = "2";
 	private static Integer  VISIT_STATUS_NOT = 1;
 	private static Integer  VISIT_STATUS_HAND = 2;
-	private static Integer  VISIT_STATUS_LEAVE = 3;
+	private static Integer  VISIT_STATUS_LEAVE = 3;*/
 	
     public final static int SUCCESS = 0;
 	
@@ -63,25 +63,31 @@ public class VisitRecordController {
 	@RequestMapping(value="/visitlist.do")
 	@SystemControllerLog
 	@ResponseBody
-	public Map getVistorByPage(@Param(value="pageSize") Integer page,
-			@Param(value="rows") Integer rows,@Param(value="status") String status,
+	public Map getVistorByPage(@Param(value="status") String status,
 			@Param(value="matterTxnNum") String matterTxnNum,@Param(value="startDate") String startDate,
 			@Param(value="endDate") String endDate,@Param(value="IdCardNum") String IdCardNum,
 			@Param(value="visitorName") String visitorName,@Param(value="employeeName") String employeeName,
-			@Param(value="companyName") String companyName,@Param(value="validateMode") String validateMode){
+			@Param(value="companyName") String companyName,@Param(value="validateMode") String validateMode,
+			HttpServletRequest request){
 		logger.info("Start to getVisitorByPage:vistorlist.do");
-		
+		Integer page = Integer.parseInt(request.getParameter("start"));
+        System.out.println(page);
+        Integer rows = Integer.parseInt(request.getParameter("length"));
+        System.out.println(rows);
+        String draw = request.getParameter("draw") == null ? "0" : request.getParameter("draw") + 1;
 		Map<String, Object> params = toMap(status, matterTxnNum, startDate, endDate, 
 				IdCardNum, visitorName, employeeName, companyName, validateMode);
 	
 		int count = vistService.findCount(null, params);
 		logger.info("check visitRecord by params Count:"+count);
-		SimplePage simplepage = new SimplePage(page, rows, count);
+		SimplePage simplepage = new SimplePage(page/rows+1, rows, count);
 		String orderBy = "modified_date";
 		List<VisitRecord> visits = vistService.findByPage(simplepage, params, orderBy);
 		Map maps = new HashMap();
-		maps.put("rows", visits);
-		maps.put("total", count);
+		maps.put("data", visits);
+		maps.put("draw", draw);
+		maps.put("recordsTotal", count);
+		maps.put("recordsFiltered", count);
 		logger.info("End getVisitorByPage:matterlist.do!");
 		return maps;
 	}
