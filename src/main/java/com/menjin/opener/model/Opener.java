@@ -42,13 +42,13 @@ public class Opener {
 	/**
 	 * 继电器创建时间
 	 */
-	private Date createDate;
+	private Date createTime;
 
 	
 	@Override
 	public String toString() {
 		return "Opener [id=" + id + ", name=" + name + ", ip=" + ip + ", port=" + port + ", num=" + num + ", createBy="
-				+ createBy + ", createDate=" + createDate + "]";
+				+ createBy + ", createDate=" + createTime + "]";
 	}
 
 	public String getNum() {
@@ -99,12 +99,12 @@ public class Opener {
 		this.createBy = createBy;
 	}
 
-	public Date getCreateDate() {
-		return createDate;
+	public Date getCreateTime() {
+		return createTime;
 	}
 
-	public void setCreateDate(Date createDate) {
-		this.createDate = createDate;
+	public void setCreateTime(Date createDate) {
+		this.createTime = createDate;
 	}
 	
 }

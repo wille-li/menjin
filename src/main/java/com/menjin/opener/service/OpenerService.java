@@ -2,7 +2,10 @@ package com.menjin.opener.service;
 
 import java.io.IOException;
 
+import org.springframework.beans.factory.annotation.Autowired;
+
 import com.base.service.BaseService;
+import com.menjin.opener.mapper.OpenerMapper;
 import com.menjin.opener.model.Opener;
 
 /**
@@ -41,7 +44,6 @@ public interface OpenerService extends BaseService<Opener>{
 	 * 连接继电器失败
 	 */
 	public final String RETURN_CONNCETION_ERROR = "99";
-	
 	
 	/**
 	 * 获取继电器的状态

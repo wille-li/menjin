@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper  
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- SQL 关键字请使用大写字母, 表名, 属性名用小写 -->
+<mapper namespace="com.menjin.opener.mapper.OpenerMapper">
+	<resultMap type="com.menjin.opener.model.Opener" id="resultMap">
+		<id column="id" property="id" jdbcType="INTEGER" javaType="java.lang.Integer" />
+		<result column="name" property="name" jdbcType="VARCHAR" />
+		<result column="ip" property="ip" jdbcType="VARCHAR" />
+		<result column="num" property="num" jdbcType="VARCHAR" />
+		<result column="port" property="port" jdbcType="VARCHAR" />
+		<result column="create_by" property="createBy" jdbcType="VARCHAR" />
+		<result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+	</resultMap>
+
+	<sql id="insertList">
+		name, ip, num,
+		port, create_by, create_time
+	</sql>
+
+	<sql id="columnList">
+		id, name, ip, num,
+		port, create_by, create_time
+	</sql>
+	
+	<sql id="condition">
+		<if test="null!=params">
+		    <if test="null!=params.searchName and ''!=params.searchName">
+				AND t1.name LIKE '%${params.searchName}%'
+			</if>
+		</if>
+	</sql>
+
+
+	<insert id="insert" parameterType="com.menjin.opener.model.Opener"
+		useGeneratedKeys="true" keyColumn="id">
+		INSERT INTO t_opener(
+		<include refid="insertList" />
+		) VALUES (
+		#{name}, #{ip},#{num},
+		 #{port}, #{createBy}, #{createTime})
+	</insert>
+
+	<update id="updateByPrimaryKey" parameterType="com.menjin.opener.model.Opener">
+		UPDATE t_opener
+		SET name = #{name}, num = #{num},  ip = #{ip}, port = #{port}
+		WHERE id=#{id}
+	</update>
+
+	<select id="selectByPrimaryKey" parameterType="com.menjin.opener.model.Opener"
+		resultMap="resultMap">
+		SELECT
+		<include refid="columnList" />
+		FROM t_opener WHERE id = #{id}
+	</select>
+
+	<delete id="deleteByPrimaryKey" parameterType="com.menjin.opener.model.Opener">
+		DELETE FROM
+		t_opener WHERE id=#{id}
+	</delete>
+
+	<select id="selectCount" resultType="java.lang.Integer">
+		SELECT COUNT(1) FROM t_opener t1 WHERE 1 = 1
+		<include refid="condition" />
+	</select>
+
+	<select id="selectByPage" resultMap="resultMap">
+		SELECT
+		t1.*
+		FROM t_opener t1
+		INNER JOIN
+		(
+		SELECT id FROM t_opener WHERE 1 = 1
+		<if test="null!=page and null!=page.pageSize">
+			LIMIT #{page.startRowNum}, #{page.pageSize}
+		</if>
+		) AS t2
+		ON t1.id = t2.id
+		WHERE 1 = 1
+		<include refid="condition" />
+		<if test="null != orderByField">
+			ORDER BY #{orderByField}
+		</if>
+	</select>
+	
+	<select id="selectByParams" resultMap="resultMap">
+		SELECT
+		t1.*
+		FROM t_opener t1
+	</select>
+
+</mapper>  

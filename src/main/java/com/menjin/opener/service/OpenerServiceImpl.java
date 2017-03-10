@@ -5,14 +5,19 @@ import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
 import java.nio.channels.SocketChannel;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.base.mapper.BaseCrudMapper;
 import com.base.service.BaseServiceImpl;
+import com.menjin.opener.mapper.OpenerMapper;
 import com.menjin.opener.model.Opener;
 
 @Service
 public class OpenerServiceImpl extends BaseServiceImpl<Opener> implements OpenerService {
+	
+	@Autowired
+	private OpenerMapper openerMapper;
 	
 	@Override
 	public String getStatus(Opener opener) throws IOException {
@@ -31,8 +36,7 @@ public class OpenerServiceImpl extends BaseServiceImpl<Opener> implements Opener
 
 	@Override
 	public BaseCrudMapper<Opener> init() {
-		// TODO Auto-generated method stub
-		return null;
+		return openerMapper;
 	}
 	
 	/**
