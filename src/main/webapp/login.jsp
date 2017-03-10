@@ -10,8 +10,7 @@
 <title>用户登录</title>
 <link rel="stylesheet" type="text/css"
 	href="<c:url value='/resources/css/login.css'></c:url>" />
-<script type="text/javascript"
-	src="<c:url value='/resources/easyui/jquery.min.js'></c:url>"></script>
+<script src="<c:url value="/resources/adminlte/plugins/jQuery/jquery-2.2.3.min.js"></c:url>"></script>
 <script type="text/javascript">
 $(function(){ 
     $(window).resize(); 
