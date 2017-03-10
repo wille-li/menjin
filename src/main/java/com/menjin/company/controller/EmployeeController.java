@@ -260,6 +260,12 @@ public class EmployeeController {
 		}
 		List<BatchUploadEmployees> list = excelToEntitySet(request,excelFile);
 		Company company = companyService.selectByCompanyName(list.get(0).getCompanyName());
+		if(company == null){
+			rInfo.setMsg("此公司未加入系统。");
+			rInfo.setRet(FAIL);
+			returnMap.put("rInfo", rInfo);
+			return returnMap;
+		}
 		for (BatchUploadEmployees batchUploadEmployees : list) {
 			Employee e = new Employee();
 			e.setCompany(company);

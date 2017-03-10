@@ -1,6 +1,41 @@
-<%@ page language="java" contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
+<%@ page language="java" contentType="text/html; charset=utf-8"
+	pageEncoding="utf-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
-<div class="diy_table_panel" style="font-size:12px">
+<style>
+.a-upload {
+	padding: 4px 10px;
+	height: 30px;
+	line-height: 20px;
+	position: relative;
+	cursor: pointer;
+	color: #888;
+	background: #fafafa;
+	border: 1px solid #ddd;
+	border-radius: 4px;
+	overflow: hidden;
+	display: inline-block;
+	*display: inline;
+	*zoom: 1
+}
+
+.a-upload  input {
+	position: absolute;
+	font-size: 100px;
+	right: 0;
+	top: 0;
+	opacity: 0;
+	filter: alpha(opacity = 0);
+	cursor: pointer
+}
+
+.a-upload:hover {
+	color: #444;
+	background: #eee;
+	border-color: #ccc;
+	text-decoration: none
+}
+</style>
+<div class="diy_table_panel" style="font-size: 12px">
 	<div class="diy_table_head">
 		<div style="float: left; margin-left: 15px">
 			<div class="input-group">
@@ -24,29 +59,33 @@
 			<div class="input-group">
 				<!-- <button class="btn btn-warning" type="button" id="delrole"
 					onclick="#">导入公司数据</button> -->
-  				    <button type="submit" class="btn btn-warning" onclick="uploadBatchEmployees()">导入员工数据</button>
+				<button type="submit" class="btn btn-warning"
+					onclick="uploadBatchEmployees()">导入员工数据</button>
 			</div>
 		</div>
 		<div style="float: right; margin-left: 10px">
 
 			<form class="form-inline">
-			    <div class="form-group">
-					<select class="form-control" id="checkBycompany" name="checkBycompany" onchange="toCheck(0)">
-                    </select>
+				<div class="form-group">
+					<select class="form-control" id="checkBycompany"
+						name="checkBycompany" onchange="toCheck(0)">
+					</select>
 				</div>
 				<div class="form-group">
-					<input type="text"
-						class="form-control" id="checkEmployeeInput" name="checkEmployeeInput"
-						placeholder="输入员工名称" >
+					<input type="text" class="form-control" id="checkEmployeeInput"
+						name="checkEmployeeInput" placeholder="输入员工名称">
 				</div>
-				<button type="button" class="btn btn-info" onclick="toCheck(1)"><span class="glyphicon glyphicon-search" ></span></button>
+				<button type="button" class="btn btn-info" onclick="toCheck(1)">
+					<span class="glyphicon glyphicon-search"></span>
+				</button>
 			</form>
 		</div>
 	</div>
 	<div class="diy_table_body box">
 		<div class="">
 			<div class="box-body">
-				<table id="employeeTable" class="display table table-bordered table-hover">
+				<table id="employeeTable"
+					class="display table table-bordered table-hover">
 					<thead>
 						<tr>
 							<th>员工编号</th>
@@ -75,25 +114,31 @@
 					<h4 class="modal-title" id="visitortitle">导入员工数据</h4>
 				</div>
 				<div class="modal-body">
-					<form id="uploadform" name="uploadform" method="post" class="form-horizontal" 
-					enctype="multipart/form-data" action="./uploadBatchEmployees.do" onsubmit="return toUpload();">
-						<div style="margin-bottom: 10px;">
-							<div class="input-group">
-								<button type="button" class="btn btn-default" onclick="sds()">下载模板</button>
+					<form id="uploadform" name="uploadform" method="post"
+						class="form-horizontal" enctype="multipart/form-data"
+						action="./uploadBatchEmployees.do" onsubmit="return toUpload();">
+						<div class="control-group">
+							<div class="controls">
+								<!--  <label class="control-label" for="inputPassword">上传数据</label>
+								<input type="file" name="uploadfile" id="uploadfile"> -->
+								<a href="javascript:;" class="a-upload"> <input type="file"
+									name="uploadfile" id="uploadfile">点击这里上传文件
+								</a>
+
 							</div>
 						</div>
-						<div style="margin-bottom: 10px;">
-							<div class="input-group">
-								<input type="file" name="uploadfile" id="uploadfile" >
-  				                <button type="submit" class="btn btn-default">导入公司数据</button>
+						<div class="control-group" style="margin-top: 10px;">
+							<div class="controls">
+								<a href="./resources/excel/test.xlsx">点击此处下载模板</a>
 							</div>
 						</div>
+
 					</form>
 				</div>
 				<div class="modal-footer">
 					<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
 					<button type="button" class="btn btn-primary"
-						onclick="submitDialog()">确认</button>
+						onclick="submituploadForm()">上传</button>
 				</div>
 			</div>
 		</div>
@@ -111,69 +156,65 @@
 				</div>
 				<div class="modal-body">
 					<form class="form-horizontal" id="companyform">
-					    <input class="easyui-textbox" type="hidden" id="id" name="id"/>
-					     <input class="easyui-textbox" type="hidden" id="companyId" name="companyId"/>
+						<input class="easyui-textbox" type="hidden" id="id" name="id" /> <input
+							class="easyui-textbox" type="hidden" id="companyId"
+							name="companyId" />
 						<fieldset>
-						
-						    <div style="margin-bottom: 10px;width: 400px;">
+
+							<div style="margin-bottom: 10px; width: 400px;">
 								<div class="input-group">
-									<span class="input-group-addon">所属公司</span>
-									<select class="form-control" id="companyBox" name="companyBox">
-                                    </select>
+									<span class="input-group-addon">所属公司</span> <select
+										class="form-control" id="companyBox" name="companyBox">
+									</select>
 								</div>
-							</div> 
-							
+							</div>
+
 							<div class="recordinputleft">
 								<div class="input-group">
-									<span class="input-group-addon">员工编号</span>
-									<input class="form-control" id="employeeNo"
-									name="employeeNo" />
+									<span class="input-group-addon">员工编号</span> <input
+										class="form-control" id="employeeNo" name="employeeNo" />
 								</div>
 							</div>
 							<div class="recordinputright">
 								<div class="input-group">
-									<span class="input-group-addon">员工姓名</span>
-									<input class="form-control" id="employeeName"
-									name="employeeName" />
+									<span class="input-group-addon">员工姓名</span> <input
+										class="form-control" id="employeeName" name="employeeName" />
 								</div>
 							</div>
-							
+
 							<div class="recordinputleft">
 								<div class="input-group">
-									<span class="input-group-addon">性别</span>
-									<input class="form-control" id="employeeSex"
-									name="employeeSex"/>
+									<span class="input-group-addon">性别</span> <input
+										class="form-control" id="employeeSex" name="employeeSex" />
 								</div>
 							</div>
 							<div class="recordinputright">
 								<div class="input-group">
-								<span class="input-group-addon">证件号码</span>
-									<input class="form-control" id="IdCardNum"
-									name="IdCardNum"/>
+									<span class="input-group-addon">证件号码</span> <input
+										class="form-control" id="IdCardNum" name="IdCardNum" />
 								</div>
 							</div>
-							
+
 							<div class="recordinputleft">
 								<div class="input-group">
-									<span class="input-group-addon">联系电话</span>
-									<input class="form-control" id="mobile"
-									name="mobile"/>
+									<span class="input-group-addon">联系电话</span> <input
+										class="form-control" id="mobile" name="mobile" />
 								</div>
 							</div>
 							<div class="recordinputright">
 								<div class="input-group">
-									<span class="input-group-addon">邮箱</span>
-									<input class="form-control" id="email"
-									name="email"/>
+									<span class="input-group-addon">邮箱</span> <input
+										class="form-control" id="email" name="email" />
 								</div>
 							</div>
-							
+
 						</fieldset>
 					</form>
 				</div>
 				<div class="modal-footer">
 					<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-					<button type="button" class="btn btn-primary" onclick="submitDialog()">确认</button>
+					<button type="button" class="btn btn-primary"
+						onclick="submitDialog()">确认</button>
 				</div>
 			</div>
 			<!-- /.modal-content -->
@@ -219,94 +260,103 @@
 		}
 		floatData += "]";
 		floatData = $.parseJSON(floatData);
-	    $.each(floatData,function(index,item){
-	    	floatString += "<option value='"+item.value+"'>"+item.text+"</option>";
-	    });
-	    $("#companyAddress").html(floatString);
-		var table = $('#employeeTable').DataTable({
-			"paging" : true,
-			"lengthChange" : false,
-			"searching" : false,
-			"select": true,
-			"ordering" : false,
-			"info" : true,
-			"autoWidth" : true,
-			"keys" : true,
-			"responsive" : true,
-			"iDisplayLength" : 15,// 每页显示行数 
-			"oLanguage" : { // 汉化  
-	            "sUrl" : "./resources/adminlte/plugins/datatables/language.json"  
-	            },
-	        "processing": true,
-	        "serverSide": true,
-	        "ajax": {
-	        	"url":"./employeelistBydepartmentId.do",
-	        	"data": function ( d ) {
-	                   //添加额外的参数传给服务器
-	                   d.companyId = $('#checkBycompany').val();
-	                   d.employeeName = $('#checkEmployeeInput').val();
-	        	},
-	        	"type":"Post"
-	        },
-	        "columns": [  
-	                     { "data": "employeeNo" },  
-	                     { "data": "employeeName"},
-	                     { "data": "employeeSex"},
-	                     { "data": "email"},
-	                     { "data": "mobile"},
-	                     { "data": "idCardNum"}
-	              ] 
+		$.each(floatData, function(index, item) {
+			floatString += "<option value='"+item.value+"'>" + item.text
+					+ "</option>";
 		});
-		
-		 $('#employeeTable tbody').on( 'click', 'tr', function () {
-		        if ( $(this).hasClass('selected') ) {
-		            $(this).removeClass('selected');
-		        }
-		        else {
-		            table.$('tr.selected').removeClass('selected');
-		            $(this).addClass('selected');
-		        }
-		    } );
-		 
-		 $('#birth').datepicker({
-			 format: 'yyyy-mm-dd',
-		      autoclose: true
-		    });
+		$("#companyAddress").html(floatString);
+		var table = $('#employeeTable')
+				.DataTable(
+						{
+							"paging" : true,
+							"lengthChange" : false,
+							"searching" : false,
+							"select" : true,
+							"ordering" : false,
+							"info" : true,
+							"autoWidth" : true,
+							"keys" : true,
+							"responsive" : true,
+							"iDisplayLength" : 15,// 每页显示行数 
+							"oLanguage" : { // 汉化  
+								"sUrl" : "./resources/adminlte/plugins/datatables/language.json"
+							},
+							"processing" : true,
+							"serverSide" : true,
+							"ajax" : {
+								"url" : "./employeelistBydepartmentId.do",
+								"data" : function(d) {
+									//添加额外的参数传给服务器
+									d.companyId = $('#checkBycompany').val();
+									d.employeeName = $('#checkEmployeeInput')
+											.val();
+								},
+								"type" : "Post"
+							},
+							"columns" : [ {
+								"data" : "employeeNo"
+							}, {
+								"data" : "employeeName"
+							}, {
+								"data" : "employeeSex"
+							}, {
+								"data" : "email"
+							}, {
+								"data" : "mobile"
+							}, {
+								"data" : "idCardNum"
+							} ]
+						});
+
+		$('#employeeTable tbody').on('click', 'tr', function() {
+			if ($(this).hasClass('selected')) {
+				$(this).removeClass('selected');
+			} else {
+				table.$('tr.selected').removeClass('selected');
+				$(this).addClass('selected');
+			}
+		});
+
+		$('#birth').datepicker({
+			format : 'yyyy-mm-dd',
+			autoclose : true
+		});
 
 	});
-	
-	
-	var companyData = getJSONData({url: "./getcompanylistByTree.do"});
-	function Fillcombox(){
+
+	var companyData = getJSONData({
+		url : "./getcompanylistByTree.do"
+	});
+	function Fillcombox() {
 		var companyString = "<option value=''>请选择公司</option>";
-		
-		$.each(companyData,function(index,item){
-			companyString+="<option value='"+item.id+"' index='"+index+"'>"+item.companyName+"</option>";
+
+		$.each(companyData, function(index, item) {
+			companyString += "<option value='"+item.id+"' index='"+index+"'>"
+					+ item.companyName + "</option>";
 		});
 		$("#checkBycompany").html(companyString);
 		$("#companyBox").html(companyString);
 	}
-	
+
 	Fillcombox();
-	
-	var isAdd = true; 
-	
+
+	var isAdd = true;
+
 	/* sendToMainMessage('error', '所搜索的内容暂时没有!', ''); */
-	
-	function addEmployee(){
-		  isAdd = true;
-		  $("#id").val("");
-		  $("#companyId").val("");
-		  $("#employeeNo").val("");
-		  $("#employeeName").val("");
-		  $("#employeeSex").val("");
-		  $("#email").val("");
-		  $("#mobile").val("");
-		  $("#IdCardNum").val("");
-		  $('#visitortitle').html('添加员工信息');
-		  $('#visitormodal').modal('show');
+
+	function addEmployee() {
+		isAdd = true;
+		$("#id").val("");
+		$("#companyId").val("");
+		$("#employeeNo").val("");
+		$("#employeeName").val("");
+		$("#employeeSex").val("");
+		$("#email").val("");
+		$("#mobile").val("");
+		$("#IdCardNum").val("");
+		$('#visitortitle').html('添加员工信息');
+		$('#visitormodal').modal('show');
 	}
-	
 
 	function updateEmployee() {
 		isAdd = false;
@@ -314,7 +364,7 @@
 				.data();
 
 		if (selections.length == 0) {
-			alertMsg('请选择需要更新的数据',"info");
+			alertMsg('请选择需要更新的数据', "info");
 			return false;
 		}
 		$("#id").val(selections[0].id);
@@ -323,7 +373,7 @@
 		$("#employeeName").val(selections[0].employeeName);
 		$("#employeeSex").val(selections[0].employeeSex);
 		$("#email").val(selections[0].email);
-	    $("#mobile").val(selections[0].mobile);
+		$("#mobile").val(selections[0].mobile);
 		$("#IdCardNum").val(selections[0].idCardNum);
 		$('#visitortitle').html('修改员工信息');
 		$('#visitormodal').modal('show');
@@ -333,7 +383,7 @@
 		var selections = $('#employeeTable').DataTable().rows('.selected')
 				.data();
 		if (selections.length == 0) {
-			alertMsg('请选择你要删除的员工！',"info");
+			alertMsg('请选择你要删除的员工！', "info");
 			return false;
 		}
 
@@ -347,12 +397,12 @@
 				if (data) {
 					if (data.rInfo.ret == 0) {
 						$('#employeeTable').DataTable().draw(false);
-						alertMsg(data.rInfo.msg,"success");
+						alertMsg(data.rInfo.msg, "success");
 					} else {
-						alertMsg(data.rInfo.msg,"warning");
+						alertMsg(data.rInfo.msg, "warning");
 					}
 				} else {
-					alertMsg('网络连接失败，请与管理员联系！',"danger");
+					alertMsg('网络连接失败，请与管理员联系！', "danger");
 				}
 			});
 			$("#id").val("");
@@ -372,55 +422,59 @@
 		$.post(url, submitData, function(data) {
 			if (data) {
 				if (data.rInfo.ret == 0) {
-					if(isAdd){
+					if (isAdd) {
 						$('#employeeTable').DataTable().draw();//如果是添加则滚动到第一页并刷新
-					}else{
+					} else {
 						$('#employeeTable').DataTable().draw(false);
 					}
-					alertMsg(data.rInfo.msg,"success");
+					alertMsg(data.rInfo.msg, "success");
 				} else {
-					alertMsg(data.rInfo.msg,"warning");
+					alertMsg(data.rInfo.msg, "warning");
 				}
 			} else {
-				alertMsg('网络连接失败，请与管理员联系！',"danger");
+				alertMsg('网络连接失败，请与管理员联系！', "danger");
 			}
 			$('#visitormodal').modal('hide');
 			//清空form表单中的数据
 		});
 	}
-	
-	
-	
-	function toCheck(type){
+
+	function toCheck(type) {
 		/* $('#employeeTable').DataTable().ajax.url('./visitorlist.do?status='+$('#selectstatus').val()+'&visitorName='+visitorName).load(); */
-		if(type == 0){
+		if (type == 0) {
 			$('#checkEmployeeInput').val("");
 		}
 		$('#employeeTable').DataTable().ajax.reload();
 		$('#checkEmployeeInput').val("");
 	}
-	
+
 	function validation() {
 		var phone = $("#companyPhone").val();
 		if (!/(^(\d{3,4}-)?\d{7,8})$|(13[0-9]{9})$/.test(phone)) {
-			alertMsg('输入的公司联系电话格式有误，请重新输入!',"info");
+			alertMsg('输入的公司联系电话格式有误，请重新输入!', "info");
 			return false;
 		}
 		return true;
 	}
-	
-	function uploadBatchEmployees(){
+
+	function uploadBatchEmployees() {
 		$('#uploadBatchEmployees').modal('show');
 	}
-	
-	function toUpload(){
-		$("#uploadform").ajaxSubmit(function(data) { 
-			alertMsg(data.rInfo.msg,"success");
+
+	function toUpload() {
+		$("#uploadform").ajaxSubmit(function(data) {
+			if (data.rInfo.ret == 0) {
+				alertMsg(data.rInfo.msg, "success");
+			}else{
+				alertMsg(data.rInfo.msg, "warning");
+			}
 			$('#uploadBatchEmployees').modal('hide');
 			$('#employeeTable').DataTable().ajax.reload();
-		}); 
+		});
 		return false;
 	}
-	
-	
+
+	function submituploadForm() {
+		$("#uploadform").submit();
+	}
 </script>
