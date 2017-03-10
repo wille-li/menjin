@@ -17,6 +17,11 @@ public class Employee {
 	private Department department;
 	
 	/**
+	 * 部门信息
+	 */
+	private Company company;
+	
+	/**
 	 * 员工编号
 	 */
 	private String employeeNo;
@@ -54,6 +59,8 @@ public class Employee {
 	private String createBy;
 
 	private Date modifiedDate;
+	
+	private String index;
 
 	public Integer getId() {
 		return id;
@@ -142,6 +149,22 @@ public class Employee {
 
 	public void setModifiedDate(Date modifiedDate) {
 		this.modifiedDate = modifiedDate;
+	}
+	
+	public Company getCompany() {
+		return company;
+	}
+
+	public void setCompany(Company company) {
+		this.company = company;
+	}
+
+	public String getIndex() {
+		return index;
+	}
+
+	public void setIndex(String index) {
+		this.index = index;
 	}
 
 	@Override

@@ -440,18 +440,17 @@
 		var matterString = "";
 		$.each(visitorData,function(index,item){
 			visitorString+="<option value='"+item.id+"' index='"+index+"'>"+item.visitorName+"</option>";
-			$("#visitorName").html(visitorString);
 		});
+		$("#visitorName").html(visitorString);
 		
 		$.each(companyData,function(index,item){
 			companyString+="<option value='"+item.id+"' index='"+index+"'>"+item.companyName+"</option>";
-			$("#companyBox").html(companyString);
 		});
-		
+		$("#companyBox").html(companyString);
 		$.each(matterData,function(index,item){
 			matterString+="<option value='"+item.id+"' index='"+index+"'>"+item.matterDecs+"</option>";
-			$("#matterBox").html(matterString);
 		});
+		$("#matterBox").html(matterString);
 	}
 	
 	Fillcombox();

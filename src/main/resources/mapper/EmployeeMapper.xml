@@ -16,17 +16,10 @@
 		<result column="id_card_type" property="IdCardType" jdbcType="VARCHAR" />
 		<result column="id_card_num" property="IdCardNum" jdbcType="VARCHAR" />
 		<result column="created_by" property="createBy" jdbcType="VARCHAR" />
+		<result column="ce_index" property="index" jdbcType="VARCHAR" />
 		<result column="modified_date" property="modifiedDate" jdbcType="TIMESTAMP" />
-		<association property="department" column="department_id" javaType="com.menjin.company.model.Department">  
-            <id column="id" property="id" jdbcType="INTEGER" javaType="java.lang.Integer"/>
-		    <result column="department_name" property="departmentName" jdbcType="VARCHAR" />
-		    <result column="department_header" property="departmentHeader" jdbcType="VARCHAR" />
-		    <result column="department_phone" property="departmentPhone" jdbcType="VARCHAR" />
-		    <result column="created_time" property="createTime" jdbcType="TIMESTAMP" />
-		    <result column="created_by" property="createBy" jdbcType="VARCHAR" />
-		    <result column="modified_date" property="modifiedDate" jdbcType="TIMESTAMP" />
 		    <association property="company" column="company_id" javaType="com.menjin.company.model.Company">  
-                 <id column="id" property="id" jdbcType="INTEGER" javaType="java.lang.Integer"/>
+                 <id column="c_id" property="id" jdbcType="INTEGER" javaType="java.lang.Integer"/>
 		         <result column="company_name" property="companyName" jdbcType="VARCHAR" />
 		         <result column="company_addr" property="companyAddress" jdbcType="VARCHAR" />
 		         <result column="company_mobile" property="companyPhone" jdbcType="VARCHAR" />
@@ -34,7 +27,6 @@
 		         <result column="created_by" property="createBy" jdbcType="VARCHAR" />
 		         <result column="modified_date" property="modifiedDate" jdbcType="TIMESTAMP" />
             </association>
-        </association> 
 	</resultMap>
 	
     <resultMap type="com.menjin.company.model.Employee" id="baseResultMap">
@@ -48,25 +40,37 @@
 		<result column="id_card_num" property="IdCardNum" jdbcType="VARCHAR" />
 		<result column="created_by" property="createBy" jdbcType="VARCHAR" />
 		<result column="modified_date" property="modifiedDate" jdbcType="TIMESTAMP" />
+		<result column="ce_index" property="index" jdbcType="VARCHAR" />
 	</resultMap>
 	
 	<sql id="insertList" >
 	    employee_no,employee_name,employee_sex,email,
 	    mobile,id_card_type,id_card_num,department_id,
-	    created_by,modified_date
+	    created_by,modified_date,ce_index
+	</sql>
+	
+	<sql id="condition">
+		<if test="null!=params">
+		    <if test="null!=params.companyId and ''!=params.companyId">
+				AND s.id = '${params.companyId}'
+			</if>
+			<if test="null!=params.employeeName and ''!=params.employeeName">
+				AND t1.employee_name LIKE '%${params.employeeName}%'
+			</if>
+		</if>
 	</sql>
 	
 	<insert id="insert" parameterType="com.menjin.company.model.Employee" useGeneratedKeys="true"
 		keyColumn="id">
 		INSERT INTO t_employee(<include refid="insertList"/>) VALUES (
 		#{employeeNo}, #{employeeName}, #{employeeSex},#{email},
-		#{mobile}, #{IdCardType},#{IdCardNum},#{department.id},
-		#{createBy}, #{modifiedDate})
+		#{mobile}, #{IdCardType},#{IdCardNum},#{company.id},
+		#{createBy}, #{modifiedDate},#{index})
 	</insert>
 	
 	<update id="updateByPrimaryKey" parameterType="com.menjin.company.model.Employee">
 		UPDATE t_employee SET employee_no = #{employeeNo},employee_name = #{employeeName},
-		employee_sex = #{employeeSex}, email = #{email},mobile = #{mobile},
+		employee_sex = #{employeeSex}, email = #{email},mobile = #{mobile},ce_index = #{index},
 		id_card_type = #{IdCardType},id_card_num = #{IdCardNum},modified_date = #{modifiedDate} 
 		WHERE id=#{id}
 	</update>
@@ -86,8 +90,8 @@
 	</select> 
 	
 	<select id="getEmployeesByCompanyId" resultMap="resultMap">
-		SELECT * FROM t_employee e ,t_department d ,t_company c
-		WHERE e.department_id = d.id AND d.company_Id = c.id AND  c.id = #{companyId}
+		SELECT * FROM t_employee e ,t_company c
+		WHERE e.department_id = c.id AND  c.id = #{companyId}
 	</select> 
 	
 	
@@ -96,28 +100,35 @@
 	</delete>
 	
 	<select id="selectCount" resultType="java.lang.Integer" >
-	    SELECT COUNT(1) FROM t_employee WHERE 1 = 1
-	    <if test="null!=params and null!=params.departmentId">
-		         AND department_id = #{params.departmentId}
-		</if>
+		SELECT
+		COUNT(1)
+		FROM t_employee t1
+		INNER JOIN
+		(
+		SELECT id FROM t_employee WHERE 1
+		= 1
+		) AS t2
+		ON t1.id = t2.id
+		LEFT JOIN t_company s ON t1.department_id = s.id
+		WHERE 1 = 1
+		<include refid="condition" />
 	</select>
 	
 	<select id="selectByPage" resultMap="resultMap">
 	    SELECT 
-		t1.*
+		t1.*,s.id as c_id,s.*
 		FROM t_employee t1
 		INNER JOIN 
 		(
 		    SELECT id FROM t_employee WHERE 1 = 1
-		    <if test="null!=params and null!=params.departmentId">
-		         AND department_id = #{params.departmentId}
-		    </if>
-		    <if test="null!=page and null!=page.pageSize">
-		      LIMIT #{page.startRowNum}, #{page.pageSize}
-		    </if>
 		) AS t2
 		ON t1.id = t2.id
+		LEFT JOIN t_company s ON t1.department_id = s.id
 		WHERE 1 = 1
+		<include refid="condition" />
+		<if test="null!=page and null!=page.pageSize">
+		      LIMIT #{page.startRowNum}, #{page.pageSize}
+		</if>
 		<if test="null != orderByField">
 		    ORDER BY #{orderByField}
 		</if>
