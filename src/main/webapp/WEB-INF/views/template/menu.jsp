@@ -68,6 +68,18 @@
             <li><a target="navTab" href="./vist.do"><i class="fa fa-circle-o"></i> 拜访记录管理</a></li>
           </ul>
         </li>
+        <li class="treeview">
+          <a href="#">
+            <i class="fa fa-cloud"></i> <span>门禁管理</span>
+            <span class="pull-right-container">
+              <i class="fa fa-angle-left pull-right"></i>
+            </span>
+          </a>
+          <ul class="treeview-menu">
+            <li><a target="navTab" href="./camera.do"><i class="fa fa-camera"></i> 摄像头管理</a></li>
+            <li><a target="navTab" href="./opener.do"><i class="fa fa-circle-o"></i> 闸机管理</a></li>
+          </ul>
+        </li>
         <%-- <li class="treeview">
           <a href="#">
             <i class="fa fa-table"></i> <span>表格</span>
