@@ -28,6 +28,8 @@ import com.base.annotation.log.SystemControllerLog;
 import com.base.entity.JsonReturn;
 import com.base.entity.ReturnInfo;
 import com.menjin.afr.service.AfrService;
+import com.menjin.api.model.APIAuth;
+import com.menjin.api.service.APIAuthService;
 import com.menjin.api.service.APICompanyService;
 import com.menjin.api.service.APIDepartmentService;
 import com.menjin.api.service.APIEmployeeService;
@@ -66,7 +68,7 @@ public class APIController {
 	
 	private static final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh24:mm");
 	
-	@Resource
+	//@Resource
 	private AfrService afrService;
 	
 	@Value("${photo.path}")
@@ -90,6 +92,8 @@ public class APIController {
 	@Autowired
 	VisitRecordService visitRecordService;
 	
+	@Autowired
+	APIAuthService aPIAuthService;
 	
 	@RequestMapping(value="/api/visit.do", method=RequestMethod.POST)
 	@SystemControllerLog
@@ -306,6 +310,50 @@ public class APIController {
 		JsonReturn<Company> returnObj = new JsonReturn<Company>(0, "测试", company);
 		return returnObj;
 	}
+	
+	@RequestMapping(value="/api/auth.do", method = RequestMethod.GET)
+	@SystemControllerLog
+	@ResponseBody
+	public Map<String, Object> auth(APIAuth aPIAuth){
+		Map<String, Object> returnMap = new HashMap<String, Object>();
+		ReturnInfo rInfo = new ReturnInfo();
+		if (aPIAuth == null){
+			rInfo.setMsg("验证失败");
+			rInfo.setRet(FAIL);
+			returnMap.put(HEAD_KEY, rInfo);
+			return returnMap;
+		}
+		Integer uid = -1;
+		if (null != aPIAuth.getUsername() && !"".equals(aPIAuth.getUsername())){
+			uid = aPIAuthService.authByUsernameAndPassword(aPIAuth);
+			if (uid > 0){
+				aPIAuth.setToken(Integer.toString(uid) 
+						+ Calendar.getInstance().getTimeInMillis());
+				aPIAuth.setUid(uid);
+				aPIAuthService.deleteAuthInfo(aPIAuth);
+				aPIAuthService.createAuthInfo(aPIAuth);
+			}
+		}
+		if (null != aPIAuth.getToken()){
+			uid = aPIAuthService.authByToken(aPIAuth);
+			aPIAuth.setUid(uid);
+		}
+		
+		if (uid != null && uid > 0) {
+			rInfo.setMsg("验证成功");
+			rInfo.setRet(SUCCESS);
+			returnMap.put(HEAD_KEY, rInfo);
+			returnMap.put("uid", uid);
+			returnMap.put("token", aPIAuth.getToken());
+		} else {
+			rInfo.setMsg("验证失败");
+			rInfo.setRet(FAIL);
+			returnMap.put(HEAD_KEY, rInfo);
+			return returnMap;
+		}
+		return returnMap;
+	}
+	
 	
 	
 	public String getMatterTxnNum(){

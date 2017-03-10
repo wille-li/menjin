@@ -83,6 +83,7 @@ public class APICompanyController {
 		return returnMap;
 	}
 	
+	
 	private List<?> findAllInfo(BaseService<?> baseService){
 		int count = baseService.findCount(null, null);
 		logger.info("Count:"+count);
