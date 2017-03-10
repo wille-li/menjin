@@ -52,6 +52,7 @@
           </a>
           <ul class="treeview-menu">
             <li><a target="navTab" href="./company.do"><i class="fa fa-circle-o"></i> 公司管理</a></li>
+             <li><a target="navTab" href="./department.do"><i class="fa fa-circle-o"></i> 员工管理</a></li>
           </ul>
         </li>
         <li class="treeview">
