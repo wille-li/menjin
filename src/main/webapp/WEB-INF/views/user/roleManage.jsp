@@ -1,7 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=utf-8"
 	pageEncoding="utf-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
-<div class="diy_table_panel">
+<div class="diy_table_panel" style="font-size:12px">
 	<div class="diy_table_head">
 		<form action="/include/tables/diytable.html" data-toggle="ajaxsearch"
 			class="row">
@@ -110,23 +110,6 @@
 
 <!-- page script -->
 <script>
-var $$ = window;
-while($$.parent !== $$)
-	$$ = $$.parent;
-$$ = $$.jQuery;
-var sendToMainMessage = function(type, title, msg){
-	$$.pnotify({
-		type: type,
-	    title: title,
-		text: msg,
-	    icon: 'picon icon16 iconic-icon-check-alt white',
-	    opacity: 0.95,
-	    history: true,
-	    sticker: true,
-	    delay: 3000,
-	    stack:{"dir1": "down", "dir2": "right"}
-	});
-};
 	$(function() {
 		var table = $('#RoleTable').DataTable({
 			"paging" : true,
@@ -188,7 +171,7 @@ var sendToMainMessage = function(type, title, msg){
 		var selections = $('#RoleTable').DataTable().rows('.selected').data();
 		
 		if (selections.length == 0) {
-			sendToMainMessage('notice', '请选择需要更新的数据', '提醒');
+			alertMsg('请选择需要更新的数据',"info");
 	         return false;
 	       }
 		$("#id").val(selections[0].id);
@@ -202,11 +185,11 @@ var sendToMainMessage = function(type, title, msg){
 	function deleteRole() {
 		var selections = $('#RoleTable').DataTable().rows('.selected').data();
 		if (selections.length == 0) {
-			sendToMainMessage('notice', '请选择你要删除的用户！', '提醒');
+			alertMsg('请选择你要删除的角色！',"info");
 			return false;
 		}
 
-		if (confirm("你确认删除该用户吗？")) {
+		if (confirm("你确认删除该角色吗？")) {
 			$("#id").val(selections[0].id);
 			var id = $("#id").val();
 			var submitData = {
@@ -215,9 +198,9 @@ var sendToMainMessage = function(type, title, msg){
 			$.post('./role/deleteRole.do', submitData, function(data) {
 				if (data) {
 					$('#RoleTable').DataTable().draw(false);
-					sendToMainMessage('success', '提醒', '用户删除成功！');
+					alertMsg('角色删除成功！',"success");
 				} else {
-					sendToMainMessage('error', '提醒', '删除用户失败！');
+					alertMsg('删除角色失败！',"warning");
 				}
 			});
 			$("#id").val("");
@@ -234,13 +217,13 @@ var sendToMainMessage = function(type, title, msg){
 			if (data) {
 				if (isAdd) {
 					$('#RoleTable').DataTable().draw();//如果是添加则滚动到第一页并刷新
-					sendToMainMessage('success', '提醒', '数据添加成功');
+					alertMsg('数据添加成功!',"success");
 				} else {
 					$('#RoleTable').DataTable().draw(false);
-					sendToMainMessage('success', '提醒', '数据修改成功');
+					alertMsg('数据修改成功',"success");
 				}
 			} else {
-				sendToMainMessage('error', '数据操作失败！', '操作失败');
+				alertMsg('数据操作失败！',"danger");
 			}
 
 			$('#rolemodal').modal('hide');

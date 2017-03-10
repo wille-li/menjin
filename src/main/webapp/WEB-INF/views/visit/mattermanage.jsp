@@ -1,22 +1,22 @@
 <%@ page language="java" contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
-<div class="diy_table_panel">
+<div class="diy_table_panel" style="font-size:12px">
 	<div class="diy_table_head">
 		<form action="/include/tables/diytable.html" data-toggle="ajaxsearch"
 			class="row">
 			<div style="float:left;margin-left: 15px">
 				<div class="input-group">
-					<button class="btn btn-success" type="button" id="addMatter" onclick="addMatters()">新增事由</button>
+					<button class="btn btn-success" type="button" id="addMatter" onclick="addMatters()">新增缘由</button>
 				</div>
 			</div>
 			<div style="float:left;margin-left: 10px">
 				<div class="input-group">
-					<button class="btn btn-info" type="button" id="roledetail" onclick="updateMatter()">修改事由</button>
+					<button class="btn btn-info" type="button" id="roledetail" onclick="updateMatter()">修改缘由</button>
 				</div>
 			</div>
 			<div style="float:left;margin-left: 10px">
 				<div class="input-group">
-					<button class="btn btn-danger" type="button" id="delrole" onclick="deleteMatter()">删除是由</button>
+					<button class="btn btn-danger" type="button" id="delrole" onclick="deleteMatter()">删除缘由</button>
 				</div>
 			</div>
 		</form>
@@ -27,7 +27,7 @@
 				<table id="matterTable" class="display table table-bordered table-hover">
 					<thead>
 						<tr>
-							<th>拜访事由</th>
+							<th>拜访缘由</th>
 							<th>记录创建人</th>
 							<th>记录创建时间</th>
 							<th>记录修改时间</th>
@@ -56,7 +56,7 @@
 					    <input class="easyui-textbox" type="hidden" id="id" name="id"/>
 						<fieldset>
 							<div class="form-group">
-								<label class="col-sm-2 control-label" for="matterDecs">拜访是由</label>
+								<label class="col-sm-2 control-label" for="matterDecs">拜访缘由</label>
 								<div class="col-sm-4">
 									<input class="form-control" id="matterDecs" type="text" name = "matterDecs"
 										placeholder="" />
@@ -101,28 +101,11 @@
 
 <!-- page script -->
 <script>
-var $$ = window;
-while($$.parent !== $$)
-	$$ = $$.parent;
-$$ = $$.jQuery;
-var sendToMainMessage = function(type, title, msg){
-	$$.pnotify({
-		type: type,
-	    title: title,
-		text: msg,
-	    icon: 'picon icon16 iconic-icon-check-alt white',
-	    opacity: 0.95,
-	    history: true,
-	    sticker: true,
-	    delay: 3000,
-	    stack:{"dir1": "down", "dir2": "right"}
-	});
-};
 	$(function() {
 		var table = $('#matterTable').DataTable({
 			"paging" : true,
 			"lengthChange" : false,
-			"searching" : true,
+			"searching" : false,
 			"select": true,
 			"ordering" : false,
 			"info" : true,
@@ -176,7 +159,7 @@ var sendToMainMessage = function(type, title, msg){
 		  isAdd = true;
 		  $("#id").val("");
 		  $("#matterDecs").val("");
-		  $('#mattertitle').html('添加拜访事由');
+		  $('#mattertitle').html('添加拜访缘由');
 		  $('#mattermodal').modal('show');
 	}
 	
@@ -186,12 +169,12 @@ var sendToMainMessage = function(type, title, msg){
 		var selections = $('#matterTable').DataTable().rows('.selected').data();
 		
 		if (selections.length == 0) {
-			sendToMainMessage('notice', '请选择需要更新的数据', '提醒');
+			alertMsg('请选择需要更新的数据',"info");
 	         return false;
 	       }
 		$("#id").val(selections[0].id);
 		$("#matterDecs").val(selections[0].matterDecs);
-		$('#mattertitle').html('修改拜访事由');
+		$('#mattertitle').html('修改拜访缘由');
 		$('#mattermodal').modal('show');
 	}
 	
@@ -199,11 +182,11 @@ var sendToMainMessage = function(type, title, msg){
 	function deleteMatter() {
 		var selections = $('#matterTable').DataTable().rows('.selected').data();
 		if (selections.length == 0) {
-			sendToMainMessage('notice', '请选择你要删除的用户！', '提醒');
+			alertMsg('请选择你要删除的拜访缘由！',"info");
 			return false;
 		}
 
-		if (confirm("你确认删除该用户吗？")) {
+		if (confirm("你确认删除改拜访缘由吗？")) {
 			$("#id").val(selections[0].id);
 			var id = $("#id").val();
 			var submitData = {
@@ -212,9 +195,9 @@ var sendToMainMessage = function(type, title, msg){
 			$.post('./deleteMatter.do', submitData, function(data) {
 				if (data) {
 					$('#matterTable').DataTable().draw(false);
-					sendToMainMessage('success', '提醒', '用户删除成功！');
+					alertMsg('拜访缘由删除成功！',"success");
 				} else {
-					sendToMainMessage('error', '提醒', '删除用户失败！');
+					alertMsg('删除拜访缘由失败！',"warning");
 				}
 			});
 			$("#id").val("");
@@ -231,13 +214,13 @@ var sendToMainMessage = function(type, title, msg){
 			if (data) {
 				if (isAdd) {
 					$('#matterTable').DataTable().draw();//如果是添加则滚动到第一页并刷新
-					sendToMainMessage('success', '提醒', '数据添加成功');
+					alertMsg('数据添加成功',"success");
 				} else {
 					$('#matterTable').DataTable().draw(false);
-					sendToMainMessage('success', '提醒', '数据修改成功');
+					alertMsg('数据修改成功',"success");
 				}
 			} else {
-				sendToMainMessage('error', '数据操作失败！', '操作失败');
+				alertMsg('数据操作失败！',"warning");
 			}
 
 			$('#mattermodal').modal('hide');

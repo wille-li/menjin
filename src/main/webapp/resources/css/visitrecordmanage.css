@@ -56,7 +56,7 @@
 
 .vsmesleft{
 	float:left;
-	width: 75%;
+	width: 65%;
 }
 
 .vsinput{
@@ -66,7 +66,7 @@
 
 .vsmesright{
 	float:left;
-	width: 25%;
+	width: 35%;
 }
 
 .record{
@@ -78,13 +78,13 @@
 .recordinputleft{
 	margin-bottom:10px;
 	float:left;
-	width:240px;
+	width:260px;
 }
 
 .recordinputright{
 	margin-bottom:10px;
 	float:left;
-	width:240px;
+	width:260px;
 	margin-left:10px;
 }
 

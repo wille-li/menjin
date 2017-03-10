@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
-<div class="diy_table_panel">
+<div class="diy_table_panel" style="font-size:12px">
 	<div class="diy_table_head">
 		<form action="/include/tables/diytable.html" data-toggle="ajaxsearch"
 			class="row">
@@ -257,25 +257,7 @@
 
 <!-- page script -->
 <script>
-var $$ = window;
-while($$.parent !== $$)
-	$$ = $$.parent;
-$$ = $$.jQuery;
-var sendToMainMessage = function(type, title, msg){
-	$$.pnotify({
-		type: type,
-	    title: title,
-		text: msg,
-	    icon: 'picon icon16 iconic-icon-check-alt white',
-	    opacity: 0.95,
-	    history: true,
-	    sticker: true,
-	    delay: 3000,
-	    stack:{"dir1": "down", "dir2": "right"}
-	});
-};
 	$(function() {
-		var param = {iDisplayStart:1,iDisplayLength:15};
 		var table = $('#UserTable').DataTable({
 			"paging" : true,
 			"lengthChange" : false,
@@ -372,7 +354,7 @@ var sendToMainMessage = function(type, title, msg){
 		var selections = $('#UserTable').DataTable().rows('.selected').data();
 		
 		if (selections.length == 0) {
-			sendToMainMessage('notice', '请选择需要更新的数据', '提醒');
+			alertMsg('请选择需要更新的数据',"info");
 	         return false;
 	       }
 		$("#id").val(selections[0].id);
@@ -394,7 +376,7 @@ var sendToMainMessage = function(type, title, msg){
 	function deleteUser() {
 		var selections = $('#UserTable').DataTable().rows('.selected').data();
 		if (selections.length == 0) {
-			sendToMainMessage('notice', '请选择你要删除的用户！', '提醒');
+			alertMsg('请选择你要删除的用户！',"info");
 			return false;
 		}
 
@@ -407,9 +389,9 @@ var sendToMainMessage = function(type, title, msg){
 			$.post('./user/deleteUser.do', submitData, function(data) {
 				if (data) {
 					$('#UserTable').DataTable().draw(false);
-					sendToMainMessage('success', '提醒', '用户删除成功！');
+					alertMsg('用户删除成功！',"success");
 				} else {
-					sendToMainMessage('error', '提醒', '删除用户失败！');
+					alertMsg('删除用户失败！',"warning");
 				}
 			});
 			$("#id").val("");
@@ -426,13 +408,13 @@ var sendToMainMessage = function(type, title, msg){
 			if (data) {
 				if (isAdd) {
 					$('#UserTable').DataTable().draw();//如果是添加则滚动到第一页并刷新
-					sendToMainMessage('success', '提醒', '数据添加成功');
+					alertMsg('数据添加成功',"success");
 				} else {
 					$('#UserTable').DataTable().draw(false);
-					sendToMainMessage('success', '提醒', '数据修改成功');
+					alertMsg('数据修改成功',"success");
 				}
 			} else {
-				sendToMainMessage('error', '数据操作失败！', '操作失败');
+				alertMsg('数据操作失败！',"warning");
 			}
 
 			$('#usermodal').modal('hide');
@@ -445,7 +427,7 @@ var sendToMainMessage = function(type, title, msg){
 		$("#from").empty();
 		var selections = $('#UserTable').DataTable().rows('.selected').data();
 		if (selections.length == 0) {
-			sendToMainMessage('notice', '提醒', '请选择你要分配角色的用户！');
+			alertMsg('请选择你要分配角色的用户！',"info");
 	         return false;
 	     }
 		$("#userId").val(selections[0].id);
@@ -525,9 +507,9 @@ var sendToMainMessage = function(type, title, msg){
         	var arr = data;
         	if(arr.result=="success"){
         		$('#UserTable').DataTable().draw(false);
-        		sendToMainMessage('success', '提醒', '角色修改成功');
+        		alertMsg('角色修改成功',"success");
         	}else{
-        		sendToMainMessage('error', '提醒', '角色修改失败');
+        		alertMsg('角色修改失败',"warning");
         	} 
         },"json");
         $('#userrolemodal').modal('hide');

@@ -1154,8 +1154,10 @@ function _init() {
             //     require1(item.src);
             //   }
             // })
-            $("#navTabs").append('<li url="'+_href+'"><span>'+_text+'</span><a href="javascript:void(0);" class="fa fa-close"></a></li>');
-            $("#content").append('<div class="tabs-panel">'+result+'</div>');
+           /* $("#navTabs").append('<li url="'+_href+'"><span>'+_text+'</span><a href="javascript:void(0);" class="fa fa-close"></a></li>');*/
+            $("#titleName").html(_text);
+            $("#munulink").html('<li><a href="./index.do"><i class="fa fa-dashboard"></i> 首页</a></li><li class="active">'+_text+'</li>');
+            $("#content").html('<div class="tabs-panel">'+result+'</div>');
             showTab($("#navTabs li[url='"+_href+"']"));   
           },
           error:function(err){

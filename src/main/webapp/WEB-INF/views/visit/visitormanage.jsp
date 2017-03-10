@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
-<div class="diy_table_panel">
+<div class="diy_table_panel" style="font-size:12px">
 	<div class="diy_table_head">
 		<div style="float: left; margin-left: 15px">
 			<div class="input-group">
@@ -195,23 +195,6 @@
 
 <!-- page script -->
 <script>
-var $$ = window;
-while($$.parent !== $$)
-	$$ = $$.parent;
-$$ = $$.jQuery;
-var sendToMainMessage = function(type, title, msg){
-	$$.pnotify({
-		type: type,
-	    title: title,
-		text: msg,
-	    icon: 'picon icon16 iconic-icon-check-alt white',
-	    opacity: 0.95,
-	    history: true,
-	    sticker: true,
-	    delay: 3000,
-	    stack:{"dir1": "down", "dir2": "right"}
-	});
-};
 	$(function() {
 		var table = $('#visitorTable').DataTable({
 			"paging" : true,
@@ -312,7 +295,7 @@ var sendToMainMessage = function(type, title, msg){
 				.data();
 
 		if (selections.length == 0) {
-			sendToMainMessage('notice', '提醒', '请选择需要更新的数据');
+			alertMsg('请选择需要更新的数据',"info");
 			return false;
 		}
 		$("#id").val(selections[0].id);
@@ -334,7 +317,7 @@ var sendToMainMessage = function(type, title, msg){
 		var selections = $('#visitorTable').DataTable().rows('.selected')
 				.data();
 		if (selections.length == 0) {
-			sendToMainMessage('notice', '提醒', '请选择你要删除的访客！');
+			alertMsg('请选择你要删除的访客！',"info");
 			return false;
 		}
 
@@ -348,12 +331,12 @@ var sendToMainMessage = function(type, title, msg){
 				if (data) {
 					if (data.rInfo.ret == 0) {
 						$('#visitorTable').DataTable().draw(false);
-						sendToMainMessage('success', '提醒', '访客删除成功！');
+						alertMsg('访客删除成功！',"success");
 					} else {
-						sendToMainMessage('error', '提醒', data.rInfo.msg);
+						alertMsg(data.rInfo.msg,"warning");
 					}
 				} else {
-					sendToMainMessage('error', '提醒', '网络连接失败，请与管理员联系！');
+					alertMsg('网络连接失败，请与管理员联系！',"danger");
 				}
 			});
 			$("#id").val("");
@@ -361,6 +344,10 @@ var sendToMainMessage = function(type, title, msg){
 	}
 
 	function submitDialog() {
+		if(!validation()){
+			return ;
+		}
+		
 		var url = './addVisitor.do';
 		if (!isAdd) {
 			url = './updateVisitor.do';
@@ -374,12 +361,12 @@ var sendToMainMessage = function(type, title, msg){
 					}else{
 						$('#visitorTable').DataTable().draw(false);
 					}
-					sendToMainMessage('success', '提醒', data.rInfo.msg);
+					alertMsg(data.rInfo.msg,"success");
 				} else {
-					sendToMainMessage('error', '提醒', data.rInfo.msg);
+					alertMsg(data.rInfo.msg,"warning");
 				}
 			} else {
-				sendToMainMessage('error', '提醒', '网络连接失败，请与管理员联系！');
+				alertMsg('网络连接失败，请与管理员联系！',"danger");
 			}
 			$('#visitormodal').modal('hide');
 			//清空form表单中的数据
@@ -396,6 +383,23 @@ var sendToMainMessage = function(type, title, msg){
 		/* $('#visitorTable').DataTable().ajax.url('./visitorlist.do?status='+$('#selectstatus').val()+'&visitorName='+visitorName).load(); */
 		$('#visitorTable').DataTable().ajax.reload();
 		$('#selectvisitorName').val("");
+	}
+	
+	function validation(){
+		var phone = $("#mobile").val();
+		if(!/(^(\d{3,4}-)?\d{7,8})$|(13[0-9]{9})$/.test(phone)){
+			alertMsg('输入的联系电话格式有误，请重新输入!',"info");
+			return false;
+		}
+		var email = $("#email").val();
+		if(email != null){
+			if(!/\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/.test(email)){
+				alertMsg('提醒','邮箱格式有误，请重新输入!',"info");
+				return false;
+			}
+		}
+		
+		return true;
 	}
 	
 </script>

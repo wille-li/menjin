@@ -16,8 +16,7 @@
   <link rel="stylesheet" href="<c:url value="/resources/adminlte/dist/css/font-awesome.min.css"></c:url>">
   <!-- Ionicons -->
   <link rel="stylesheet" href="<c:url value="/resources/adminlte/dist/css/ionicons.min.css"></c:url>">
-  <!-- Theme style -->
-  <link rel="stylesheet" href="<c:url value="/resources/adminlte/dist/css/AdminLTE.min.css"></c:url>">
+  
   <!-- AdminLTE Skins. Choose a skin from the css/skins
        folder instead of downloading all of them to reduce the load. -->
   <link rel="stylesheet" href="<c:url value="/resources/adminlte/dist/css/skins/_all-skins.min.css"></c:url>">
@@ -25,10 +24,13 @@
   <%-- <link rel="stylesheet" href="<c:url value="/resources/adminlte/plugins/datatables/dataTables.bootstrap.css"></c:url>"> --%>
   
   <link rel="stylesheet" href="<c:url value="/resources/adminlte/plugins/datatables/jquery.dataTables.min.css"></c:url>">
-  <link rel="stylesheet" href="<c:url value="/resources/adminlte/plugins/pnotify/jquery.pnotify.default.css"></c:url>">
   <link rel="stylesheet" href="<c:url value="/resources/adminlte/plugins/datepicker/datepicker3.css"></c:url>">
+  <link rel="stylesheet" href="<c:url value="/resources/adminlte/plugins/datetimepicker/bootstrap-datetimepicker.css"></c:url>">
   <!-- Bootstrap 3.3.6 -->
   <link rel="stylesheet" href="<c:url value="/resources/adminlte/plugins/bootstrap/css/bootstrap.min.css"></c:url>">
+  <!-- Theme style -->
+  <link rel="stylesheet" href="<c:url value="/resources/adminlte/dist/css/AdminLTE.min.css"></c:url>">
+  <link rel="stylesheet" type="text/css" href="<c:url value="/resources/css/visitrecordmanage.css"></c:url>" />
 <!-- 以上为公共css -->
 <script>
 function iFrameHeight() { 
@@ -69,129 +71,11 @@ ifm.height = subWeb.body.scrollHeight;
       <!-- Home tab content -->
       <div class="tab-pane" id="control-sidebar-home-tab">
 
-        <h3 class="control-sidebar-heading">任务进度</h3>
-        <ul class="control-sidebar-menu">
-          <li>
-            <a href="javascript:void(0)">
-              <h4 class="control-sidebar-subheading">
-                自定义模板的设计
-                <span class="label label-danger pull-right">70%</span>
-              </h4>
-
-              <div class="progress progress-xxs">
-                <div class="progress-bar progress-bar-danger" style="width: 70%"></div>
-              </div>
-            </a>
-          </li>
-          <li>
-            <a href="javascript:void(0)">
-              <h4 class="control-sidebar-subheading">
-                更新简历
-                <span class="label label-success pull-right">95%</span>
-              </h4>
-
-              <div class="progress progress-xxs">
-                <div class="progress-bar progress-bar-success" style="width: 95%"></div>
-              </div>
-            </a>
-          </li>
-          <li>
-            <a href="javascript:void(0)">
-              <h4 class="control-sidebar-subheading">
-                获取积分
-                <span class="label label-warning pull-right">50%</span>
-              </h4>
-
-              <div class="progress progress-xxs">
-                <div class="progress-bar progress-bar-warning" style="width: 50%"></div>
-              </div>
-            </a>
-          </li>
-          <li>
-            <a href="javascript:void(0)">
-              <h4 class="control-sidebar-subheading">
-                后端框架
-                <span class="label label-primary pull-right">68%</span>
-              </h4>
-
-              <div class="progress progress-xxs">
-                <div class="progress-bar progress-bar-primary" style="width: 68%"></div>
-              </div>
-            </a>
-          </li>
-        </ul>
-        <!-- /.control-sidebar-menu -->
-
       </div>
       <!-- /.tab-pane -->
 
       <!-- Settings tab content -->
       <div class="tab-pane" id="control-sidebar-settings-tab">
-        <form method="post">
-          <h3 class="control-sidebar-heading">一般设置</h3>
-
-          <div class="form-group">
-            <label class="control-sidebar-subheading">
-              面板的使用报告
-              <input type="checkbox" class="pull-right" checked>
-            </label>
-
-            <p>
-              有关此常规设置选项的一些信息
-            </p>
-          </div>
-          <!-- /.form-group -->
-
-          <div class="form-group">
-            <label class="control-sidebar-subheading">
-              允许邮件重定向
-              <input type="checkbox" class="pull-right" checked>
-            </label>
-
-            <p>
-              其他可用的选项集
-            </p>
-          </div>
-          <!-- /.form-group -->
-
-          <div class="form-group">
-            <label class="control-sidebar-subheading">
-              在帖子中公开作者姓名
-              <input type="checkbox" class="pull-right" checked>
-            </label>
-
-            <p>
-              允许用户在博客帖子中显示自己的名字
-            </p>
-          </div>
-          <!-- /.form-group -->
-
-          <h3 class="control-sidebar-heading">聊天设置</h3>
-
-          <div class="form-group">
-            <label class="control-sidebar-subheading">
-              显示我是否在线
-              <input type="checkbox" class="pull-right" checked>
-            </label>
-          </div>
-          <!-- /.form-group -->
-
-          <div class="form-group">
-            <label class="control-sidebar-subheading">
-              关闭通知
-              <input type="checkbox" class="pull-right">
-            </label>
-          </div>
-          <!-- /.form-group -->
-
-          <div class="form-group">
-            <label class="control-sidebar-subheading">
-              删除的聊天记录
-              <a href="javascript:void(0)" class="text-red pull-right"><i class="fa fa-trash-o"></i></a>
-            </label>
-          </div>
-          <!-- /.form-group -->
-        </form>
       </div>
       <!-- /.tab-pane -->
     </div>
@@ -211,27 +95,6 @@ ifm.height = subWeb.body.scrollHeight;
 </div>
 
 
-<div class="modal fade" id="smModal">
-  <div class="modal-dialog modal-sm">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">×</span></button>
-        <h4 class="modal-title">提示</h4>
-      </div>
-      <div class="modal-body">
-        <p>确认删除？</p>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary">确认</button>
-      </div>
-    </div>
-    <!-- /.modal-content -->
-  </div>
-  <!-- /.modal-dialog -->
-</div>
-
 <!-- jQuery 2.2.3 -->
 <script src="<c:url value="/resources/adminlte/plugins/jQuery/jquery-2.2.3.min.js"></c:url>"></script>
 <!-- Bootstrap 3.3.6 -->
@@ -245,8 +108,8 @@ ifm.height = subWeb.body.scrollHeight;
 
 <script src="<c:url value="/resources/adminlte/plugins/datatables/jquery.dataTables.min.js"></c:url>"></script>
 <script type="text/javascript" src="<c:url value="/resources/js/service.js"></c:url>"></script>
-<script type="text/javascript" src="<c:url value="/resources/adminlte/plugins/pnotify/jquery.pnotify.min.js"></c:url>"></script>
 <script src="<c:url value="/resources/adminlte/plugins/datepicker/bootstrap-datepicker.js"></c:url>"></script>
+<script src="<c:url value="/resources/adminlte/plugins/datetimepicker/bootstrap-datetimepicker.js"></c:url>"></script>
 
 </body>
 </html>

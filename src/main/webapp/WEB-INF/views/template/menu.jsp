@@ -67,7 +67,7 @@
             <li><a target="navTab" href="./vist.do"><i class="fa fa-circle-o"></i> 拜访记录管理</a></li>
           </ul>
         </li>
-        <li class="treeview">
+        <%-- <li class="treeview">
           <a href="#">
             <i class="fa fa-table"></i> <span>表格</span>
             <span class="pull-right-container">
@@ -79,7 +79,7 @@
             <li><a target="navTab" href="<%=request.getContextPath() %>/resources/adminlte/include/tables/data.html"><i class="fa fa-circle-o"></i> 数据表格</a></li>
             <li><a target="navTab" href="<%=request.getContextPath() %>/resources/adminlte/include/tables/diytable.html"><i class="fa fa-circle-o"></i> DIY表格</a></li>
           </ul>
-        </li>
+        </li> --%>
         <li class="header">标签</li>
         <li><a href="javascript:void(0);"><i class="fa fa-circle-o text-red"></i> <span>重要</span></a></li>
         <li><a href="javascript:void(0);"><i class="fa fa-circle-o text-yellow"></i> <span>警告</span></a></li>
