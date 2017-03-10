@@ -80,10 +80,10 @@
             <li><a target="navTab" href="<%=request.getContextPath() %>/resources/adminlte/include/tables/diytable.html"><i class="fa fa-circle-o"></i> DIY表格</a></li>
           </ul>
         </li> --%>
-        <li class="header">标签</li>
+       <!--  <li class="header">标签</li>
         <li><a href="javascript:void(0);"><i class="fa fa-circle-o text-red"></i> <span>重要</span></a></li>
         <li><a href="javascript:void(0);"><i class="fa fa-circle-o text-yellow"></i> <span>警告</span></a></li>
-        <li><a href="javascript:void(0);"><i class="fa fa-circle-o text-aqua"></i> <span>消息</span></a></li>
+        <li><a href="javascript:void(0);"><i class="fa fa-circle-o text-aqua"></i> <span>消息</span></a></li> -->
       </ul>
     </section>
     <!-- /.sidebar -->
