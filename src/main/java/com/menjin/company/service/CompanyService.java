@@ -8,4 +8,6 @@ import com.menjin.company.model.Company;
 public interface CompanyService extends BaseService<Company>{
 
 	public List<Company> selectAllAndDepartment();
+	
+	public Company selectByCompanyName(String companyName);
 }

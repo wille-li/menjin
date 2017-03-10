@@ -24,10 +24,7 @@
 			<div class="input-group">
 				<!-- <button class="btn btn-warning" type="button" id="delrole"
 					onclick="#">导入公司数据</button> -->
-				<form action="./uploadBatchCompanys.do" id="index_form" name="index_form" method="post" class="form-horizontal" enctype="multipart/form-data">
-  				    <input type="file" name="uploadfile" id="uploadfile" >
-  				    <button type="submit" class="btn btn-warning">导入员工数据</button>
-				</form>
+  				    <button type="submit" class="btn btn-warning" onclick="uploadBatchEmployees()">导入员工数据</button>
 			</div>
 		</div>
 		<div style="float: right; margin-left: 10px">
@@ -63,6 +60,42 @@
 					<tbody>
 					</tbody>
 				</table>
+			</div>
+		</div>
+	</div>
+
+	<div class="modal fade bs-example-modal-sm" id="uploadBatchEmployees">
+		<div class="modal-dialog modal-sm">
+			<div class="modal-content">
+				<div class="modal-header" style="padding: 10px 15px 10px 15px;">
+					<button type="button" class="close" data-dismiss="modal"
+						aria-label="Close">
+						<span aria-hidden="true">×</span>
+					</button>
+					<h4 class="modal-title" id="visitortitle">导入员工数据</h4>
+				</div>
+				<div class="modal-body">
+					<form id="uploadform" name="uploadform" method="post" class="form-horizontal" 
+					enctype="multipart/form-data" action="./uploadBatchEmployees.do" onsubmit="return toUpload();">
+						<div style="margin-bottom: 10px;">
+							<div class="input-group">
+								<button type="button" class="btn btn-default" onclick="sds()">下载模板</button>
+							</div>
+						</div>
+						<div style="margin-bottom: 10px;">
+							<div class="input-group">
+								<input type="file" name="uploadfile" id="uploadfile" >
+  				                <button type="submit" class="btn btn-default">导入公司数据</button>
+							</div>
+						</div>
+
+					</form>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+					<button type="button" class="btn btn-primary"
+						onclick="submitDialog()">确认</button>
+				</div>
 			</div>
 		</div>
 	</div>
@@ -375,6 +408,19 @@
 			return false;
 		}
 		return true;
+	}
+	
+	function uploadBatchEmployees(){
+		$('#uploadBatchEmployees').modal('show');
+	}
+	
+	function toUpload(){
+		$("#uploadform").ajaxSubmit(function(data) { 
+			alertMsg(data.rInfo.msg,"success");
+			$('#uploadBatchEmployees').modal('hide');
+			$('#employeeTable').DataTable().ajax.reload();
+		}); 
+		return false;
 	}
 	
 	
