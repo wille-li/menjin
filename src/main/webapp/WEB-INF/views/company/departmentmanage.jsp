@@ -1,93 +1,371 @@
 <%@ page language="java" contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
-<%
-String path = request.getContextPath();
-String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/";
-%>
-   <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
-<head>
-	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-	<title>部门管理</title>
-    <link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/resources/easyui/themes/gray/easyui.css" />
-    <link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/resources/easyui/themes/icon.css" />
-    <script type="text/javascript" src="<%=request.getContextPath()%>/resources/easyui/jquery.min.js"></script>
-    <script type="text/javascript" src="<%=request.getContextPath()%>/resources/easyui/jquery.easyui.min.js"></script>
-    <script type="text/javascript" src="<%=request.getContextPath()%>/resources/js/service.js"></script>
-    <script type="text/javascript" src="<%=request.getContextPath()%>/resources/js/departmentmanage.js"></script>
-  </head>
-<body>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<div class="diy_table_panel" style="font-size:12px">
+	<div class="diy_table_head">
+		<div style="float: left; margin-left: 15px">
+			<div class="input-group">
+				<button class="btn btn-success" type="button" id="addEmployee"
+					onclick="addEmployee()">新增员工</button>
+			</div>
+		</div>
+		<div style="float: left; margin-left: 10px">
+			<div class="input-group">
+				<button class="btn btn-info" type="button" id="roledetail"
+					onclick="updateEmployee()">修改员工信息</button>
+			</div>
+		</div>
+		<div style="float: left; margin-left: 10px">
+			<div class="input-group">
+				<button class="btn btn-danger" type="button" id="delrole"
+					onclick="deleteEmployee()">删除员工</button>
+			</div>
+		</div>
+		<div style="float: right; margin-left: 10px">
 
-	<div class="easyui-layout" data-options="fit:true">
-		<div data-options="region:'west',split:true,iconCls:'icon-ok'" title="公司列表" style="width:300px;">
-		   <ul id="companytree" class="easyui-tree" >
-			<!-- <li>
-				<span>所有公司</span>
-				<ul>
-					<li>
-						<span>Photos</span>
-					</li>
-					<li>
-						<span>Program Files</span>
-					</li>
-					<li>index.html</li>
-					<li>about.html</li>
-					<li>welcome.html</li>
-				</ul>
-			</li> -->
-		</ul>
-		</div>
-		<div data-options="region:'center',split:true,title:'部门信息',iconCls:'icon-ok'">
-		     <table id='departmenttb' class="easyui-datagrid" >  
-	             <thead>  
-		           <tr>  
-			       <th field="departmentName" width="80">部门名称</th>  
-			       <th field="departmentHeader" width="50">部门经理</th>  
-			       <th field="departmentPhone"  width="80">部门联系电话</th>  
-			       <th field="createBy" width="80">记录创建人</th>  
-			       <th field="createTime" width="80" formatter="formatDatebox">记录创建时间</th>  
-			       <th field="modifiedDate" width="80" formatter="formatDatebox">记录修改时间</th> 
-		           </tr>  
-	             </thead>  
-              </table>
-		</div>
-	</div>
-	<div id="tb">
-		<div region="north" border="false" style="border-bottom:1px solid #ddd;height:28px;padding:2px 2px 2px 2px;background:#fafafa;">
-			<div style="float:left;">
-				<a href="javascript:void(0)" id="addcm" class="easyui-linkbutton" plain="true" icon="icon-add" onclick="addBrand()">新增</a>
-				<a href="javascript:void(0)" id="updatecm" class="easyui-linkbutton" plain="true" icon="icon-save" onclick="updateBrand()">编辑</a>
-				<a href="javascript:void(0)" id="deletecm" class="easyui-linkbutton" plain="true" icon="icon-remove" onclick="deleteCompany()">删除</a>
-			</div>
-			<div class="datagrid-btn-separator"></div>
-			<div style="float:right;">
-			   <input class="easyui-searchbox" data-options="prompt:'Please Input Value',searcher:''" style="width:130px;vertical-align:middle;"></input>
-			   <a href="#" class="easyui-linkbutton" iconCls="icon-search">Search</a>
-			</div>
-		</div>
-	</div>
-	
-	<div id="departmentDialog" class="easyui-dialog" data-options="modal:true" closed="true" style="width:400px;height:300px;padding:10px">
-		<div class="easyui-panel" style="padding:30px 10px;">
-			<form id="departmentDialogForm"  method="post">
-			<input class="easyui-textbox" type="hidden" id="id" name="id"/>
-			<input class="easyui-textbox" type="hidden" id="companyId" name="companyId"/>
-			<div style="margin-bottom:20px">
-				<input class="easyui-textbox" id="departmentName" name="departmentName" style="width:100%" label='部门名称'/>
-			</div>
-			<div style="margin-bottom:20px">
-				<input class="easyui-textbox" id="departmentHeader" name="departmentHeader" style="width:100%" label='部门经理'/>
-			</div>
-			<div style="margin-bottom:10px">
-				<input class="easyui-textbox" id="departmentPhone" name="departmentPhone" style="width:100%" label='部门联系电话'/>
-			</div>
+			<form class="form-inline">
+			    <div class="form-group">
+					<select class="form-control" id="checkBycompany" name="checkBycompany" onchange="toCheck(0)">
+                    </select>
+				</div>
+				<div class="form-group">
+					<input type="text"
+						class="form-control" id="checkEmployeeInput" name="checkEmployeeInput"
+						placeholder="输入员工名称" >
+				</div>
+				<button type="button" class="btn btn-info" onclick="toCheck(1)"><span class="glyphicon glyphicon-search" ></span></button>
 			</form>
-	    </div>
+		</div>
 	</div>
-    
-    <div id="departmentDialogButton">
-	    <a href="javascript:void(0)" class="easyui-linkbutton" id="saveCompany" onclick="submitDialog()">保存</a>
-	    <a href="javascript:void(0)" class="easyui-linkbutton" id="quitAdd" onclick="quitDialog()">取消</a>
+	<div class="diy_table_body box">
+		<div class="">
+			<div class="box-body">
+				<table id="employeeTable" class="display table table-bordered table-hover">
+					<thead>
+						<tr>
+							<th>员工编号</th>
+							<th>员工姓名</th>
+							<th>性别</th>
+							<th>邮箱</th>
+							<th>联系电话</th>
+							<th>证件号码</th>
+						</tr>
+					</thead>
+					<tbody>
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+
+	<div class="modal fade" id="visitormodal">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal"
+						aria-label="Close">
+						<span aria-hidden="true">×</span>
+					</button>
+					<h4 class="modal-title" id="visitortitle"></h4>
+				</div>
+				<div class="modal-body">
+					<form class="form-horizontal" id="companyform">
+					    <input class="easyui-textbox" type="hidden" id="id" name="id"/>
+					     <input class="easyui-textbox" type="hidden" id="companyId" name="companyId"/>
+						<fieldset>
+						
+						    <div style="margin-bottom: 10px;width: 400px;">
+								<div class="input-group">
+									<span class="input-group-addon">所属公司</span>
+									<select class="form-control" id="companyBox" name="companyBox">
+                                    </select>
+								</div>
+							</div> 
+							
+							<div class="recordinputleft">
+								<div class="input-group">
+									<span class="input-group-addon">员工编号</span>
+									<input class="form-control" id="employeeNo"
+									name="employeeNo" />
+								</div>
+							</div>
+							<div class="recordinputright">
+								<div class="input-group">
+									<span class="input-group-addon">员工姓名</span>
+									<input class="form-control" id="employeeName"
+									name="employeeName" />
+								</div>
+							</div>
+							
+							<div class="recordinputleft">
+								<div class="input-group">
+									<span class="input-group-addon">性别</span>
+									<input class="form-control" id="employeeSex"
+									name="employeeSex"/>
+								</div>
+							</div>
+							<div class="recordinputright">
+								<div class="input-group">
+								<span class="input-group-addon">证件号码</span>
+									<input class="form-control" id="IdCardNum"
+									name="IdCardNum"/>
+								</div>
+							</div>
+							
+							<div class="recordinputleft">
+								<div class="input-group">
+									<span class="input-group-addon">联系电话</span>
+									<input class="form-control" id="mobile"
+									name="mobile"/>
+								</div>
+							</div>
+							<div class="recordinputright">
+								<div class="input-group">
+									<span class="input-group-addon">邮箱</span>
+									<input class="form-control" id="email"
+									name="email"/>
+								</div>
+							</div>
+							
+						</fieldset>
+					</form>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+					<button type="button" class="btn btn-primary" onclick="submitDialog()">确认</button>
+				</div>
+			</div>
+			<!-- /.modal-content -->
+		</div>
+		<!-- /.modal-dialog -->
+	</div>
+
+
+
+	<!-- ./wrapper -->
+	<!--   <div class="diy_table_foot">
+    <span>每页</span>
+    <div class="btn-group select_pagesize">
+      <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">20</button>
+      <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+        <span class="caret"></span>
+        <span class="sr-only"></span>
+      </button>
+      <ul class="dropdown-menu" role="menu">
+        <li><a href="#">20</a></li>
+        <li><a href="#">50</a></li>
+        <li><a href="#">100</a></li>
+        <li><a href="#">500</a></li>
+      </ul>
     </div>
+    <span>条,共1999条，当前第1页</span>
+    <div class="pull-right pagination" data-toggle="pagination" data-total="1999" data-page-size="20" data-page-current="50"></div>
+  </div> -->
+</div>
+
+
+<!-- page script -->
+<script>
+	$(function() {
+		var floatString = "";
+		var floatData = "[";
+		for (var i = 1; i < 101; i++) {
+			var item = '{"value":' + i + ',"text":"' + i + '楼"},';
+			if (i == 100) {
+				item = '{"value":' + i + ',"text":"' + i + '楼"}';
+			}
+			floatData += item;
+		}
+		floatData += "]";
+		floatData = $.parseJSON(floatData);
+	    $.each(floatData,function(index,item){
+	    	floatString += "<option value='"+item.value+"'>"+item.text+"</option>";
+	    });
+	    $("#companyAddress").html(floatString);
+		var table = $('#employeeTable').DataTable({
+			"paging" : true,
+			"lengthChange" : false,
+			"searching" : false,
+			"select": true,
+			"ordering" : false,
+			"info" : true,
+			"autoWidth" : true,
+			"keys" : true,
+			"responsive" : true,
+			"iDisplayLength" : 15,// 每页显示行数 
+			"oLanguage" : { // 汉化  
+	            "sUrl" : "./resources/adminlte/plugins/datatables/language.json"  
+	            },
+	        "processing": true,
+	        "serverSide": true,
+	        "ajax": {
+	        	"url":"./employeelistBydepartmentId.do",
+	        	"data": function ( d ) {
+	                   //添加额外的参数传给服务器
+	                   d.companyId = $('#checkBycompany').val();
+	                   d.employeeName = $('#checkEmployeeInput').val();
+	        	},
+	        	"type":"Post"
+	        },
+	        "columns": [  
+	                     { "data": "employeeNo" },  
+	                     { "data": "employeeName"},
+	                     { "data": "employeeSex"},
+	                     { "data": "email"},
+	                     { "data": "mobile"},
+	                     { "data": "idCardNum"}
+	              ] 
+		});
+		
+		 $('#employeeTable tbody').on( 'click', 'tr', function () {
+		        if ( $(this).hasClass('selected') ) {
+		            $(this).removeClass('selected');
+		        }
+		        else {
+		            table.$('tr.selected').removeClass('selected');
+		            $(this).addClass('selected');
+		        }
+		    } );
+		 
+		 $('#birth').datepicker({
+			 format: 'yyyy-mm-dd',
+		      autoclose: true
+		    });
+
+	});
 	
-</body>
-</html>
+	
+	var companyData = getJSONData({url: "./getcompanylistByTree.do"});
+	function Fillcombox(){
+		var companyString = "<option value=''>请选择公司</option>";
+		
+		$.each(companyData,function(index,item){
+			companyString+="<option value='"+item.id+"' index='"+index+"'>"+item.companyName+"</option>";
+		});
+		$("#checkBycompany").html(companyString);
+		$("#companyBox").html(companyString);
+	}
+	
+	Fillcombox();
+	
+	var isAdd = true; 
+	
+	/* sendToMainMessage('error', '所搜索的内容暂时没有!', ''); */
+	
+	function addEmployee(){
+		  isAdd = true;
+		  $("#id").val("");
+		  $("#companyId").val("");
+		  $("#employeeNo").val("");
+		  $("#employeeName").val("");
+		  $("#employeeSex").val("");
+		  $("#email").val("");
+		  $("#mobile").val("");
+		  $("#IdCardNum").val("");
+		  $('#visitortitle').html('添加员工信息');
+		  $('#visitormodal').modal('show');
+	}
+	
+
+	function updateEmployee() {
+		isAdd = false;
+		var selections = $('#employeeTable').DataTable().rows('.selected')
+				.data();
+
+		if (selections.length == 0) {
+			alertMsg('请选择需要更新的数据',"info");
+			return false;
+		}
+		$("#id").val(selections[0].id);
+		$("#companyBox").val(selections[0].company.id);
+		$("#employeeNo").val(selections[0].employeeNo);
+		$("#employeeName").val(selections[0].employeeName);
+		$("#employeeSex").val(selections[0].employeeSex);
+		$("#email").val(selections[0].email);
+	    $("#mobile").val(selections[0].mobile);
+		$("#IdCardNum").val(selections[0].idCardNum);
+		$('#visitortitle').html('修改员工信息');
+		$('#visitormodal').modal('show');
+	}
+
+	function deleteEmployee() {
+		var selections = $('#employeeTable').DataTable().rows('.selected')
+				.data();
+		if (selections.length == 0) {
+			alertMsg('请选择你要删除的员工！',"info");
+			return false;
+		}
+
+		if (confirm("你确认删除该员工吗？")) {
+			$("#id").val(selections[0].id);
+			var id = $("#id").val();
+			var submitData = {
+				id : id
+			};
+			$.post('./deleteemployee.do', submitData, function(data) {
+				if (data) {
+					if (data.rInfo.ret == 0) {
+						$('#employeeTable').DataTable().draw(false);
+						alertMsg(data.rInfo.msg,"success");
+					} else {
+						alertMsg(data.rInfo.msg,"warning");
+					}
+				} else {
+					alertMsg('网络连接失败，请与管理员联系！',"danger");
+				}
+			});
+			$("#id").val("");
+		}
+	}
+
+	function submitDialog() {
+		/* if (!validation()) {
+			return;
+		} */
+		var url = './addemployeement.do';
+		$("#companyId").val($("#companyBox").val());
+		if (!isAdd) {
+			url = './updateemployee.do';
+		}
+		var submitData = $('#companyform').serialize();
+		$.post(url, submitData, function(data) {
+			if (data) {
+				if (data.rInfo.ret == 0) {
+					if(isAdd){
+						$('#employeeTable').DataTable().draw();//如果是添加则滚动到第一页并刷新
+					}else{
+						$('#employeeTable').DataTable().draw(false);
+					}
+					alertMsg(data.rInfo.msg,"success");
+				} else {
+					alertMsg(data.rInfo.msg,"warning");
+				}
+			} else {
+				alertMsg('网络连接失败，请与管理员联系！',"danger");
+			}
+			$('#visitormodal').modal('hide');
+			//清空form表单中的数据
+		});
+	}
+	
+	
+	
+	function toCheck(type){
+		/* $('#employeeTable').DataTable().ajax.url('./visitorlist.do?status='+$('#selectstatus').val()+'&visitorName='+visitorName).load(); */
+		if(type == 0){
+			$('#checkEmployeeInput').val("");
+		}
+		$('#employeeTable').DataTable().ajax.reload();
+		$('#checkEmployeeInput').val("");
+	}
+	
+	function validation() {
+		var phone = $("#companyPhone").val();
+		if (!/(^(\d{3,4}-)?\d{7,8})$|(13[0-9]{9})$/.test(phone)) {
+			alertMsg('输入的公司联系电话格式有误，请重新输入!',"info");
+			return false;
+		}
+		return true;
+	}
+	
+	
+</script>

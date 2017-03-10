@@ -16,9 +16,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.base.annotation.log.SystemControllerLog;
+import com.base.entity.ReturnInfo;
 import com.base.entity.SimplePage;
 import com.menjin.company.model.Company;
 import com.menjin.company.model.Department;
@@ -41,6 +44,10 @@ public class EmployeeController {
 	
 	@Autowired
 	EmployeeService employeeService;
+	
+    public final static int SUCCESS = 0;
+	
+	public final static int FAIL = 1;
 
 	@RequestMapping(value = "/employee.do")
 	@SystemControllerLog
@@ -51,19 +58,27 @@ public class EmployeeController {
 	@RequestMapping(value = "/employeelistBydepartmentId.do")
 	@SystemControllerLog
 	@ResponseBody
-	public Map getEmployeeByDepartemtnId(@Param(value = "departmentId") Integer departmentId,
-			@Param(value="pageSize") Integer page,@Param(value="rows") Integer rows) {
+	public Map getEmployeeByDepartemtnId(@Param(value = "companyId") Integer companyId,@Param(value = "employeeName") String employeeName,
+			HttpServletRequest request) {
+		Integer page = Integer.parseInt(request.getParameter("start"));
+        System.out.println(page);
+        Integer rows = Integer.parseInt(request.getParameter("length"));
+        System.out.println(rows);
+        String draw = request.getParameter("draw") == null ? "0" : request.getParameter("draw") + 1;
 		Map<String, Object> params = new HashMap<String, Object>();
-		params.put("departmentId", departmentId);
+		params.put("companyId", companyId);
+		params.put("employeeName", employeeName);
 		int count = employeeService.findCount(null, params);
 		logger.info("Conpany Count:"+count);
-		SimplePage simplepage = new SimplePage(page, rows, count);
+		SimplePage simplepage = new SimplePage(page/rows+1, rows, count);
 		
 		String orderBy = null;
 		List<Employee> employees = employeeService.findByPage(simplepage,params, orderBy);
 		Map maps = new HashMap();
-		maps.put("rows", employees);
-		maps.put("total", count);
+		maps.put("data", employees);
+		maps.put("draw", draw);
+		maps.put("recordsTotal", count);
+		maps.put("recordsFiltered", count);
 		return maps;
 	}
 	
@@ -121,44 +136,116 @@ public class EmployeeController {
 	@RequestMapping(value = "/addemployeement.do")
 	@SystemControllerLog
 	@ResponseBody
-	public Integer addEmployeement(@ModelAttribute Employee employee,
-			@Param(value = "departmentId") String departmentId,
+	public Map<String, Object> addEmployeement(@ModelAttribute Employee employee,
+			@Param(value = "companyId") String companyId,
 			HttpServletRequest request, HttpServletResponse response) {
 		logger.info("Start to insert employee message!");
-		if (departmentId != null && !departmentId.equals("")) {
-			Department department = new Department();
-			department.setId(Integer.parseInt(departmentId));
-			employee.setDepartment(department);
+		Map<String, Object> returnMap = new HashMap<String, Object>();
+		ReturnInfo rInfo = new ReturnInfo();
+		if (companyId != null && !companyId.equals("")) {
+			Company company = new Company();
+			company.setId(Integer.parseInt(companyId));
+			company = companyService.findById(company);
+			if(company.getCompanyName().equals("") || company.getCompanyName() == null  ){
+				rInfo.setMsg("请选择所属公司！");
+				rInfo.setRet(FAIL);
+				returnMap.put("rInfo", rInfo);
+				return returnMap;
+			}
+			employee.setCompany(company);
 			employee.setModifiedDate(new Date());
 			employee.setCreateBy("Admin");
+			String index = company.getCompanyName()+","+company.getCompanyAddress()+","+company.getDoorPlate()
+					+","+company.getCompanyPhone()+","+employee.getEmployeeName()+","+employee.getMobile();
+			employee.setIndex(index);
 			int returnCode = employeeService.add(employee);
+			if(returnCode > SUCCESS){
+				rInfo.setMsg("员工数据添加成功!");
+				rInfo.setRet(SUCCESS);
+			}else{
+				rInfo.setMsg("员工数据添加失败,请重试！");
+				rInfo.setRet(FAIL);
+			}
 			logger.info("End to insert employee. ReturnCode:"+returnCode);
-			return returnCode;
+		}else{
+			rInfo.setMsg("请选择所属公司！");
+			rInfo.setRet(FAIL);
 		}
-
-		return null;
+		returnMap.put("rInfo", rInfo);
+		return returnMap;
 	}
 
 	@RequestMapping(value = "/updateemployee.do")
 	@SystemControllerLog
 	@ResponseBody
-	public Integer updateEmployeement(@ModelAttribute Employee employee,
-			/*@Param(value = "departmentId") String departmentId,*/
+	public Map<String, Object> updateEmployeement(
+			@ModelAttribute Employee employee,
+			@Param(value = "companyId") String companyId,
 			HttpServletRequest request, HttpServletResponse response) {
-		    employee.setModifiedDate(new Date());
-			int returnCode = employeeService.modifyById(employee);
-			return returnCode;
+		Map<String, Object> returnMap = new HashMap<String, Object>();
+		ReturnInfo rInfo = new ReturnInfo();
+		employee.setModifiedDate(new Date());
+		Company company = new Company();
+		company.setId(Integer.parseInt(companyId));
+		employee.setCompany(company);
+		company = companyService.findById(company);
+		String index = company.getCompanyName()+","+company.getCompanyAddress()+","+company.getDoorPlate()
+				+","+company.getCompanyPhone()+","+employee.getEmployeeName()+","+employee.getMobile();
+		employee.setIndex(index);
+		int returnCode = employeeService.modifyById(employee);
+		if(returnCode > SUCCESS){
+			rInfo.setMsg("员工数据添加成功!");
+			rInfo.setRet(SUCCESS);
+		}else{
+			rInfo.setMsg("员工数据添加失败,请重试！");
+			rInfo.setRet(FAIL);
+		}
+		returnMap.put("rInfo", rInfo);
+		return returnMap;
 	}
 
 	@RequestMapping(value = "/deleteemployee.do")
 	@SystemControllerLog
 	@ResponseBody
-	public Integer delectCompany(@ModelAttribute Employee employee,
+	public Map<String, Object> delectCompany(@ModelAttribute Employee employee,
 			HttpServletRequest request, HttpServletResponse response) {
 		logger.info("Start to delete Employee!");
+		Map<String, Object> returnMap = new HashMap<String, Object>();
+		ReturnInfo rInfo = new ReturnInfo();
 		int returnCode = employeeService.deleteById(employee);
+		if(returnCode > SUCCESS){
+			rInfo.setMsg("刪除员工数据成功!");
+			rInfo.setRet(SUCCESS);
+		}else{
+			rInfo.setMsg("刪除员工数据失败,请重试!");
+			rInfo.setRet(FAIL);
+		}
+		returnMap.put("rInfo", rInfo);
 		logger.info("End to delete Employee。RetrunCode:" + returnCode);
-		return returnCode;
+		return returnMap;
+	}
+	
+	@RequestMapping(value="/uploadBatchEmployees.do")
+	@SystemControllerLog
+	@ResponseBody
+	public Map<String, Object> BatchUploadEmployees(@RequestParam("uploadfile") MultipartFile excelFile, String idCardNum,
+			String visitorName, String birth){
+		logger.info("Start to Upload Batch Company!");
+		Map<String, Object> returnMap = new HashMap<String, Object>();
+		ReturnInfo rInfo = new ReturnInfo();
+		System.out.println(excelFile.getName());
+		System.out.println(excelFile.getOriginalFilename());
+		System.out.println(excelFile.getSize());
+		/*int returnCode = companyService.add(company);
+		if(returnCode > SUCCESS){
+			rInfo.setMsg("公司数据添加成功!");
+			rInfo.setRet(SUCCESS);
+		}else{
+			rInfo.setMsg("公司数据添加失败,请重试！");
+			rInfo.setRet(FAIL);
+		}*/
+		returnMap.put("rInfo", rInfo);
+		return returnMap;
 	}
 
 }

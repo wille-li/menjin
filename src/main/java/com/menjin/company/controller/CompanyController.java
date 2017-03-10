@@ -15,7 +15,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.base.annotation.log.SystemControllerLog;
 import com.base.entity.ReturnInfo;
@@ -153,5 +155,5 @@ public class CompanyController {
 		logger.info("End to delete company。RetrunCode:"+returnCode);
 		return returnMap;
 	}
-
+	
 }
