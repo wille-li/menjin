@@ -59,6 +59,13 @@
 		<include refid="columnList" />
 		FROM t_company WHERE id = #{id}
 	</select>
+	
+	<select id="selectByCompanyName" parameterType="com.menjin.company.model.Company"
+		resultMap="resultMap">
+		SELECT
+		<include refid="columnList" />
+		FROM t_company WHERE company_name = #{companyName}
+	</select>
 
 	<delete id="deleteByPrimaryKey" parameterType="com.menjin.company.model.Company">
 		DELETE FROM

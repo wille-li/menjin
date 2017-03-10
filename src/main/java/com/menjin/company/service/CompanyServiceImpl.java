@@ -31,4 +31,9 @@ public class CompanyServiceImpl extends BaseServiceImpl<Company> implements Comp
 		return companyMapper.selectAllAndDepartment();
 	}
 
+	@Override
+	public Company selectByCompanyName(String companyName) {
+		return companyMapper.selectByCompanyName(companyName);
+	}
+
 }

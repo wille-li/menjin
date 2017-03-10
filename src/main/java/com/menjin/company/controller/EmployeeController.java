@@ -1,5 +1,7 @@
 package com.menjin.company.controller;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -10,6 +12,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.ibatis.annotations.Param;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,8 +28,8 @@ import org.springframework.web.multipart.MultipartFile;
 import com.base.annotation.log.SystemControllerLog;
 import com.base.entity.ReturnInfo;
 import com.base.entity.SimplePage;
+import com.menjin.company.model.BatchUploadEmployees;
 import com.menjin.company.model.Company;
-import com.menjin.company.model.Department;
 import com.menjin.company.model.Employee;
 import com.menjin.company.model.TreeJson;
 import com.menjin.company.service.CompanyService;
@@ -48,6 +53,14 @@ public class EmployeeController {
     public final static int SUCCESS = 0;
 	
 	public final static int FAIL = 1;
+	
+	private static final  String MSG_IMPORT_FAIL = "导入失败。";
+
+	private static final  String MSG_IMPORT_FILE_TYPE_ERR = "请选择xlsx文件";
+
+	private static final  String IMPORT_FILE_TYPE = ".xlsx";
+
+	private static final  String ERROR_KEY = "error";
 
 	@RequestMapping(value = "/employee.do")
 	@SystemControllerLog
@@ -229,13 +242,43 @@ public class EmployeeController {
 	@SystemControllerLog
 	@ResponseBody
 	public Map<String, Object> BatchUploadEmployees(@RequestParam("uploadfile") MultipartFile excelFile, String idCardNum,
-			String visitorName, String birth){
+			String visitorName, String birth,HttpServletRequest request){
 		logger.info("Start to Upload Batch Company!");
 		Map<String, Object> returnMap = new HashMap<String, Object>();
 		ReturnInfo rInfo = new ReturnInfo();
 		System.out.println(excelFile.getName());
 		System.out.println(excelFile.getOriginalFilename());
 		System.out.println(excelFile.getSize());
+		String fileName = excelFile.getOriginalFilename();
+		boolean isFile = fileName.endsWith(IMPORT_FILE_TYPE);
+		if (!isFile) {
+			// 文件格式不对直接返回
+			rInfo.setMsg(MSG_IMPORT_FILE_TYPE_ERR);
+			rInfo.setRet(FAIL);
+			returnMap.put("rInfo", rInfo);
+			return returnMap;
+		}
+		List<BatchUploadEmployees> list = excelToEntitySet(request,excelFile);
+		Company company = companyService.selectByCompanyName(list.get(0).getCompanyName());
+		for (BatchUploadEmployees batchUploadEmployees : list) {
+			Employee e = new Employee();
+			e.setCompany(company);
+			e.setEmployeeNo(batchUploadEmployees.getEmployeeNo());
+			batchUploadEmployees.getCompanyAddress();
+			batchUploadEmployees.getCompanyName();
+			batchUploadEmployees.getCompanyPhone();
+			batchUploadEmployees.getDoorPlate();
+			e.setEmail(batchUploadEmployees.getEmail());
+			e.setEmployeeName(batchUploadEmployees.getEmployeeName());
+			e.setEmployeeSex(batchUploadEmployees.getEmployeeSex());
+			e.setIdCardNum(batchUploadEmployees.getIdCardNum());
+			e.setIdCardType(batchUploadEmployees.getIdCardType());
+			e.setMobile(batchUploadEmployees.getMobile());
+			String index = company.getCompanyName()+","+company.getCompanyAddress()+","+company.getDoorPlate()
+					+","+company.getCompanyPhone()+","+e.getEmployeeName()+","+e.getMobile();
+			e.setIndex(index);
+			employeeService.add(e);
+		}
 		/*int returnCode = companyService.add(company);
 		if(returnCode > SUCCESS){
 			rInfo.setMsg("公司数据添加成功!");
@@ -244,8 +287,87 @@ public class EmployeeController {
 			rInfo.setMsg("公司数据添加失败,请重试！");
 			rInfo.setRet(FAIL);
 		}*/
+		rInfo.setMsg("Success");
+		rInfo.setRet(SUCCESS);
 		returnMap.put("rInfo", rInfo);
 		return returnMap;
+	}
+	
+	
+	/**
+	 * Excel数据转换成对象数据
+	 * @param request 请求对象
+	 * @param excelFile 文件对象
+	 * @return 对象集合
+	 * @throws CheckCellException Excel数据错误信息
+	 */
+	public List<BatchUploadEmployees> excelToEntitySet(HttpServletRequest request,
+			MultipartFile excelFile)  {
+		InputStream fileStream = null;
+		XSSFWorkbook workBook;
+		try {
+			fileStream = excelFile.getInputStream();
+			// 读取excel 文件数据
+			workBook = new XSSFWorkbook(fileStream);
+			XSSFSheet sheet = workBook.getSheetAt(0);
+			// 检查模板格式
+			//checkExcelTempleteTitleFormat(sheet);
+			// 校验数据是否合法
+			//validateData(sheet);  
+			// 构建数据并返回数据
+			return buildDataSet(sheet, request);
+		} catch (IOException e) {
+			logger.error("导入Excel文件失败!\n", e);
+			e.printStackTrace();
+		} finally {
+			if (null != fileStream ){
+				try {
+					fileStream.close();
+				} catch (IOException e) {
+					logger.error("关闭流失败\n", e);
+				}
+			}
+		}
+		return null;
+	}
+	
+	public List<BatchUploadEmployees> buildDataSet(XSSFSheet sheet, HttpServletRequest request) {
+		
+		List<BatchUploadEmployees> datas = new ArrayList<>();
+		
+		int lastRowNum = sheet.getLastRowNum();
+		
+		for (int rowNum = 1; rowNum <= lastRowNum; rowNum++){
+			Row row = sheet.getRow(rowNum);
+			String companyName = 
+					row.getCell(0).getStringCellValue();
+			String employeeNo = row.getCell(1).getStringCellValue();
+			String companyAddress = row.getCell(2).getStringCellValue();
+			String companyPhone = row.getCell(3).getStringCellValue();
+			String doorPlate = row.getCell(4).getStringCellValue();
+			String employeeName = row.getCell(5).getStringCellValue();
+			String employeeSex = row.getCell(6).getStringCellValue();
+			String email = row.getCell(7).getStringCellValue();
+			String mobile = row.getCell(8).getStringCellValue();
+			String idCardType = row.getCell(9).getStringCellValue();
+			String idCardNum = row.getCell(10).getStringCellValue();
+			
+			BatchUploadEmployees info = new BatchUploadEmployees(
+					companyName, 
+					companyAddress,
+					companyPhone,
+					doorPlate,
+					employeeNo, 
+					employeeName, 
+					employeeSex, 
+					email, 
+					mobile, 
+					idCardType,
+					idCardNum);
+			
+			datas.add(info);
+		}
+		return datas;
 	}
 
 }

@@ -12,4 +12,6 @@ import com.menjin.company.model.Company;
 public interface CompanyMapper extends BaseCrudMapper<Company>{
 
 	public List<Company> selectAllAndDepartment();
+	
+	public Company selectByCompanyName(String companyName);
 }

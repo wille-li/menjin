@@ -97,6 +97,7 @@ ifm.height = subWeb.body.scrollHeight;
 
 <!-- jQuery 2.2.3 -->
 <script src="<c:url value="/resources/adminlte/plugins/jQuery/jquery-2.2.3.min.js"></c:url>"></script>
+<script src="<c:url value="/resources/adminlte/plugins/jQuery/jquery.form.js"></c:url>"></script>
 <!-- Bootstrap 3.3.6 -->
 <script src="<c:url value="/resources/adminlte/plugins/bootstrap/js/bootstrap.min.js"></c:url>"></script>
 <script src="<c:url value="/resources/adminlte/plugins/fastclick/fastclick.js"></c:url>"></script>
