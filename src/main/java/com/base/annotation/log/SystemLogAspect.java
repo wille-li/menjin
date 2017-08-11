@@ -5,7 +5,6 @@ import java.util.Calendar;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.After;
@@ -21,6 +20,7 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 
 import com.base.entity.LogInfo;
 import com.base.service.LogInfoService;
+import com.base.util.UserSessionUtil;
 
 /**
  * 系统Log 切面类
@@ -36,6 +36,7 @@ public class SystemLogAspect {
 	// 注入Service用于把日志保存数据库
 	@Resource
 	private LogInfoService logInfoService;
+	
 	private static final Logger logger = LoggerFactory.getLogger(SystemLogAspect.class);
 
 	private final String LOG_KEY = "logInfo";
@@ -57,13 +58,9 @@ public class SystemLogAspect {
 	public void doBefore(JoinPoint joinPoint) {
 		logger.info("Log aop ===== doBefore =====");
 		try {
-			HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes())
-					.getRequest();
-			HttpSession session = request.getSession();
-			// 读取session中的用户 TODO:把用户信息加进来
-			// User user = (User)
-			// session.getAttribute(WebConstants.CURRENT_USER);
-			String username = "Wille";
+			HttpServletRequest request = getRequest();
+
+			String username = UserSessionUtil.getCurrentUsername(request);
 			// 请求的IP
 			String ip = request.getRemoteAddr();
 			// 方法路径
@@ -80,7 +77,8 @@ public class SystemLogAspect {
 			// *========数据库日志=========*//
 			LogInfo log = new LogInfo();
 			log.setMethod(methodName);
-			log.setLogType("1");
+			log.setLogType("系统日志");
+			log.setDescription("系统日志");
 			log.setRequestIP(ip);
 			log.setServerIP(serverIP);
 			log.setExceptionCode(null);
@@ -108,8 +106,7 @@ public class SystemLogAspect {
 	public void doAfter(JoinPoint joinPoint) {
 		logger.info("Log aop ===== doAfter =====");
 		try {
-			HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes())
-					.getRequest();
+			HttpServletRequest request = getRequest();
 			// 获取用户请求方法的参数并序列化为JSON格式字符串
 			String params = "";
 			if (joinPoint.getArgs() != null && joinPoint.getArgs().length > 0) {
@@ -137,8 +134,7 @@ public class SystemLogAspect {
 	@AfterThrowing(pointcut = "controllerAspect()", throwing = "e")
 	public void doAfterThrowing(JoinPoint joinPoint, Throwable e) {
 		logger.info("Log aop ===== doAfterThrowing =====");
-		HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes())
-				.getRequest();
+		HttpServletRequest request = getRequest();
 		// 获取用户请求方法的参数并序列化为JSON格式字符串
 		String params = "";
 		if (joinPoint.getArgs() != null && joinPoint.getArgs().length > 0) {
@@ -156,8 +152,12 @@ public class SystemLogAspect {
 		Long startTime = log.getCreateDate().getTime();
 		log.setRunTime(nowTime - startTime);
 		// 保存数据库
-		// logService.add(log);
+		logInfoService.add(log);
 
 	}
 
+	private HttpServletRequest getRequest(){
+		return ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes())
+				.getRequest();
+	}
 }

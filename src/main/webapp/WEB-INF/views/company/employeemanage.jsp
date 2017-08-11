@@ -63,6 +63,14 @@
 					onclick="uploadBatchEmployees()">导入员工数据</button>
 			</div>
 		</div>
+		<div style="float: left; margin-left: 10px">
+			<div class="input-group">
+				<!-- <button class="btn btn-warning" type="button" id="delrole"
+					onclick="#">导入公司数据</button> -->
+				<a href="./downloadEmployees.do" class="btn btn-warning"
+					>导出员工数据</a>
+			</div>
+		</div>
 		<div style="float: right; margin-left: 10px">
 
 			<form class="form-inline">

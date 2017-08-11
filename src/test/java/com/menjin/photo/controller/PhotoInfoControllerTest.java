@@ -40,9 +40,9 @@ public class PhotoInfoControllerTest {
     /*测试文件上传发送的请求*/  
     @Test  
     public void testUpload() throws Exception{  
-    	FileInputStream fis = new FileInputStream("C:\\Users\\Administrator\\Desktop\\Personal\\idcard.jpg");
+    	FileInputStream fis = new FileInputStream("C:\\Users\\user\\Desktop\\Personal\\idcard.jpg");
         MockMultipartFile multipartFile = new MockMultipartFile("file", fis);
-        FileInputStream fis2 = new FileInputStream("C:\\Users\\Administrator\\Desktop\\Personal\\idcard2.jpg");
+        FileInputStream fis2 = new FileInputStream("C:\\Users\\user\\Desktop\\Personal\\idcard2.jpg");
         MockMultipartFile multipartFile2 = new MockMultipartFile("file", fis2);
 
         HashMap<String, String> contentTypeParams = new HashMap<String, String>();

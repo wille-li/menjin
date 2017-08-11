@@ -73,6 +73,6 @@ public abstract interface BaseCrudMapper<ModelType> {
 	public abstract List<ModelType> selectByPage(
 			@Param("page") SimplePage page,
 			@Param("params") Map<String, Object> paramMap,
-			@Param("orderByField") String orderBy);
+			@Param("orderByField") String orderByField);
 	
 }

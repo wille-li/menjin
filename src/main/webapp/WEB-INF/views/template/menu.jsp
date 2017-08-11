@@ -15,7 +15,7 @@
           <a href="#"><i class="fa fa-circle text-success"></i> 在线</a>
         </div>
       </div>
-      <!-- search form -->
+      <!-- search form 
       <form action="#" method="get" class="sidebar-form">
         <div class="input-group">
           <input type="text" name="q" class="form-control" placeholder="Search...">
@@ -25,7 +25,7 @@
               </span>
         </div>
       </form>
-      <!-- /.search form -->
+       /.search form -->
       <!-- sidebar menu: : style can be found in sidebar.less -->
       <ul class="sidebar-menu">
         <li class="header">主导航</li>
@@ -78,25 +78,20 @@
           <ul class="treeview-menu">
             <li><a target="navTab" href="./camera.do"><i class="fa fa-camera"></i> 摄像头管理</a></li>
             <li><a target="navTab" href="./opener.do"><i class="fa fa-circle-o"></i> 闸机管理</a></li>
+            <li><a target="navTab" href="./machine.do"><i class="fa fa-circle-o"></i> 终端管理</a></li>
           </ul>
         </li>
-        <%-- <li class="treeview">
+        <li class="treeview">
           <a href="#">
-            <i class="fa fa-table"></i> <span>表格</span>
+            <i class="fa fa-cloud"></i> <span>日志管理</span>
             <span class="pull-right-container">
               <i class="fa fa-angle-left pull-right"></i>
             </span>
           </a>
           <ul class="treeview-menu">
-            <li><a target="navTab" href="<%=request.getContextPath() %>/resources/adminlte/include/tables/simple.html"><i class="fa fa-circle-o"></i> 简单表格</a></li>
-            <li><a target="navTab" href="<%=request.getContextPath() %>/resources/adminlte/include/tables/data.html"><i class="fa fa-circle-o"></i> 数据表格</a></li>
-            <li><a target="navTab" href="<%=request.getContextPath() %>/resources/adminlte/include/tables/diytable.html"><i class="fa fa-circle-o"></i> DIY表格</a></li>
+            <li><a target="navTab" href="./log.do"><i class="fa fa-camera"></i> 日志管理</a></li>
           </ul>
-        </li> --%>
-       <!--  <li class="header">标签</li>
-        <li><a href="javascript:void(0);"><i class="fa fa-circle-o text-red"></i> <span>重要</span></a></li>
-        <li><a href="javascript:void(0);"><i class="fa fa-circle-o text-yellow"></i> <span>警告</span></a></li>
-        <li><a href="javascript:void(0);"><i class="fa fa-circle-o text-aqua"></i> <span>消息</span></a></li> -->
+        </li>
       </ul>
     </section>
     <!-- /.sidebar -->

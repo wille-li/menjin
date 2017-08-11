@@ -104,7 +104,7 @@ public class ResourceServiceImpl extends BaseServiceImpl<Resource> implements Re
 
 	@PostConstruct 
 	public void initResource() throws Exception{
-		this.resourceMap = new HashMap<String,Collection<ConfigAttribute>>();
+		ResourceServiceImpl.resourceMap = new HashMap<String,Collection<ConfigAttribute>>();
 		for(Resource item:resourceMapper.selectAllResources()){
 			Set<Role> roles = roleMapper.searchRoleByResourceId(item.getId());
 			item.setRoles(roles);

@@ -1,7 +1,9 @@
 package com.menjin.company.controller;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -12,12 +14,14 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.ibatis.annotations.Param;
+import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -41,26 +45,29 @@ public class EmployeeController {
 
 	private Logger logger = LoggerFactory.getLogger(getClass());
 
+	@Value("${file.name}")
+	private String filePath;
+
 	@Autowired
 	CompanyService companyService;
 
 	@Autowired
 	DepartmentService departmentService;
-	
+
 	@Autowired
 	EmployeeService employeeService;
-	
-    public final static int SUCCESS = 0;
-	
+
+	public final static int SUCCESS = 0;
+
 	public final static int FAIL = 1;
-	
-	private static final  String MSG_IMPORT_FAIL = "导入失败。";
 
-	private static final  String MSG_IMPORT_FILE_TYPE_ERR = "请选择xlsx文件";
+	private static final String MSG_IMPORT_FAIL = "导入失败。";
 
-	private static final  String IMPORT_FILE_TYPE = ".xlsx";
+	private static final String MSG_IMPORT_FILE_TYPE_ERR = "请选择xlsx文件";
 
-	private static final  String ERROR_KEY = "error";
+	private static final String IMPORT_FILE_TYPE = ".xlsx";
+
+	private static final String ERROR_KEY = "error";
 
 	@RequestMapping(value = "/employee.do")
 	@SystemControllerLog
@@ -71,30 +78,30 @@ public class EmployeeController {
 	@RequestMapping(value = "/employeelistBydepartmentId.do")
 	@SystemControllerLog
 	@ResponseBody
-	public Map getEmployeeByDepartemtnId(@Param(value = "companyId") Integer companyId,@Param(value = "employeeName") String employeeName,
-			HttpServletRequest request) {
+	public Map<String, Object> getEmployeeByDepartemtnId(@Param(value = "companyId") Integer companyId,
+			@Param(value = "employeeName") String employeeName, HttpServletRequest request) {
 		Integer page = Integer.parseInt(request.getParameter("start"));
-        System.out.println(page);
-        Integer rows = Integer.parseInt(request.getParameter("length"));
-        System.out.println(rows);
-        String draw = request.getParameter("draw") == null ? "0" : request.getParameter("draw") + 1;
+		System.out.println(page);
+		Integer rows = Integer.parseInt(request.getParameter("length"));
+		System.out.println(rows);
+		String draw = request.getParameter("draw") == null ? "0" : request.getParameter("draw") + 1;
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("companyId", companyId);
 		params.put("employeeName", employeeName);
 		int count = employeeService.findCount(null, params);
-		logger.info("Conpany Count:"+count);
-		SimplePage simplepage = new SimplePage(page/rows+1, rows, count);
-		
+		logger.info("Conpany Count:" + count);
+		SimplePage simplepage = new SimplePage(page / rows + 1, rows, count);
+
 		String orderBy = null;
-		List<Employee> employees = employeeService.findByPage(simplepage,params, orderBy);
-		Map maps = new HashMap();
+		List<Employee> employees = employeeService.findByPage(simplepage, params, orderBy);
+		Map<String, Object> maps = new HashMap<>();
 		maps.put("data", employees);
 		maps.put("draw", draw);
 		maps.put("recordsTotal", count);
 		maps.put("recordsFiltered", count);
 		return maps;
 	}
-	
+
 	@RequestMapping(value = "/employeelistBydepartmentIdForCombox.do")
 	@SystemControllerLog
 	@ResponseBody
@@ -102,10 +109,10 @@ public class EmployeeController {
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("departmentId", departmentId);
 		int count = employeeService.findCount(null, params);
-		logger.info("Conpany Count:"+count);
+		logger.info("Conpany Count:" + count);
 		SimplePage simplepage = new SimplePage(1, count, count);
 		String orderBy = null;
-		List<Employee> employees = employeeService.findByPage(simplepage,params, orderBy);
+		List<Employee> employees = employeeService.findByPage(simplepage, params, orderBy);
 		return employees;
 	}
 
@@ -118,8 +125,7 @@ public class EmployeeController {
 		SimplePage page = new SimplePage(1, 10, count);
 		Map<String, Object> params = null;
 		String orderBy = null;
-		List<Employee> employees = employeeService.findByPage(page,
-				params, orderBy);
+		List<Employee> employees = employeeService.findByPage(page, params, orderBy);
 		return employees;
 	}
 
@@ -133,7 +139,7 @@ public class EmployeeController {
 			TreeJson tree = new TreeJson();
 			tree.setId(companys.get(i).getId());
 			tree.setText(companys.get(i).getCompanyName());
-			List<TreeJson> child =  new ArrayList<TreeJson>();
+			List<TreeJson> child = new ArrayList<TreeJson>();
 			for (int j = 0; j < companys.get(i).getDepartments().size(); j++) {
 				TreeJson t = new TreeJson();
 				t.setId(companys.get(i).getDepartments().get(j).getId());
@@ -150,8 +156,7 @@ public class EmployeeController {
 	@SystemControllerLog
 	@ResponseBody
 	public Map<String, Object> addEmployeement(@ModelAttribute Employee employee,
-			@Param(value = "companyId") String companyId,
-			HttpServletRequest request, HttpServletResponse response) {
+			@Param(value = "companyId") String companyId, HttpServletRequest request, HttpServletResponse response) {
 		logger.info("Start to insert employee message!");
 		Map<String, Object> returnMap = new HashMap<String, Object>();
 		ReturnInfo rInfo = new ReturnInfo();
@@ -159,7 +164,7 @@ public class EmployeeController {
 			Company company = new Company();
 			company.setId(Integer.parseInt(companyId));
 			company = companyService.findById(company);
-			if(company.getCompanyName().equals("") || company.getCompanyName() == null  ){
+			if (company.getCompanyName().equals("") || company.getCompanyName() == null) {
 				rInfo.setMsg("请选择所属公司！");
 				rInfo.setRet(FAIL);
 				returnMap.put("rInfo", rInfo);
@@ -168,19 +173,19 @@ public class EmployeeController {
 			employee.setCompany(company);
 			employee.setModifiedDate(new Date());
 			employee.setCreateBy("Admin");
-			String index = company.getCompanyName()+","+company.getCompanyAddress()+","+company.getDoorPlate()
-					+","+company.getCompanyPhone()+","+employee.getEmployeeName()+","+employee.getMobile();
+			String index = company.getCompanyName() + "," + company.getCompanyAddress() + "," + company.getDoorPlate()
+					+ "," + company.getCompanyPhone() + "," + employee.getEmployeeName() + "," + employee.getMobile();
 			employee.setIndex(index);
 			int returnCode = employeeService.add(employee);
-			if(returnCode > SUCCESS){
+			if (returnCode > SUCCESS) {
 				rInfo.setMsg("员工数据添加成功!");
 				rInfo.setRet(SUCCESS);
-			}else{
+			} else {
 				rInfo.setMsg("员工数据添加失败,请重试！");
 				rInfo.setRet(FAIL);
 			}
-			logger.info("End to insert employee. ReturnCode:"+returnCode);
-		}else{
+			logger.info("End to insert employee. ReturnCode:" + returnCode);
+		} else {
 			rInfo.setMsg("请选择所属公司！");
 			rInfo.setRet(FAIL);
 		}
@@ -191,10 +196,8 @@ public class EmployeeController {
 	@RequestMapping(value = "/updateemployee.do")
 	@SystemControllerLog
 	@ResponseBody
-	public Map<String, Object> updateEmployeement(
-			@ModelAttribute Employee employee,
-			@Param(value = "companyId") String companyId,
-			HttpServletRequest request, HttpServletResponse response) {
+	public Map<String, Object> updateEmployeement(@ModelAttribute Employee employee,
+			@Param(value = "companyId") String companyId, HttpServletRequest request, HttpServletResponse response) {
 		Map<String, Object> returnMap = new HashMap<String, Object>();
 		ReturnInfo rInfo = new ReturnInfo();
 		employee.setModifiedDate(new Date());
@@ -202,14 +205,14 @@ public class EmployeeController {
 		company.setId(Integer.parseInt(companyId));
 		employee.setCompany(company);
 		company = companyService.findById(company);
-		String index = company.getCompanyName()+","+company.getCompanyAddress()+","+company.getDoorPlate()
-				+","+company.getCompanyPhone()+","+employee.getEmployeeName()+","+employee.getMobile();
+		String index = company.getCompanyName() + "," + company.getCompanyAddress() + "," + company.getDoorPlate() + ","
+				+ company.getCompanyPhone() + "," + employee.getEmployeeName() + "," + employee.getMobile();
 		employee.setIndex(index);
 		int returnCode = employeeService.modifyById(employee);
-		if(returnCode > SUCCESS){
+		if (returnCode > SUCCESS) {
 			rInfo.setMsg("员工数据添加成功!");
 			rInfo.setRet(SUCCESS);
-		}else{
+		} else {
 			rInfo.setMsg("员工数据添加失败,请重试！");
 			rInfo.setRet(FAIL);
 		}
@@ -220,16 +223,16 @@ public class EmployeeController {
 	@RequestMapping(value = "/deleteemployee.do")
 	@SystemControllerLog
 	@ResponseBody
-	public Map<String, Object> delectCompany(@ModelAttribute Employee employee,
-			HttpServletRequest request, HttpServletResponse response) {
+	public Map<String, Object> delectCompany(@ModelAttribute Employee employee, HttpServletRequest request,
+			HttpServletResponse response) {
 		logger.info("Start to delete Employee!");
 		Map<String, Object> returnMap = new HashMap<String, Object>();
 		ReturnInfo rInfo = new ReturnInfo();
 		int returnCode = employeeService.deleteById(employee);
-		if(returnCode > SUCCESS){
+		if (returnCode > SUCCESS) {
 			rInfo.setMsg("刪除员工数据成功!");
 			rInfo.setRet(SUCCESS);
-		}else{
+		} else {
 			rInfo.setMsg("刪除员工数据失败,请重试!");
 			rInfo.setRet(FAIL);
 		}
@@ -237,12 +240,12 @@ public class EmployeeController {
 		logger.info("End to delete Employee。RetrunCode:" + returnCode);
 		return returnMap;
 	}
-	
-	@RequestMapping(value="/uploadBatchEmployees.do")
+
+	@RequestMapping(value = "/uploadBatchEmployees.do")
 	@SystemControllerLog
 	@ResponseBody
-	public Map<String, Object> BatchUploadEmployees(@RequestParam("uploadfile") MultipartFile excelFile, String idCardNum,
-			String visitorName, String birth,HttpServletRequest request){
+	public Map<String, Object> BatchUploadEmployees(@RequestParam("uploadfile") MultipartFile excelFile,
+			String idCardNum, String visitorName, String birth, HttpServletRequest request) {
 		logger.info("Start to Upload Batch Company!");
 		Map<String, Object> returnMap = new HashMap<String, Object>();
 		ReturnInfo rInfo = new ReturnInfo();
@@ -258,9 +261,9 @@ public class EmployeeController {
 			returnMap.put("rInfo", rInfo);
 			return returnMap;
 		}
-		List<BatchUploadEmployees> list = excelToEntitySet(request,excelFile);
+		List<BatchUploadEmployees> list = excelToEntitySet(request, excelFile);
 		Company company = companyService.selectByCompanyName(list.get(0).getCompanyName());
-		if(company == null){
+		if (company == null) {
 			rInfo.setMsg("此公司未加入系统。");
 			rInfo.setRet(FAIL);
 			returnMap.put("rInfo", rInfo);
@@ -280,35 +283,65 @@ public class EmployeeController {
 			e.setIdCardNum(batchUploadEmployees.getIdCardNum());
 			e.setIdCardType(batchUploadEmployees.getIdCardType());
 			e.setMobile(batchUploadEmployees.getMobile());
-			String index = company.getCompanyName()+","+company.getCompanyAddress()+","+company.getDoorPlate()
-					+","+company.getCompanyPhone()+","+e.getEmployeeName()+","+e.getMobile();
+			String index = company.getCompanyName() + "," + company.getCompanyAddress() + "," + company.getDoorPlate()
+					+ "," + company.getCompanyPhone() + "," + e.getEmployeeName() + "," + e.getMobile();
 			e.setIndex(index);
 			employeeService.add(e);
 		}
-		/*int returnCode = companyService.add(company);
-		if(returnCode > SUCCESS){
-			rInfo.setMsg("公司数据添加成功!");
-			rInfo.setRet(SUCCESS);
-		}else{
-			rInfo.setMsg("公司数据添加失败,请重试！");
-			rInfo.setRet(FAIL);
-		}*/
+
 		rInfo.setMsg("Success");
 		rInfo.setRet(SUCCESS);
 		returnMap.put("rInfo", rInfo);
 		return returnMap;
 	}
-	
-	
+
+	@RequestMapping(value = "/downloadEmployees.do")
+	@SystemControllerLog
+	public void downloadEmployees(HttpServletRequest request, HttpServletResponse response) {
+		logger.info("Start to Upload Batch Company!");
+		File file = new File(filePath);
+
+		if (!file.exists()) {
+			logger.error("文件不存在");
+			return;
+		}
+		List<Employee> list = this.getDepartmentByPage();
+
+		if (list == null || list.isEmpty()) {
+			logger.error("没有数据");
+			return;
+		}
+
+		try {
+			XSSFWorkbook wb = new XSSFWorkbook(file);
+			XSSFSheet sheet = wb.getSheetAt(0);
+			buildDataOutPut(sheet, list);
+			OutputStream out = response.getOutputStream();
+			response.reset();
+			response.setContentType("application/vnd.ms-excel"); // 改成输出excel文件
+			response.setHeader("Content-disposition", "attachment; filename=data.xlsx");
+			wb.write(out);
+			out.close();
+			wb.close();
+		} catch (InvalidFormatException e) {
+			logger.error("无效的格式", e);
+		} catch (IOException e) {
+			logger.error("IO出错", e);
+		}
+	}
+
 	/**
 	 * Excel数据转换成对象数据
-	 * @param request 请求对象
-	 * @param excelFile 文件对象
+	 * 
+	 * @param request
+	 *            请求对象
+	 * @param excelFile
+	 *            文件对象
 	 * @return 对象集合
-	 * @throws CheckCellException Excel数据错误信息
+	 * @throws CheckCellException
+	 *             Excel数据错误信息
 	 */
-	public List<BatchUploadEmployees> excelToEntitySet(HttpServletRequest request,
-			MultipartFile excelFile)  {
+	public List<BatchUploadEmployees> excelToEntitySet(HttpServletRequest request, MultipartFile excelFile) {
 		InputStream fileStream = null;
 		XSSFWorkbook workBook;
 		try {
@@ -317,16 +350,16 @@ public class EmployeeController {
 			workBook = new XSSFWorkbook(fileStream);
 			XSSFSheet sheet = workBook.getSheetAt(0);
 			// 检查模板格式
-			//checkExcelTempleteTitleFormat(sheet);
+			// checkExcelTempleteTitleFormat(sheet);
 			// 校验数据是否合法
-			//validateData(sheet);  
+			// validateData(sheet);
 			// 构建数据并返回数据
 			return buildDataSet(sheet, request);
 		} catch (IOException e) {
 			logger.error("导入Excel文件失败!\n", e);
 			e.printStackTrace();
 		} finally {
-			if (null != fileStream ){
+			if (null != fileStream) {
 				try {
 					fileStream.close();
 				} catch (IOException e) {
@@ -336,17 +369,16 @@ public class EmployeeController {
 		}
 		return null;
 	}
-	
+
 	public List<BatchUploadEmployees> buildDataSet(XSSFSheet sheet, HttpServletRequest request) {
-		
+
 		List<BatchUploadEmployees> datas = new ArrayList<>();
-		
+
 		int lastRowNum = sheet.getLastRowNum();
-		
-		for (int rowNum = 1; rowNum <= lastRowNum; rowNum++){
+
+		for (int rowNum = 1; rowNum <= lastRowNum; rowNum++) {
 			Row row = sheet.getRow(rowNum);
-			String companyName = 
-					row.getCell(0).getStringCellValue();
+			String companyName = row.getCell(0).getStringCellValue();
 			String employeeNo = row.getCell(1).getStringCellValue();
 			String companyAddress = row.getCell(2).getStringCellValue();
 			String companyPhone = row.getCell(3).getStringCellValue();
@@ -357,23 +389,36 @@ public class EmployeeController {
 			String mobile = row.getCell(8).getStringCellValue();
 			String idCardType = row.getCell(9).getStringCellValue();
 			String idCardNum = row.getCell(10).getStringCellValue();
-			
-			BatchUploadEmployees info = new BatchUploadEmployees(
-					companyName, 
-					companyAddress,
-					companyPhone,
-					doorPlate,
-					employeeNo, 
-					employeeName, 
-					employeeSex, 
-					email, 
-					mobile, 
-					idCardType,
-					idCardNum);
-			
+
+			BatchUploadEmployees info = new BatchUploadEmployees(companyName, companyAddress, companyPhone, doorPlate,
+					employeeNo, employeeName, employeeSex, email, mobile, idCardType, idCardNum);
+
 			datas.add(info);
 		}
 		return datas;
+	}
+
+	public XSSFSheet buildDataOutPut(XSSFSheet sheet, List<Employee> list) {
+
+		int lastRowNum = list.size();
+		for (int i = 0; i < lastRowNum; i++) {
+			int rowNum = i + 1;
+			Row row = sheet.createRow(rowNum);
+			Employee info = list.get(i);
+			Company cInfo = info.getCompany();
+			row.createCell(0).setCellValue(cInfo.getCompanyName());
+			row.createCell(1).setCellValue(info.getEmployeeNo());
+			row.createCell(2).setCellValue(cInfo.getCompanyAddress());
+			row.createCell(3).setCellValue(cInfo.getCompanyPhone());
+			row.createCell(4).setCellValue(cInfo.getDoorPlate());
+			row.createCell(5).setCellValue(info.getEmployeeName());
+			row.createCell(6).setCellValue(info.getEmployeeSex());
+			row.createCell(7).setCellValue(info.getEmail());
+			row.createCell(8).setCellValue(info.getMobile());
+			row.createCell(9).setCellValue(info.getIdCardType());
+			row.createCell(10).setCellValue(info.getIdCardNum());
+		}
+		return sheet;
 	}
 
 }

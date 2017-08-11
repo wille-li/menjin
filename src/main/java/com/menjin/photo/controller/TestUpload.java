@@ -27,9 +27,9 @@ public class TestUpload {
 			.addConverterFactory(GsonConverterFactory.create()).build();
 
 	public static void main(String[] args) {
-		testCompany2();
+		//testCompany2();
 		//testVisit();
-		//testUpload2();
+		testUpload2();
 		//testVisit();
 	}
 
@@ -74,8 +74,8 @@ public class TestUpload {
 	public static void testUpload(){
 		UploadService service = sRetrofit.create(UploadService.class);
 
-		File file1 = new File("C:\\Users\\Administrator\\Desktop\\1.jpg");
-		File file2 = new File("C:\\Users\\Administrator\\Desktop\\2.jpg");
+		File file1 = new File("C:\\Users\\user\\Desktop\\1.jpg");
+		File file2 = new File("C:\\Users\\user\\Desktop\\2.jpg");
 
 		RequestBody requestBody1 = RequestBody.create(MediaType.parse("multipart/form-data"), file1);
 		RequestBody requestBody2 = RequestBody.create(MediaType.parse("multipart/form-data"), file2);
@@ -96,8 +96,8 @@ public class TestUpload {
 	}
 	
 	public static void testUpload2(){
-		File file1 = new File("C:\\Users\\Administrator\\Desktop\\1.jpg");
-		File file2 = new File("C:\\Users\\Administrator\\Desktop\\2.jpg");
+		File file1 = new File("C:\\Users\\user\\Desktop\\Personal\\idcard2.jpg");
+		File file2 = new File("C:\\Users\\user\\Desktop\\Personal\\idcard.jpg");
 		List<File> list = new ArrayList<File>();
 		list.add(file1);
 		list.add(file2);
@@ -106,7 +106,7 @@ public class TestUpload {
 		Map<String, String> params = new HashMap<String, String>();
 		params.put("idCardNum", "126ssd623");
 		params.put("visitorName", "csap");
-		params.put("birth", "1990-02-09");
+		params.put("birth", "1990年02月09日");
 		
 		NetWorkService.postUserInfo(params, path, new Observer<HeadBean>(){
 		//NetWorkService.postUserInfo("126623", "cap", "1990-02-09", path, new Observer<HeadBean>(){
@@ -118,7 +118,8 @@ public class TestUpload {
 
 			@Override
 			public void onError(Throwable e) {
-				System.out.println(2);				
+				System.out.println(2);	
+				e.printStackTrace();
 			}
 
 			@Override

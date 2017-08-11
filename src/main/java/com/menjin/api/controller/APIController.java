@@ -27,7 +27,6 @@ import org.springframework.web.multipart.MultipartFile;
 import com.base.annotation.log.SystemControllerLog;
 import com.base.entity.JsonReturn;
 import com.base.entity.ReturnInfo;
-import com.menjin.afr.service.AfrService;
 import com.menjin.api.model.APIAuth;
 import com.menjin.api.service.APIAuthService;
 import com.menjin.api.service.APICompanyService;
@@ -68,8 +67,6 @@ public class APIController {
 	
 	private static final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh24:mm");
 	
-	//@Resource
-	private AfrService afrService;
 	
 	@Value("${photo.path}")
 	private String imagePath;
@@ -280,7 +277,7 @@ public class APIController {
 			}
 			
 		}
-		boolean vertifyResult = afrService.vertifyUser(idCardNum.substring(idCardNum.length() - 6), file1, file2);
+		boolean vertifyResult = true;//afrService.vertifyUser(idCardNum.substring(idCardNum.length() - 6), file1, file2);
 		if (!vertifyResult){
 			returnInfo.setRet(APIController.FAIL);
 			returnInfo.setMsg("身份认证失败。");

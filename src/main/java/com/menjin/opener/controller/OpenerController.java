@@ -26,7 +26,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.base.annotation.log.SystemControllerLog;
 import com.base.entity.ReturnInfo;
 import com.base.entity.SimplePage;
-import com.menjin.company.model.Company;
 import com.menjin.opener.model.Opener;
 import com.menjin.opener.service.OpenerService;
 
@@ -40,13 +39,32 @@ public class OpenerController {
 	public final static int FAIL = 1;
 	
 	@Value("${opener.ip}")
-	private String openerIP;
+	private String openerIP = "192.168.1.106";
 	
 	@Value("${opener.port}")
-	private Integer openerPort;
+	private Integer openerPort = 5000;
 	
 	@Autowired
 	private OpenerService openerService;
+	
+	@RequestMapping(value="/openerDoor.do")
+	@ResponseBody
+	public Map<String, Object> openDoor(Opener opener) {
+		logger.info("Start to update opener!");
+		Map<String, Object> returnMap = new HashMap<String, Object>();
+		ReturnInfo rInfo = new ReturnInfo();
+		Opener temOpen = openerService.findById(opener);
+		if (null == temOpen) {
+			rInfo.setMsg("闸机数据添加失败,请重试！");
+			rInfo.setRet(FAIL);
+			returnMap.put("rInfo", rInfo);
+			return returnMap;
+		}
+		
+		checkOpenerStatus("on1", temOpen.getIp(), temOpen.getPort());
+		
+		return returnMap;
+	}
 	
 	private SocketChannel createSocketChannel(String hostName, int port) throws IOException{
 		SocketChannel sChannel = SocketChannel.open();
@@ -67,8 +85,14 @@ public class OpenerController {
 		return "opener/openerManage";
 	}
 	
-	@RequestMapping(value="opener1.do")
-	public void checkOpenerStatus(String sendContent){
+	@RequestMapping(value="/opener1.do")
+	@ResponseBody
+	public String checkOpenerStatus(String sendContent){
+		return checkOpenerStatus(sendContent, openerIP, openerPort);
+	}
+	
+	private String checkOpenerStatus(String sendContent, String openerIP, Integer openerPort){
+		StringBuffer resultBF = new StringBuffer();
 		ByteBuffer buf = ByteBuffer.allocate(1024);
 		try {
 			buf.clear();
@@ -96,17 +120,21 @@ public class OpenerController {
 			buf.clear();
 			channel.read(buf);
 			buf.flip();
+			
 			while (buf.remaining() > 0){
-				System.out.println((char)buf.get());
+				resultBF.append((char)buf.get());
 			}
 			buf.clear();
 			channel.close();
 			
 		} catch (UnknownHostException e) {
 			logger.error("Connect opener error", e);
+			resultBF.append("UnknownHosterror");
 		} catch (IOException e) {
 			logger.error("Connect opener error", e);
+			resultBF.append("IOerror");
 		}
+		return resultBF.toString();
 	}
 	
 	@RequestMapping(value="/addOpener.do")
@@ -211,9 +239,9 @@ public class OpenerController {
 	}
 	
 	
-//	public static void main(String[] args){
-//		OpenerController open = new OpenerController();
-//		
-//		open.checkOpenerStatus("0ff1");
-//	}
+	public static void main(String[] args){
+		OpenerController open = new OpenerController();
+		
+		open.checkOpenerStatus("on1");
+	}
 }
