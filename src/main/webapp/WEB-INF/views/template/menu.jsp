@@ -70,7 +70,7 @@
         </li>
         <li class="treeview">
           <a href="#">
-            <i class="fa fa-cloud"></i> <span>门禁管理</span>
+            <i class="fa fa-cloud"></i> <span>设备管理</span>
             <span class="pull-right-container">
               <i class="fa fa-angle-left pull-right"></i>
             </span>

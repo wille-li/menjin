@@ -7,7 +7,7 @@
       <!-- mini logo for sidebar mini 50x50 pixels -->
       <span class="logo-mini"><b>门禁</b></span>
       <!-- logo for regular state and mobile devices -->
-      <span class="logo-lg"><b>门禁管理  </b>后台</span>
+      <span class="logo-lg"><b>访客管理  </b>后台</span>
     </a>
     <!-- Header Navbar: style can be found in header.less -->
     <nav class="navbar navbar-static-top">

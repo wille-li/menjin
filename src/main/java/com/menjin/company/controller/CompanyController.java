@@ -22,6 +22,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.base.annotation.log.SystemControllerLog;
 import com.base.entity.ReturnInfo;
 import com.base.entity.SimplePage;
+import com.menjin.api.controller.APICompanyController;
 import com.menjin.company.model.Company;
 import com.menjin.company.service.CompanyService;
 
@@ -95,6 +96,7 @@ public class CompanyController {
 	public Map<String, Object> addCompany(@ModelAttribute Company company,
 			HttpServletRequest request,HttpServletResponse response){
 		logger.info("Start to insert new Company!Company Name:"+company.getCompanyName());
+		APICompanyController.versionNum ++;
 		Map<String, Object> returnMap = new HashMap<String, Object>();
 		ReturnInfo rInfo = new ReturnInfo();
 		company.setCreateBy("Admin");//根据现在操作用户修改
@@ -118,6 +120,7 @@ public class CompanyController {
 	@ResponseBody
 	public Map<String, Object> updateCompany(@ModelAttribute Company company,HttpServletRequest request,HttpServletResponse response){
 		logger.info("Start to update Company!");
+		APICompanyController.versionNum ++;
 		Map<String, Object> returnMap = new HashMap<String, Object>();
 		ReturnInfo rInfo = new ReturnInfo();
 		company.setCreateTime(new Date());
@@ -141,6 +144,7 @@ public class CompanyController {
 	@ResponseBody
 	public Map<String, Object> delectCompany(@ModelAttribute Company company,HttpServletRequest request,HttpServletResponse response){
 		logger.info("Start to delete Company!");
+		APICompanyController.versionNum ++;
 		Map<String, Object> returnMap = new HashMap<String, Object>();
 		ReturnInfo rInfo = new ReturnInfo();
 		int returnCode = companyService.deleteById(company);

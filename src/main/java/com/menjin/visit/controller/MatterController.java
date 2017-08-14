@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.base.annotation.log.SystemControllerLog;
 import com.base.entity.ReturnInfo;
 import com.base.entity.SimplePage;
+import com.menjin.api.controller.APIController;
 import com.menjin.visit.model.Matter;
 import com.menjin.visit.service.MatterService;
 
@@ -94,6 +95,7 @@ public class MatterController {
 	public Map<String, Object> addMatter(@ModelAttribute Matter matter,
 			HttpServletRequest request,HttpServletResponse response){
 		logger.info("Start to insert new Matter!Matter Name:"+matter.getMatterDecs());
+		APIController.versionNum ++;
 		Map<String, Object> returnMap = new HashMap<String, Object>();
 		ReturnInfo rInfo = new ReturnInfo();
 		String currentLoginUser = getCurrentUsername(request);
@@ -118,6 +120,7 @@ public class MatterController {
 	@ResponseBody
 	public Map<String, Object> updateMatter(@ModelAttribute Matter matter,HttpServletRequest request,HttpServletResponse response){
 		logger.info("Start to update Matter!");
+		APIController.versionNum ++;
 		Map<String, Object> returnMap = new HashMap<String, Object>();
 		ReturnInfo rInfo = new ReturnInfo();
 		matter.setModifiedDate(new Date());
@@ -140,6 +143,7 @@ public class MatterController {
 	public Map<String, Object> delectMatter(@ModelAttribute Matter matter,HttpServletRequest request,HttpServletResponse response){
 		logger.info("Start to delete Matter!");
 		Map<String, Object> returnMap = new HashMap<String, Object>();
+		APIController.versionNum ++;
 		ReturnInfo rInfo = new ReturnInfo();
 		int returnCode = matterService.deleteById(matter);
 		if(returnCode > SUCCESS){

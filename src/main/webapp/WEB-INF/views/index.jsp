@@ -16,7 +16,7 @@
     <!-- Main content -->
     <section class="content" id="content" style="margin-top: 20px;">
       <div class="tabs-panel">
-        <h1>欢迎使用门禁管理系统 </h1>
+        <h1>欢迎使用访客管理后台 </h1>
       </div>
     </section>
     <!-- /.content -->

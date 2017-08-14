@@ -4,9 +4,11 @@ import java.io.File;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
@@ -27,7 +29,9 @@ import org.springframework.web.multipart.MultipartFile;
 import com.base.annotation.log.SystemControllerLog;
 import com.base.entity.JsonReturn;
 import com.base.entity.ReturnInfo;
+import com.base.entity.SimplePage;
 import com.menjin.api.model.APIAuth;
+import com.menjin.api.model.APIMatter;
 import com.menjin.api.service.APIAuthService;
 import com.menjin.api.service.APICompanyService;
 import com.menjin.api.service.APIDepartmentService;
@@ -38,6 +42,7 @@ import com.menjin.photo.service.PhotoInfoService;
 import com.menjin.visit.model.Matter;
 import com.menjin.visit.model.VisitRecord;
 import com.menjin.visit.model.Visitor;
+import com.menjin.visit.service.MatterService;
 import com.menjin.visit.service.VisitRecordService;
 import com.menjin.visit.service.VisitorService;
 
@@ -91,6 +96,9 @@ public class APIController {
 	
 	@Autowired
 	APIAuthService aPIAuthService;
+	
+	@Autowired	
+	MatterService matterService;
 	
 	@RequestMapping(value="/api/visit.do", method=RequestMethod.POST)
 	@SystemControllerLog
@@ -186,6 +194,31 @@ public class APIController {
 		return returnMap;
 	}
 	
+	@RequestMapping(value="/api/getMatter.do", method=RequestMethod.GET)
+	@SystemControllerLog
+	@ResponseBody
+	public Map<String, Object> getMatter(){
+		Map<String, Object> returnMap = new HashMap<String, Object>();
+		Map<String, Object> dataMap = new HashMap<String, Object>();
+		int count = matterService.findCount(null, null);
+		ReturnInfo rInfo = new ReturnInfo();
+		logger.info("Count:"+count);
+		SimplePage simplepage = new SimplePage(1, count, count);
+		List<Matter> matters = matterService.findByPage(simplepage, null, null);
+		List<APIMatter> result = new ArrayList<>();
+		for (Matter matter : matters) {
+			result.add(new APIMatter(matter));
+		}
+		dataMap.put("matter", result);
+		dataMap.put(VERSION_KEY, versionNum);
+		rInfo.setMsg("获取成功");
+		rInfo.setRet(SUCCESS);
+		returnMap.put(HEAD_KEY, rInfo);
+		returnMap.put(DATA_KEY, dataMap);
+		return returnMap;
+	}
+	
+	
 	
 	
 	private void savePhotoInfo(String fileName, String filePath, String idCardNum, Long size, int picType){
@@ -199,6 +232,9 @@ public class APIController {
 		photoInfo.setCreateDate(Calendar.getInstance().getTime());
 		photoInfoService.add(photoInfo);
 	}
+	
+	
+	
 	
 	
 	@RequestMapping(value="/api/upload.do", method=RequestMethod.POST)
@@ -240,9 +276,9 @@ public class APIController {
 		visitor.setVisitorName(visitorName);
 		visitor.setIdCardNum(idCardNum);
 		
-		if (null == files || files.length != 2){
+		if (null == files){
 			returnInfo.setRet(APIController.FAIL);
-			returnInfo.setMsg("请上传两张图片，第一张为身份证，第二张为验证图片。");
+			returnInfo.setMsg("请上传一张身份证图片.");
 			result.put(APIController.HEAD_KEY, returnInfo);
 	        return result;
 		}
