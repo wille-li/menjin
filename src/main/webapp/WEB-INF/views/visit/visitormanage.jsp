@@ -52,10 +52,8 @@
 							<th>证件号</th>
 							<th width="40px">性别</th>
 							<th>访客单位</th>
-							<th width="60px">出生日月</th>
 							<th>地址</th>
 							<th width="60px">联系电话</th>
-							<th>访客邮箱地址</th>
 							<th width="60px">访客等级</th>
 						</tr>
 					</thead>
@@ -117,15 +115,6 @@
 									<input class="form-control" id="nation" type="text" name = "nation"
 										placeholder="" />
 								</div>
-								<label class="col-sm-2 control-label" for="birth">出生年月</label>
-								<div class="col-sm-4">
-									<div class="input-group date">
-                                        <div class="input-group-addon">
-                                             <i class="fa fa-calendar"></i>
-                                        </div>
-                                        <input type="text" class="form-control pull-right" id=birth name="birth">
-                                    </div>
-								</div>
 							</div>
 							
 							<div class="form-group">
@@ -142,11 +131,6 @@
 							</div>
 							
 							<div class="form-group">
-								<label class="col-sm-2 control-label" for="email">邮箱</label>
-								<div class="col-sm-4">
-									<input class="form-control" id="email" type="text" name = "email"
-										placeholder="" />
-								</div>
 								<label class="col-sm-2 control-label" for="rank">访客等级</label>
 								<div class="col-sm-4">
 									<select class="form-control" id="rank" name="rank">
@@ -227,13 +211,8 @@
 	                     { "data": "idCardNum"},
 	                     { "data": "sex"},
 	                     { "data": "nation"},
-	                     { "data": "birth",
-		                   "render": function(data, type, row, meta) {
-				               return formatYMDatebox(data);
-				         }},
 	                     { "data": "address"},
 	                     { "data": "mobile"},
-	                     { "data": "email"},
 	                     { "data": "rank",
 		                   "render": function(data, type, row, meta) {
 		                        if (type === 'display') {
@@ -279,10 +258,8 @@
 		  $("#idCardNum").val("");
 		  $("#sex").val("");
 		  $("#nation").val("");
-		  $("#birth").val("");
 		  $("#address").val("");
 		  $("#mobile").val("");
-		  $("#email").val("");
 		  $("#rank").val("");
 		  $('#visitortitle').html('添加访客');
 		  $('#visitormodal').modal('show');
@@ -304,10 +281,8 @@
 		$("#idCardNum").val(selections[0].idCardNum);
 		$("#sex").val(selections[0].sex);
 		$("#nation").val(selections[0].nation);
-		$("#birth").val(selections[0].birth);
 		$("#address").val(selections[0].address);
 		$("#mobile").val(selections[0].mobile);
-		$("#email").val(selections[0].email);
 		$("#rank").val(selections[0].rank);
 		$('#visitortitle').html('修改访客信息');
 		$('#visitormodal').modal('show');

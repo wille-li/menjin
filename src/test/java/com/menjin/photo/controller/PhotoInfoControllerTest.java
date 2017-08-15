@@ -58,4 +58,19 @@ public class PhotoInfoControllerTest {
                 .contentType(mediaType))
                 .andExpect(MockMvcResultMatchers.status().isOk());  
     } 
+    @Test  
+    public void testvisitor() throws Exception{  
+
+
+        mockMvc.perform(
+                MockMvcRequestBuilders.post("/api/visitor.do")
+                .param("idCardNum", "123456789123456789")
+                .param("phoneNum", "13510444833")
+                .param("appointmentTime", "2017-07-07 10:10")
+                .param("companyId", "1")
+                .param("matterId", "554")
+                .param("employeeName", "Wille")
+                .param("employeePhone", "13510444833")
+                );  
+    } 
 }

@@ -150,7 +150,7 @@ public class APIController {
 		Company company = new Company();
 		company.setId(companyId);
 		Matter matter = new Matter();
-		matter.setId(1);
+		matter.setId(matterId);
 		
 		visit.setActualTime(tmpDate);
 		visit.setLeaveTime(tmpDate);
