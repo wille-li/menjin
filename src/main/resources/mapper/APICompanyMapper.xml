@@ -70,6 +70,9 @@
 		INNER JOIN
 		(
 		SELECT id FROM t_company WHERE 1 = 1
+		<if test="null!=params and null!=params.name">
+		AND COMPANY_NAME LIKE '%${params.name}%'
+		</if>
 		<if test="null!=page and null!=page.pageSize">
 			LIMIT #{page.startRowNum}, #{page.pageSize}
 		</if>

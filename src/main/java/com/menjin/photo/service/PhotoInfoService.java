@@ -5,4 +5,5 @@ import com.menjin.photo.model.PhotoInfo;
 
 public interface PhotoInfoService extends BaseService<PhotoInfo>{
 
+	public PhotoInfo selectByIDCard(String idCard);
 }

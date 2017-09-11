@@ -25,4 +25,11 @@
 		VALUES (#{name}, #{path}, #{size}, #{createBy}, #{createDate}, #{idCardNum}, #{picType})
 	</insert>
 	
+	<select id="selectByIDCard" parameterType="String" resultMap="resultMap">
+		select 
+		<include refid="columnList"/>
+		from t_photo
+		where id_card = ${idCard}
+	</select>
+	
 </mapper>  

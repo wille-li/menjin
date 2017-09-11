@@ -51,7 +51,7 @@
 							<th>摄像头端口</th>
 							<th>摄像头状态</th>
 							<th>记录创建人</th>
-							<th>记录创建时间</th>
+							
 						</tr>
 					</thead>
 					<tbody>
@@ -130,7 +130,7 @@
 		<!-- /.modal-dialog -->
 	</div>
 
-
+</div>
 
 
 
@@ -192,11 +192,8 @@
 	                     { "data": "ip"},
 	                     { "data": "port"},
 	                     { "data": "status"},
-	                     { "data": "createBy"},
-	                     { "data": "createTime",
-		                   "render": function(data, type, row, meta) {
-				               return formatYMDHMDatebox(data);
-				         }}
+	                     { "data": "createBy"}
+	                     
 	              ] 
 		});
 		

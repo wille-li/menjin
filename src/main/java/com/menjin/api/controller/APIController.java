@@ -10,6 +10,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 import javax.annotation.Resource;
 
@@ -37,6 +38,9 @@ import com.menjin.api.service.APICompanyService;
 import com.menjin.api.service.APIDepartmentService;
 import com.menjin.api.service.APIEmployeeService;
 import com.menjin.company.model.Company;
+import com.menjin.face.model.FaceInfo;
+import com.menjin.face.service.FaceClient;
+import com.menjin.opener.controller.OpenerController;
 import com.menjin.photo.model.PhotoInfo;
 import com.menjin.photo.service.PhotoInfoService;
 import com.menjin.visit.model.Matter;
@@ -100,6 +104,9 @@ public class APIController {
 	@Autowired	
 	MatterService matterService;
 	
+	@Resource
+	FaceClient faceClient;
+	
 	@RequestMapping(value="/api/visit.do", method=RequestMethod.POST)
 	@SystemControllerLog
 	@ResponseBody
@@ -133,10 +140,30 @@ public class APIController {
 			return returnMap;
 		}
 		
+		String photoPath = getIdCardPhtoPath(idCardNum);
+		if (photoPath == null){
+			logger.info("这个身份证获取图片有问题:"+idCardNum);
+			rInfo.setMsg("获取身份图片出错，请检查图片是否存在！");
+			rInfo.setRet(FAIL);
+			returnMap.put("rInfo", rInfo);
+			return returnMap;
+		}
+		Boolean flag = faceClient.registerFace(photoPath, visitor.getId().toString(),
+				"visitor", visitor.getVisitorName());
+		if (!flag) {
+			logger.info("身份注册出错:"+idCardNum);
+			rInfo.setMsg("上传到图片库出错");
+			rInfo.setRet(FAIL);
+			returnMap.put("rInfo", rInfo);
+			return returnMap;
+		}
+		
 		String phone = visitor.getMobile();
 		if (null == phone){
 			visitor.setMobile(phoneNum);
 		}
+		
+		
 		String txnNum = getMatterTxnNum();
 		if(txnNum == null){
 			logger.info("get Matter Txn Num failed,MatterTxnNum:"+txnNum);
@@ -145,6 +172,7 @@ public class APIController {
 			returnMap.put("rInfo", rInfo);
 			return returnMap;
 		}
+		
 		VisitRecord visit = new VisitRecord();
 		visit.setMatterTxnNum(txnNum);
 		Company company = new Company();
@@ -174,6 +202,22 @@ public class APIController {
 	}
 	
 	
+	private String getIdCardPhtoPath(String idCardNum) {
+		PhotoInfo info = photoInfoService.selectByIDCard(idCardNum);
+		if (null == info) {
+			logger.error("这个身份证找不到图片信息，请检查上传图片过程");
+			return null;
+		}
+		String filePath = info.getPath() + info.getName();
+		File picFile = new File(filePath);
+		if (!picFile.exists()) {
+			logger.error("这个身份证找不到身份证图片， 请检查文件是否已经删除");
+			return null;
+		}
+		return filePath;
+	}
+
+
 	@RequestMapping(value="/api/checkIDCard.do", method=RequestMethod.GET)
 	@SystemControllerLog
 	@ResponseBody
@@ -220,7 +264,6 @@ public class APIController {
 	
 	
 	
-	
 	private void savePhotoInfo(String fileName, String filePath, String idCardNum, Long size, int picType){
 		PhotoInfo photoInfo = new PhotoInfo();
 		photoInfo.setName(fileName);
@@ -232,10 +275,6 @@ public class APIController {
 		photoInfo.setCreateDate(Calendar.getInstance().getTime());
 		photoInfoService.add(photoInfo);
 	}
-	
-	
-	
-	
 	
 	@RequestMapping(value="/api/upload.do", method=RequestMethod.POST)
 	@SystemControllerLog
@@ -252,7 +291,7 @@ public class APIController {
 		if (visitorName.indexOf("\"") > -1){
 			visitorName = visitorName.replace("\"", "");
 		}
-		if (birth.indexOf("\"") > -1){
+		if (birth != null && birth.indexOf("\"") > -1){
 			birth = birth.replace("\"", "");
 		}
 		if (idCardNum == null){
@@ -267,8 +306,10 @@ public class APIController {
 		Visitor visitor = new Visitor();
 		
 		try {
+			if (birth != null) {
 			Date date = new SimpleDateFormat("yyyy年MM月dd日").parse(birth);
 			visitor.setBirth(date);
+			}
 		} catch (ParseException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
@@ -313,7 +354,7 @@ public class APIController {
 			}
 			
 		}
-		boolean vertifyResult = true;//afrService.vertifyUser(idCardNum.substring(idCardNum.length() - 6), file1, file2);
+		boolean vertifyResult = true;
 		if (!vertifyResult){
 			returnInfo.setRet(APIController.FAIL);
 			returnInfo.setMsg("身份认证失败。");
@@ -385,6 +426,56 @@ public class APIController {
 			return returnMap;
 		}
 		return returnMap;
+	}
+	
+	
+	@RequestMapping(value="/api/enterCheck.do", method = RequestMethod.POST)
+	@SystemControllerLog
+	@ResponseBody
+	public Map<String, Object> enterCheck(@RequestParam("file") MultipartFile file){
+		Map<String, Object> result = new HashMap<>();
+		ReturnInfo rInfo = new ReturnInfo();
+		if (null == file){
+			rInfo.setRet(APIController.FAIL);
+			rInfo.setMsg("请上传一张头像图片.");
+			result.put(APIController.HEAD_KEY, rInfo);
+	        return result;
+		}
+		
+		String filename = "TMP_IMAGE" + new Random().nextInt() + "-" + Calendar.getInstance().getTimeInMillis() + ".jpg";
+		String filePath = imagePath + filename;
+		File tmpFile=new File(filePath); 
+		if (filename !=null && !file.isEmpty()){  
+			try {  
+				FileCopyUtils.copy(file.getBytes(), tmpFile); 
+			} catch (IOException e) {  
+				rInfo.setRet(APIController.FAIL);
+				rInfo.setMsg("上传图片失败。");
+				logger.error("上传图片失败",  e);
+				result.put(APIController.HEAD_KEY, rInfo);
+		        return result;
+			}  
+		} else {
+			rInfo.setRet(APIController.FAIL);
+			rInfo.setMsg("没有收到上传图片，请上传图片。");
+			result.put(APIController.HEAD_KEY, rInfo);
+	        return result;
+		}
+		FaceInfo faceInfo = faceClient.identifyUser(filePath, "visitor");
+		logger.info(faceInfo.toString());
+		if (null != faceInfo && faceInfo.getScope() > 80) {
+			
+			rInfo.setRet(APIController.SUCCESS);
+			rInfo.setMsg(faceInfo.getMessage());
+			OpenerController open = new OpenerController();
+			
+			open.checkOpenerStatus("on1");
+			open.checkOpenerStatus("off1");
+		} else {
+			rInfo.setRet(APIController.FAIL);
+			rInfo.setMsg("该访客未注册，请先到前台办理访客手续。");
+		}
+		return result;
 	}
 	
 	

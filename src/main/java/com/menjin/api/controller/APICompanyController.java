@@ -17,7 +17,6 @@ import com.base.annotation.log.SystemControllerLog;
 import com.base.entity.JsonReturn;
 import com.base.entity.ReturnInfo;
 import com.base.entity.SimplePage;
-import com.base.service.BaseService;
 import com.base.util.JsonReturnUtil;
 import com.menjin.api.model.APICompany;
 import com.menjin.api.service.APICompanyService;
@@ -62,18 +61,24 @@ public class APICompanyController {
 	@SystemControllerLog
 	@ResponseBody
 	public JsonReturn<APICompany> getCompanyInfo1(Integer version){
-		List<APICompany> company  = (List<APICompany>) findAllInfo(aPICompanyService);
+		List<APICompany> company  = findAllInfo(aPICompanyService, null);
 		return JsonReturnUtil.buildReturn(SUCCESS, "获取成功", company);
 	}
 	
 	@RequestMapping(value="/api/getCompany.do", method = RequestMethod.GET)
 	@SystemControllerLog
 	@ResponseBody
-	public Map<String, Object> getCompanyInfo(Integer version){
+	public Map<String, Object> getCompanyInfo(Integer version, String name){
 		Map<String, Object> returnMap = new HashMap<String, Object>();
 		Map<String, Object> dataMap = new HashMap<String, Object>();
+		Map<String, Object> params = null;
 		ReturnInfo rInfo = new ReturnInfo();
-		List<APICompany> company  = (List<APICompany>) findAllInfo(aPICompanyService);
+		logger.info("name:" + name);
+		if (null != name && name.length() > 1){
+			params = new HashMap<String, Object>();
+			params.put("name", name);
+		}
+		List<APICompany> company  =  findAllInfo(aPICompanyService, params);
 		dataMap.put("company", company);
 		dataMap.put(VERSION_KEY, versionNum);
 		rInfo.setMsg("获取成功");
@@ -84,11 +89,11 @@ public class APICompanyController {
 	}
 	
 	
-	private List<?> findAllInfo(BaseService<?> baseService){
+	private List<APICompany> findAllInfo(APICompanyService baseService, Map<String, Object> params){
 		int count = baseService.findCount(null, null);
 		logger.info("Count:"+count);
 		SimplePage simplepage = new SimplePage(1, count, count);
-		return baseService.findByPage(simplepage, null, null);
+		return baseService.findByPage(simplepage, params, null);
 	}
 	
 	

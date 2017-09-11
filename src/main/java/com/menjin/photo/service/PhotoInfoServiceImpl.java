@@ -22,4 +22,9 @@ public class PhotoInfoServiceImpl extends BaseServiceImpl<PhotoInfo> implements 
 		return photoInfoMapper;
 	}
 
+	@Override
+	public PhotoInfo selectByIDCard(String idCard) {
+		return photoInfoMapper.selectByIDCard(idCard);
+	}
+
 }

@@ -39,7 +39,7 @@ public class OpenerController {
 	public final static int FAIL = 1;
 	
 	@Value("${opener.ip}")
-	private String openerIP = "192.168.1.106";
+	private String openerIP = "192.168.0.99";
 	
 	@Value("${opener.port}")
 	private Integer openerPort = 5000;
@@ -72,9 +72,10 @@ public class OpenerController {
 		boolean connection = sChannel.connect(new InetSocketAddress(hostName, port));
 		
 		if (connection){
-			System.out.println("Connect OK..");
+			logger.info("Connect OK..");
 		} else {
-			System.out.println("Fail connection..");
+			logger.error("Fail socket connection..");
+			return null;
 		}
 		return sChannel;
 	}
@@ -98,8 +99,11 @@ public class OpenerController {
 			buf.clear();
 			
 			SocketChannel channel = createSocketChannel(openerIP, openerPort);
-			if (channel.isConnected()){
-				System.out.println("Connected");
+			if (channel == null) {
+				return "出错了";
+			}
+			if ( channel.isConnected()){
+				logger.info("Connected");
 			}
 			
 			int result = -1;
@@ -115,7 +119,7 @@ public class OpenerController {
 			buf.flip();
 			result = channel.write(buf);
 			if (result > 0){
-				System.out.println("已经写入" + result + "个字节");
+				logger.info("已经写入" + result + "个字节");
 			}
 			buf.clear();
 			channel.read(buf);
@@ -243,5 +247,6 @@ public class OpenerController {
 		OpenerController open = new OpenerController();
 		
 		open.checkOpenerStatus("on1");
+		open.checkOpenerStatus("off1");
 	}
 }
