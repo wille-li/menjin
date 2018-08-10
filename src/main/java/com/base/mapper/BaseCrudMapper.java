@@ -12,14 +12,14 @@ import com.base.entity.SimplePage;
  * @author wille
  *
  */
-public abstract interface BaseCrudMapper<ModelType> {
+public interface BaseCrudMapper<ModelType> {
 
 	/**
 	 * 插入语句接口
 	 * @param entity 对象
 	 * @return 
 	 */
-	public abstract int insert(ModelType entity);
+	int insert(ModelType entity);
 	
 	
 	/**
@@ -27,21 +27,21 @@ public abstract interface BaseCrudMapper<ModelType> {
 	 * @param entity 对象
 	 * @return 返回一个对象或者null
 	 */
-	public abstract ModelType selectByPrimaryKey(ModelType entity);
+	ModelType selectByPrimaryKey(ModelType entity);
 
 	/**
 	 * 删除对象
 	 * @param entity 传入主键
 	 * @return
 	 */
-	public abstract int deleteByPrimaryKey(ModelType entity);
+	int deleteByPrimaryKey(ModelType entity);
 	
 	/**
 	 * 更新对象资料
 	 * @param entity 必须存在主键
 	 * @return
 	 */
-	public abstract int updateByPrimaryKey(ModelType entity);
+	int updateByPrimaryKey(ModelType entity);
 	
 	/**
 	 * 查询对象集合,不分页方法(建议限制条数)
@@ -49,7 +49,7 @@ public abstract interface BaseCrudMapper<ModelType> {
 	 * @param paramMap 其他参数集合
 	 * @return
 	 */
-	public abstract List<ModelType> selectByParams(
+	List<ModelType> selectByParams(
 			@Param("model") ModelType entity,
 			@Param("params") Map<String, Object> paramMap);
 	
@@ -59,7 +59,7 @@ public abstract interface BaseCrudMapper<ModelType> {
 	 * @param paramMap 其他参数, (不一定要用到,可以传空)
 	 * @return
 	 */
-	public abstract int selectCount(
+	int selectCount(
 			@Param("model") ModelType entity,
 			@Param("params") Map<String, Object> paramMap);
 	
@@ -70,7 +70,7 @@ public abstract interface BaseCrudMapper<ModelType> {
 	 * @param orderBy  排序
 	 * @return
 	 */
-	public abstract List<ModelType> selectByPage(
+	List<ModelType> selectByPage(
 			@Param("page") SimplePage page,
 			@Param("params") Map<String, Object> paramMap,
 			@Param("orderByField") String orderByField);

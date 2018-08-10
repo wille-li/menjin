@@ -117,6 +117,7 @@ public class VisitorController {
 		visitor.setIdCardNum(idCardNum);
 		visitor.setSex(sex);
 		visitor.setNation(nation);
+		/**
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-mm-dd");
 		try {
 			visitor.setBirth(sdf.parse(birth));
@@ -128,6 +129,7 @@ public class VisitorController {
 			e.printStackTrace();
 			return returnMap;
 		}
+		 **/
 		visitor.setMobile(mobile);
 		visitor.setRank(rank);
 		visitor.setAddress(address);

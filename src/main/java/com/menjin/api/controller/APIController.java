@@ -39,7 +39,6 @@ import com.menjin.api.service.APIDepartmentService;
 import com.menjin.api.service.APIEmployeeService;
 import com.menjin.company.model.Company;
 import com.menjin.face.model.FaceInfo;
-import com.menjin.face.service.FaceClient;
 import com.menjin.opener.controller.OpenerController;
 import com.menjin.photo.model.PhotoInfo;
 import com.menjin.photo.service.PhotoInfoService;
@@ -103,104 +102,8 @@ public class APIController {
 	
 	@Autowired	
 	MatterService matterService;
-	
-	@Resource
-	FaceClient faceClient;
-	
-	@RequestMapping(value="/api/visit.do", method=RequestMethod.POST)
-	@SystemControllerLog
-	@ResponseBody
-	public Map<String, Object> visit(String idCardNum, String phoneNum, 
-			String appointmentTime, Integer companyId, Integer matterId,
-			String employeeName, String employeePhone){
-		Map<String, Object> returnMap = new HashMap<String, Object>();
-		ReturnInfo rInfo = new ReturnInfo();
-		Visitor visitor = visitorService.selectByIDCar(idCardNum);
-		if (null == visitor){
-			rInfo.setRet(FAIL);
-			rInfo.setMsg("身份证未做识别验证");
-			returnMap.put(HEAD_KEY, rInfo);
-			return returnMap;
-		} 
-		Date tmpDate = null;
-		if (null == appointmentTime ){
-			try {
-				tmpDate = sdf.parse(appointmentTime);
-			} catch (ParseException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-				rInfo.setRet(FAIL);
-				rInfo.setMsg("请输入有效的访问时间.");
-				returnMap.put(HEAD_KEY, rInfo);
-				return returnMap;
-			}
-			rInfo.setRet(FAIL);
-			rInfo.setMsg("请输入有效的访问时间.");
-			returnMap.put(HEAD_KEY, rInfo);
-			return returnMap;
-		}
-		
-		String photoPath = getIdCardPhtoPath(idCardNum);
-		if (photoPath == null){
-			logger.info("这个身份证获取图片有问题:"+idCardNum);
-			rInfo.setMsg("获取身份图片出错，请检查图片是否存在！");
-			rInfo.setRet(FAIL);
-			returnMap.put("rInfo", rInfo);
-			return returnMap;
-		}
-		Boolean flag = faceClient.registerFace(photoPath, visitor.getId().toString(),
-				"visitor", visitor.getVisitorName());
-		if (!flag) {
-			logger.info("身份注册出错:"+idCardNum);
-			rInfo.setMsg("上传到图片库出错");
-			rInfo.setRet(FAIL);
-			returnMap.put("rInfo", rInfo);
-			return returnMap;
-		}
-		
-		String phone = visitor.getMobile();
-		if (null == phone){
-			visitor.setMobile(phoneNum);
-		}
-		
-		
-		String txnNum = getMatterTxnNum();
-		if(txnNum == null){
-			logger.info("get Matter Txn Num failed,MatterTxnNum:"+txnNum);
-			rInfo.setMsg("获取拜访单号失败，请重试！");
-			rInfo.setRet(FAIL);
-			returnMap.put("rInfo", rInfo);
-			return returnMap;
-		}
-		
-		VisitRecord visit = new VisitRecord();
-		visit.setMatterTxnNum(txnNum);
-		Company company = new Company();
-		company.setId(companyId);
-		Matter matter = new Matter();
-		matter.setId(matterId);
-		
-		visit.setActualTime(tmpDate);
-		visit.setLeaveTime(tmpDate);
-		visit.setCompany(company);
-		visit.setVisitor(visitor);
-		visit.setMatter(matter);
-		visit.setStatus("3");
-		visit.setEmployeeName(employeeName);
-		visit.setEmployeePhone(employeePhone);
-		visit.setValidateMode("1");
-		visit.setPeopleSum(1);
-		visit.setCreateBy("Admin");//根据现在操作用户修改
-		visit.setModifiedDate(new Date());
-		visitRecordService.add(visit);
-		rInfo.setMsg("预约成功");
-		rInfo.setRet(SUCCESS);
-		returnMap.put(HEAD_KEY, rInfo);
-		returnMap.put("validateCode", 666333);
-		returnMap.put("visitRecord", txnNum);
-		return returnMap;
-	}
-	
+
+
 	
 	private String getIdCardPhtoPath(String idCardNum) {
 		PhotoInfo info = photoInfoService.selectByIDCard(idCardNum);
@@ -461,7 +364,7 @@ public class APIController {
 			result.put(APIController.HEAD_KEY, rInfo);
 	        return result;
 		}
-		FaceInfo faceInfo = faceClient.identifyUser(filePath, "visitor");
+		FaceInfo faceInfo = null;
 		logger.info(faceInfo.toString());
 		if (null != faceInfo && faceInfo.getScope() > 80) {
 			

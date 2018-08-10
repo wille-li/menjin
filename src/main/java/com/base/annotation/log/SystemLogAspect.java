@@ -136,6 +136,7 @@ public class SystemLogAspect {
 		logger.info("Log aop ===== doAfterThrowing =====");
 		HttpServletRequest request = getRequest();
 		// 获取用户请求方法的参数并序列化为JSON格式字符串
+		e.printStackTrace();
 		String params = "";
 		if (joinPoint.getArgs() != null && joinPoint.getArgs().length > 0) {
 			Object[] args = joinPoint.getArgs();
