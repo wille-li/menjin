@@ -1,19 +1,23 @@
 package com.menjin.api.controller;
 
-import java.io.File;
-import java.io.IOException;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
-
-import javax.annotation.Resource;
-
+import com.base.annotation.log.SystemControllerLog;
+import com.base.entity.JsonReturn;
+import com.base.entity.ReturnInfo;
+import com.base.entity.SimplePage;
+import com.menjin.api.model.APIAuth;
+import com.menjin.api.model.APIMatter;
+import com.menjin.api.service.APIAuthService;
+import com.menjin.api.service.APICompanyService;
+import com.menjin.api.service.APIDepartmentService;
+import com.menjin.api.service.APIEmployeeService;
+import com.menjin.company.model.Company;
+import com.menjin.photo.model.PhotoInfo;
+import com.menjin.photo.service.PhotoInfoService;
+import com.menjin.visit.model.Matter;
+import com.menjin.visit.model.Visitor;
+import com.menjin.visit.service.MatterService;
+import com.menjin.visit.service.VisitRecordService;
+import com.menjin.visit.service.VisitorService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,27 +31,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.base.annotation.log.SystemControllerLog;
-import com.base.entity.JsonReturn;
-import com.base.entity.ReturnInfo;
-import com.base.entity.SimplePage;
-import com.menjin.api.model.APIAuth;
-import com.menjin.api.model.APIMatter;
-import com.menjin.api.service.APIAuthService;
-import com.menjin.api.service.APICompanyService;
-import com.menjin.api.service.APIDepartmentService;
-import com.menjin.api.service.APIEmployeeService;
-import com.menjin.company.model.Company;
-import com.menjin.face.model.FaceInfo;
-import com.menjin.opener.controller.OpenerController;
-import com.menjin.photo.model.PhotoInfo;
-import com.menjin.photo.service.PhotoInfoService;
-import com.menjin.visit.model.Matter;
-import com.menjin.visit.model.VisitRecord;
-import com.menjin.visit.model.Visitor;
-import com.menjin.visit.service.MatterService;
-import com.menjin.visit.service.VisitRecordService;
-import com.menjin.visit.service.VisitorService;
+import javax.annotation.Resource;
+import java.io.File;
+import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 @Controller
 @Scope("prototype")
@@ -331,55 +320,7 @@ public class APIController {
 		return returnMap;
 	}
 	
-	
-	@RequestMapping(value="/api/enterCheck.do", method = RequestMethod.POST)
-	@SystemControllerLog
-	@ResponseBody
-	public Map<String, Object> enterCheck(@RequestParam("file") MultipartFile file){
-		Map<String, Object> result = new HashMap<>();
-		ReturnInfo rInfo = new ReturnInfo();
-		if (null == file){
-			rInfo.setRet(APIController.FAIL);
-			rInfo.setMsg("请上传一张头像图片.");
-			result.put(APIController.HEAD_KEY, rInfo);
-	        return result;
-		}
-		
-		String filename = "TMP_IMAGE" + new Random().nextInt() + "-" + Calendar.getInstance().getTimeInMillis() + ".jpg";
-		String filePath = imagePath + filename;
-		File tmpFile=new File(filePath); 
-		if (filename !=null && !file.isEmpty()){  
-			try {  
-				FileCopyUtils.copy(file.getBytes(), tmpFile); 
-			} catch (IOException e) {  
-				rInfo.setRet(APIController.FAIL);
-				rInfo.setMsg("上传图片失败。");
-				logger.error("上传图片失败",  e);
-				result.put(APIController.HEAD_KEY, rInfo);
-		        return result;
-			}  
-		} else {
-			rInfo.setRet(APIController.FAIL);
-			rInfo.setMsg("没有收到上传图片，请上传图片。");
-			result.put(APIController.HEAD_KEY, rInfo);
-	        return result;
-		}
-		FaceInfo faceInfo = null;
-		logger.info(faceInfo.toString());
-		if (null != faceInfo && faceInfo.getScope() > 80) {
-			
-			rInfo.setRet(APIController.SUCCESS);
-			rInfo.setMsg(faceInfo.getMessage());
-			OpenerController open = new OpenerController();
-			
-			open.checkOpenerStatus("on1");
-			open.checkOpenerStatus("off1");
-		} else {
-			rInfo.setRet(APIController.FAIL);
-			rInfo.setMsg("该访客未注册，请先到前台办理访客手续。");
-		}
-		return result;
-	}
+
 	
 	
 	
